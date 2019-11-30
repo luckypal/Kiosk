@@ -726,6 +726,7 @@ namespace GLib.Devices
                       this.SerialNumber = string.Concat((object) ((int) inData[4] * 16777216 + (int) inData[5] * 65536 + (int) inData[6] * 256 + (int) inData[7]));
                       break;
                   }
+                  break;
                 case 242:
                 case 243:
                 case 244:

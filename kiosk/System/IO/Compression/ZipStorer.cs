@@ -382,7 +382,8 @@ namespace System.IO.Compression
         {
           stream.Write(buffer, 0, count);
           for (uint index = 0; (long) index < (long) count; ++index)
-            _zfe.Crc32 = ZipStorer.CrcTable[(IntPtr) (uint) (((int) _zfe.Crc32 ^ (int) buffer[(IntPtr) index]) & (int) byte.MaxValue)] ^ _zfe.Crc32 >> 8;
+            //_zfe.Crc32 = ZipStorer.CrcTable[(IntPtr) (uint) (((int) _zfe.Crc32 ^ (int) buffer[(IntPtr) index]) & (int) byte.MaxValue)] ^ _zfe.Crc32 >> 8;
+            _zfe.Crc32 = ZipStorer.CrcTable[(uint)((_zfe.Crc32 ^ buffer[index]) & byte.MaxValue)] ^ _zfe.Crc32 >> 8;
         }
       }
       while (count == buffer.Length);

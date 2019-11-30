@@ -707,7 +707,7 @@ namespace GLib.Devices
         int index7 = num10;
         int num13 = index7 + 1;
         // ISSUE: variable of a boxed type
-        __Boxed<char> local1 = (ValueType) (char) numArray4[index7];
+        char local1 = (char) numArray4[index7];
         string str11 = str10 + (object) local1;
         byte[] numArray5 = numArray2;
         int index8 = num13;
@@ -721,7 +721,7 @@ namespace GLib.Devices
         int index10 = num13;
         int num16 = index10 + 1;
         // ISSUE: variable of a boxed type
-        __Boxed<char> local2 = (ValueType) (char) numArray6[index10];
+        char local2 = (char) numArray6[index10];
         string str13 = str12 + (object) local2;
         byte[] numArray7 = numArray2;
         int index11 = num16;
@@ -735,7 +735,7 @@ namespace GLib.Devices
         int index13 = num16;
         num10 = index13 + 1;
         // ISSUE: variable of a boxed type
-        __Boxed<char> local3 = (ValueType) (char) numArray8[index13];
+        char local3 = (char) numArray8[index13];
         str8 = str14 + (object) local3 + "\r\n";
       }
       int index14 = num9;

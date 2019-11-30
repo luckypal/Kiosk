@@ -520,7 +520,7 @@ namespace Kiosk
 
     public bool Start_Service(string _web)
     {
-      string fileName = Path.GetTempPath() + "tmp121212.tmp";
+      string fileName = System.IO.Path.GetTempPath() + "tmp121212.tmp";
       string empty1 = string.Empty;
       string empty2 = string.Empty;
       try

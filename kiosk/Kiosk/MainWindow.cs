@@ -1250,6 +1250,7 @@ namespace Kiosk
                 }
                 break;
             }
+            break;
           case 257:
           case 261:
             switch (e.KeyPressEvent.VKeyName)
@@ -1283,6 +1284,7 @@ namespace Kiosk
                 }
                 break;
             }
+            break;
         }
         if (!this.Opcions.Emu_Mouse)
           return;
@@ -1361,6 +1363,7 @@ namespace Kiosk
                 }
                 break;
             }
+            break;
           case 257:
           case 261:
             switch (e.KeyPressEvent.VKeyName)
@@ -1386,6 +1389,7 @@ namespace Kiosk
                 }
                 break;
             }
+            break;
         }
       }
     }
@@ -1521,7 +1525,7 @@ namespace Kiosk
     {
       this.CloseOSK();
       TimeSpan timeSpan;
-      ref TimeSpan local = ref timeSpan;
+      //ref TimeSpan local = ref timeSpan;
       DateTime now = DateTime.Now;
       int hour = now.Hour;
       now = DateTime.Now;
@@ -1530,7 +1534,7 @@ namespace Kiosk
       int second = now.Second;
       now = DateTime.Now;
       int millisecond = now.Millisecond;
-      local = new TimeSpan(hour, minute, second, millisecond);
+      timeSpan = new TimeSpan(hour, minute, second, millisecond);
       this.nofocus = true;
       bool flag;
       if (this.Opcions.ModoKiosk == 0)
@@ -2935,7 +2939,7 @@ namespace Kiosk
         if (this.Opcions.Credits + this.Opcions.Add_Credits > new Decimal(0) && this.errorcreditsserv == 0)
         {
           TimeSpan timeSpan;
-          ref TimeSpan local = ref timeSpan;
+//          ref TimeSpan local = ref timeSpan;
           int hour = DateTime.Now.Hour;
           DateTime now = DateTime.Now;
           int minute = now.Minute;
@@ -2943,7 +2947,7 @@ namespace Kiosk
           int second = now.Second;
           now = DateTime.Now;
           int millisecond = now.Millisecond;
-          local = new TimeSpan(hour, minute, second, millisecond);
+          timeSpan = new TimeSpan(hour, minute, second, millisecond);
           if (this.Opcions.ModoTickets == 1)
           {
             if (this.Opcions.News != 1)
@@ -2979,7 +2983,7 @@ namespace Kiosk
         else
         {
           TimeSpan timeSpan;
-          ref TimeSpan local = ref timeSpan;
+//          ref TimeSpan local = ref timeSpan;
           int hour = DateTime.Now.Hour;
           DateTime now = DateTime.Now;
           int minute = now.Minute;
@@ -2987,7 +2991,7 @@ namespace Kiosk
           int second = now.Second;
           now = DateTime.Now;
           int millisecond = now.Millisecond;
-          local = new TimeSpan(hour, minute, second, millisecond);
+          timeSpan = new TimeSpan(hour, minute, second, millisecond);
           if (this.Opcions.ModoTickets == 1)
           {
             if (this.Opcions.News != 1)
@@ -3860,7 +3864,7 @@ namespace Kiosk
                   MainWindow.ShowCursor(false);
                   MainWindow.ShowCursor(false);
                 }
-                ref TimeSpan local = ref timeSpan;
+                //ref TimeSpan local = ref timeSpan;
                 DateTime now1 = DateTime.Now;
                 int hour = now1.Hour;
                 now1 = DateTime.Now;
@@ -3869,7 +3873,7 @@ namespace Kiosk
                 int second = now2.Second;
                 now2 = DateTime.Now;
                 int millisecond = now2.Millisecond;
-                local = new TimeSpan(hour, minute, second, millisecond);
+                timeSpan = new TimeSpan(hour, minute, second, millisecond);
                 if (this.Opcions.ModoTickets == 1)
                 {
                   if (this.Opcions.News != 1)
@@ -8225,14 +8229,14 @@ label_20:;
       if (this.Banner_On != 2)
         return;
       TimeSpan timeSpan;
-      ref TimeSpan local = ref timeSpan;
+      //ref TimeSpan local = ref timeSpan;
       DateTime now = DateTime.Now;
       int hour = now.Hour;
       now = DateTime.Now;
       int minute = now.Minute;
       int second = DateTime.Now.Second;
       int millisecond = DateTime.Now.Millisecond;
-      local = new TimeSpan(hour, minute, second, millisecond);
+      timeSpan = new TimeSpan(hour, minute, second, millisecond);
       bool flag = true;
       this.WebLink = "http://".ToLower() + this.Opcions.Srv_Web_Ip + "/MenuTel.aspx?t=" + this.Opcions.Srv_User + "," + this.Opcions.Srv_User_P + ",TickQuioscV2.aspx," + (object) timeSpan.TotalMilliseconds;
       this.EntraJocs.Visible = false;

@@ -127,7 +127,7 @@ namespace GLib.Devices
       byte num = 0;
       for (int index = 0; index < _len; ++index)
         num += _buffer[index];
-      return -num;
+      return num;
     }
 
     public byte GetCRC(ref byte[] _buffer)
