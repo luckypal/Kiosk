@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{F6F0CC29-F909-4B70-8746-A5C31E3F9027}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>WinExe</OutputType>
+    <LangVersion>8.0</LangVersion>
+    <AssemblyName>Loader</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="System">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceProcess">
+      <HintPath>C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.ServiceProcess.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CPUVersion.cs" />
+    <Compile Include="Frame.cs" />
+    <Compile Include="FrameIs.cs" />
+    <Compile Include="FrameworkVersion.cs" />
+    <Compile Include="Ionic.Crc\CRC32.cs" />
+    <Compile Include="Ionic.Crc\CrcCalculatorStream.cs" />
+    <Compile Include="Ionic.Zip\AddOrUpdateAction.cs" />
+    <Compile Include="Ionic.Zip\AddProgressEventArgs.cs" />
+    <Compile Include="Ionic.Zip\BadCrcException.cs" />
+    <Compile Include="Ionic.Zip\BadPasswordException.cs" />
+    <Compile Include="Ionic.Zip\BadReadException.cs" />
+    <Compile Include="Ionic.Zip\BadStateException.cs" />
+    <Compile Include="Ionic.Zip\CloseDelegate.cs" />
+    <Compile Include="Ionic.Zip\CompressionMethod.cs" />
+    <Compile Include="Ionic.Zip\CountingStream.cs" />
+    <Compile Include="Ionic.Zip\CryptoMode.cs" />
+    <Compile Include="Ionic.Zip\EncryptionAlgorithm.cs" />
+    <Compile Include="Ionic.Zip\ExtractExistingFileAction.cs" />
+    <Compile Include="Ionic.Zip\ExtractProgressEventArgs.cs" />
+    <Compile Include="Ionic.Zip\OffsetStream.cs" />
+    <Compile Include="Ionic.Zip\OpenDelegate.cs" />
+    <Compile Include="Ionic.Zip\ReadOptions.cs" />
+    <Compile Include="Ionic.Zip\ReadProgressEventArgs.cs" />
+    <Compile Include="Ionic.Zip\SaveProgressEventArgs.cs" />
+    <Compile Include="Ionic.Zip\SetCompressionCallback.cs" />
+    <Compile Include="Ionic.Zip\SfxGenerationException.cs" />
+    <Compile Include="Ionic.Zip\SharedUtilities.cs" />
+    <Compile Include="Ionic.Zip\WinZipAesCipherStream.cs" />
+    <Compile Include="Ionic.Zip\WinZipAesCrypto.cs" />
+    <Compile Include="Ionic.Zip\WriteDelegate.cs" />
+    <Compile Include="Ionic.Zip\Zip64Option.cs" />
+    <Compile Include="Ionic.Zip\ZipCipherStream.cs" />
+    <Compile Include="Ionic.Zip\ZipConstants.cs" />
+    <Compile Include="Ionic.Zip\ZipContainer.cs" />
+    <Compile Include="Ionic.Zip\ZipCrypto.cs" />
+    <Compile Include="Ionic.Zip\ZipEntry.cs" />
+    <Compile Include="Ionic.Zip\ZipEntrySource.cs" />
+    <Compile Include="Ionic.Zip\ZipEntryTimestamp.cs" />
+    <Compile Include="Ionic.Zip\ZipErrorAction.cs" />
+    <Compile Include="Ionic.Zip\ZipErrorEventArgs.cs" />
+    <Compile Include="Ionic.Zip\ZipException.cs" />
+    <Compile Include="Ionic.Zip\ZipFile.cs" />
+    <Compile Include="Ionic.Zip\ZipInputStream.cs" />
+    <Compile Include="Ionic.Zip\ZipOption.cs" />
+    <Compile Include="Ionic.Zip\ZipOutput.cs" />
+    <Compile Include="Ionic.Zip\ZipOutputStream.cs" />
+    <Compile Include="Ionic.Zip\ZipProgressEventArgs.cs" />
+    <Compile Include="Ionic.Zip\ZipProgressEventType.cs" />
+    <Compile Include="Ionic.Zip\ZipSegmentedStream.cs" />
+    <Compile Include="Ionic.Zlib\Adler.cs" />
+    <Compile Include="Ionic.Zlib\BlockState.cs" />
+    <Compile Include="Ionic.Zlib\CompressionLevel.cs" />
+    <Compile Include="Ionic.Zlib\CompressionMode.cs" />
+    <Compile Include="Ionic.Zlib\CompressionStrategy.cs" />
+    <Compile Include="Ionic.Zlib\DeflateFlavor.cs" />
+    <Compile Include="Ionic.Zlib\DeflateManager.cs" />
+    <Compile Include="Ionic.Zlib\DeflateStream.cs" />
+    <Compile Include="Ionic.Zlib\FlushType.cs" />
+    <Compile Include="Ionic.Zlib\GZipStream.cs" />
+    <Compile Include="Ionic.Zlib\InflateBlocks.cs" />
+    <Compile Include="Ionic.Zlib\InflateCodes.cs" />
+    <Compile Include="Ionic.Zlib\InflateManager.cs" />
+    <Compile Include="Ionic.Zlib\InfTree.cs" />
+    <Compile Include="Ionic.Zlib\InternalConstants.cs" />
+    <Compile Include="Ionic.Zlib\InternalInflateConstants.cs" />
+    <Compile Include="Ionic.Zlib\SharedUtils.cs" />
+    <Compile Include="Ionic.Zlib\StaticTree.cs" />
+    <Compile Include="Ionic.Zlib\Tree.cs" />
+    <Compile Include="Ionic.Zlib\ZlibBaseStream.cs" />
+    <Compile Include="Ionic.Zlib\ZlibCodec.cs" />
+    <Compile Include="Ionic.Zlib\ZlibConstants.cs" />
+    <Compile Include="Ionic.Zlib\ZlibException.cs" />
+    <Compile Include="Ionic.Zlib\ZlibStream.cs" />
+    <Compile Include="Ionic.Zlib\ZlibStreamFlavor.cs" />
+    <Compile Include="Ionic\AttributesCriterion.cs" />
+    <Compile Include="Ionic\ComparisonOperator.cs" />
+    <Compile Include="Ionic\CompoundCriterion.cs" />
+    <Compile Include="Ionic\EnumUtil.cs" />
+    <Compile Include="Ionic\FileSelector.cs" />
+    <Compile Include="Ionic\LogicalConjunction.cs" />
+    <Compile Include="Ionic\NameCriterion.cs" />
+    <Compile Include="Ionic\SelectionCriterion.cs" />
+    <Compile Include="Ionic\SizeCriterion.cs" />
+    <Compile Include="Ionic\TimeCriterion.cs" />
+    <Compile Include="Ionic\TypeCriterion.cs" />
+    <Compile Include="Ionic\WhichTime.cs" />
+    <Compile Include="LimitedProcess.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelfUpdateState.cs" />
+    <Compile Include="SystemMenu.cs" />
+    <Compile Include="wyDay.Controls\AnimationControl.cs" />
+    <Compile Include="wyDay.Controls\AutoUpdaterInfo.cs" />
+    <Compile Include="wyDay.Controls\AutoUpdaterStatus.cs" />
+    <Compile Include="wyDay.Controls\CTaskbarList.cs" />
+    <Compile Include="wyDay.Controls\ITaskbarList3.cs" />
+    <Compile Include="wyDay.Controls\LinkHandler.cs" />
+    <Compile Include="wyDay.Controls\LinkLabel2.cs" />
+    <Compile Include="wyDay.Controls\ProgressBarState.cs" />
+    <Compile Include="wyDay.Controls\RichTextBoxEx.cs" />
+    <Compile Include="wyDay.Controls\ThumbnailProgressState.cs" />
+    <Compile Include="wyDay.Controls\UpdateStepOn.cs" />
+    <Compile Include="wyDay.Controls\Windows7ProgressBar.cs" />
+    <Compile Include="wyDay.Controls\Windows7Taskbar.cs" />
+    <Compile Include="wyUpdate.Common\Adler32.cs" />
+    <Compile Include="wyUpdate.Common\Arguments.cs" />
+    <Compile Include="wyUpdate.Common\ClientFile.cs" />
+    <Compile Include="wyUpdate.Common\ClientFileType.cs" />
+    <Compile Include="wyUpdate.Common\COMRegistration.cs" />
+    <Compile Include="wyUpdate.Common\ElevationType.cs" />
+    <Compile Include="wyUpdate.Common\ImageAlign.cs" />
+    <Compile Include="wyUpdate.Common\InstallingTo.cs" />
+    <Compile Include="wyUpdate.Common\NoUpdatePathToNewestException.cs" />
+    <Compile Include="wyUpdate.Common\PatchApplicationException.cs" />
+    <Compile Include="wyUpdate.Common\ReadFiles.cs" />
+    <Compile Include="wyUpdate.Common\RegBasekeys.cs" />
+    <Compile Include="wyUpdate.Common\RegChange.cs" />
+    <Compile Include="wyUpdate.Common\RegOperations.cs" />
+    <Compile Include="wyUpdate.Common\RequestHandler.cs" />
+    <Compile Include="wyUpdate.Common\Response.cs" />
+    <Compile Include="wyUpdate.Common\ServerFile.cs" />
+    <Compile Include="wyUpdate.Common\ShortcutInfo.cs" />
+    <Compile Include="wyUpdate.Common\StartService.cs" />
+    <Compile Include="wyUpdate.Common\SystemFolders.cs" />
+    <Compile Include="wyUpdate.Common\UpdateAction.cs" />
+    <Compile Include="wyUpdate.Common\UpdateDetails.cs" />
+    <Compile Include="wyUpdate.Common\UpdateFile.cs" />
+    <Compile Include="wyUpdate.Common\UpdateHelper.cs" />
+    <Compile Include="wyUpdate.Common\UpdateHelperData.cs" />
+    <Compile Include="wyUpdate.Common\UpdateOn.cs" />
+    <Compile Include="wyUpdate.Common\UpdateStep.cs" />
+    <Compile Include="wyUpdate.Common\VersionChoice.cs" />
+    <Compile Include="wyUpdate.Common\VersionTools.cs" />
+    <Compile Include="wyUpdate.Common\WindowStyle.cs" />
+    <Compile Include="wyUpdate.Common\WriteFiles.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\AddressCache.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\CodeTable.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\Instruction.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\InstructionType.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\IOHelper.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\VcdiffDecoder.cs" />
+    <Compile Include="wyUpdate.Compression.Vcdiff\VcdiffFormatException.cs" />
+    <Compile Include="wyUpdate.Downloader\DownloadData.cs" />
+    <Compile Include="wyUpdate.Downloader\FileDownloader.cs" />
+    <Compile Include="wyUpdate.Properties\Resources.cs" />
+    <Compile Include="wyUpdate\ChangeRollbackDelegate.cs" />
+    <Compile Include="wyUpdate\ClientLanguage.cs" />
+    <Compile Include="wyUpdate\CmdLineToArgvW.cs" />
+    <Compile Include="wyUpdate\Constants.cs" />
+    <Compile Include="wyUpdate\DLG_Setup.cs" />
+    <Compile Include="wyUpdate\DLS_Login.cs" />
+    <Compile Include="wyUpdate\FileFolder.cs" />
+    <Compile Include="wyUpdate\FrameType.cs" />
+    <Compile Include="wyUpdate\frmFilesInUse.cs" />
+    <Compile Include="wyUpdate\frmMain.cs" />
+    <Compile Include="wyUpdate\frmProcesses.cs" />
+    <Compile Include="wyUpdate\InstallUpdate.cs" />
+    <Compile Include="wyUpdate\IPersistFile.cs" />
+    <Compile Include="wyUpdate\IShellLinkW.cs" />
+    <Compile Include="wyUpdate\LanguageCulture.cs" />
+    <Compile Include="wyUpdate\Logger.cs" />
+    <Compile Include="wyUpdate\MSGBOX_Timer.cs" />
+    <Compile Include="wyUpdate\PanelDisplay.cs" />
+    <Compile Include="wyUpdate\PipeServer.cs" />
+    <Compile Include="wyUpdate\Program.cs" />
+    <Compile Include="wyUpdate\ProgressChangedHandler.cs" />
+    <Compile Include="wyUpdate\ProgressStatus.cs" />
+    <Compile Include="wyUpdate\RollbackUpdate.cs" />
+    <Compile Include="wyUpdate\ScreenDialog.cs" />
+    <Compile Include="wyUpdate\ShellLink.cs" />
+    <Compile Include="wyUpdate\ShellShortcut.cs" />
+    <Compile Include="wyUpdate\SLGP_FLAGS.cs" />
+    <Compile Include="wyUpdate\SLR_FLAGS.cs" />
+    <Compile Include="wyUpdate\Splash.cs" />
+    <Compile Include="wyUpdate\UninstallFileInfo.cs" />
+    <Compile Include="wyUpdate\UpdateItem.cs" />
+    <Compile Include="wyUpdate\UpdateItemStatus.cs" />
+    <Compile Include="wyUpdate\VistaTools.cs" />
+    <Compile Include="wyUpdate\WIN32_FIND_DATAW.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="wyUpdate.Properties\Resources.resx" />
+    <EmbeddedResource Include="wyUpdate\cross.png" />
+    <EmbeddedResource Include="wyUpdate\frmMain.resx" />
+    <EmbeddedResource Include="wyUpdate\loading-blue.png" />
+    <EmbeddedResource Include="wyUpdate\tick.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
