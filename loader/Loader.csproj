@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{F6F0CC29-F909-4B70-8746-A5C31E3F9027}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,9 +7,10 @@
     <OutputType>WinExe</OutputType>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>Loader</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -25,6 +26,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms">
@@ -137,18 +144,26 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelfUpdateState.cs" />
     <Compile Include="SystemMenu.cs" />
-    <Compile Include="wyDay.Controls\AnimationControl.cs" />
+    <Compile Include="wyDay.Controls\AnimationControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="wyDay.Controls\AutoUpdaterInfo.cs" />
     <Compile Include="wyDay.Controls\AutoUpdaterStatus.cs" />
     <Compile Include="wyDay.Controls\CTaskbarList.cs" />
     <Compile Include="wyDay.Controls\ITaskbarList3.cs" />
     <Compile Include="wyDay.Controls\LinkHandler.cs" />
-    <Compile Include="wyDay.Controls\LinkLabel2.cs" />
+    <Compile Include="wyDay.Controls\LinkLabel2.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="wyDay.Controls\ProgressBarState.cs" />
-    <Compile Include="wyDay.Controls\RichTextBoxEx.cs" />
+    <Compile Include="wyDay.Controls\RichTextBoxEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="wyDay.Controls\ThumbnailProgressState.cs" />
     <Compile Include="wyDay.Controls\UpdateStepOn.cs" />
-    <Compile Include="wyDay.Controls\Windows7ProgressBar.cs" />
+    <Compile Include="wyDay.Controls\Windows7ProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="wyDay.Controls\Windows7Taskbar.cs" />
     <Compile Include="wyUpdate.Common\Adler32.cs" />
     <Compile Include="wyUpdate.Common\Arguments.cs" />
@@ -195,20 +210,34 @@
     <Compile Include="wyUpdate\ClientLanguage.cs" />
     <Compile Include="wyUpdate\CmdLineToArgvW.cs" />
     <Compile Include="wyUpdate\Constants.cs" />
-    <Compile Include="wyUpdate\DLG_Setup.cs" />
-    <Compile Include="wyUpdate\DLS_Login.cs" />
+    <Compile Include="wyUpdate\DLG_Setup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="wyUpdate\DLS_Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="wyUpdate\FileFolder.cs" />
     <Compile Include="wyUpdate\FrameType.cs" />
-    <Compile Include="wyUpdate\frmFilesInUse.cs" />
-    <Compile Include="wyUpdate\frmMain.cs" />
-    <Compile Include="wyUpdate\frmProcesses.cs" />
+    <Compile Include="wyUpdate\frmFilesInUse.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="wyUpdate\frmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="wyUpdate\frmProcesses.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="wyUpdate\InstallUpdate.cs" />
     <Compile Include="wyUpdate\IPersistFile.cs" />
     <Compile Include="wyUpdate\IShellLinkW.cs" />
     <Compile Include="wyUpdate\LanguageCulture.cs" />
     <Compile Include="wyUpdate\Logger.cs" />
-    <Compile Include="wyUpdate\MSGBOX_Timer.cs" />
-    <Compile Include="wyUpdate\PanelDisplay.cs" />
+    <Compile Include="wyUpdate\MSGBOX_Timer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="wyUpdate\PanelDisplay.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="wyUpdate\PipeServer.cs" />
     <Compile Include="wyUpdate\Program.cs" />
     <Compile Include="wyUpdate\ProgressChangedHandler.cs" />
@@ -219,7 +248,9 @@
     <Compile Include="wyUpdate\ShellShortcut.cs" />
     <Compile Include="wyUpdate\SLGP_FLAGS.cs" />
     <Compile Include="wyUpdate\SLR_FLAGS.cs" />
-    <Compile Include="wyUpdate\Splash.cs" />
+    <Compile Include="wyUpdate\Splash.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="wyUpdate\UninstallFileInfo.cs" />
     <Compile Include="wyUpdate\UpdateItem.cs" />
     <Compile Include="wyUpdate\UpdateItemStatus.cs" />
@@ -232,6 +263,9 @@
     <EmbeddedResource Include="wyUpdate\frmMain.resx" />
     <EmbeddedResource Include="wyUpdate\loading-blue.png" />
     <EmbeddedResource Include="wyUpdate\tick.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
