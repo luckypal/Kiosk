@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Loader", "..\loader\Loader.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KioskTweak", "..\kiosktweak\KioskTweak.csproj", "{3BBB3A07-870C-4BCA-AEA1-098529D43468}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckSystem", "..\checksystem\CheckSystem.csproj", "{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,14 @@ Global
 		{3BBB3A07-870C-4BCA-AEA1-098529D43468}.Release|Any CPU.ActiveCfg = Release|x86
 		{3BBB3A07-870C-4BCA-AEA1-098529D43468}.Release|x86.ActiveCfg = Release|x86
 		{3BBB3A07-870C-4BCA-AEA1-098529D43468}.Release|x86.Build.0 = Release|x86
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Debug|x86.Build.0 = Debug|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Release|x86.ActiveCfg = Release|Any CPU
+		{E17844BD-9BFF-4BA9-AD0C-026D45CA822B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
