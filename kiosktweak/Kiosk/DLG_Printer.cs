@@ -287,7 +287,7 @@ namespace Kiosk
 			LocalPrintServer val = (LocalPrintServer)(object)new LocalPrintServer();
 			PrintQueue printQueue = ((PrintServer)val).GetPrintQueue(_ptr_device);
 			((PrintSystemObject)printQueue).Refresh();
-			if (printQueue.get_NumberOfJobs() > 0)
+			if (printQueue.NumberOfJobs > 0)
 			{
 				PrintJobInfoCollection printJobInfoCollection = printQueue.GetPrintJobInfoCollection();
 				foreach (PrintSystemJobInfo item in printJobInfoCollection)
@@ -315,7 +315,7 @@ namespace Kiosk
 			PrintQueue printQueue = ((PrintServer)val).GetPrintQueue(_ptr_device);
 			((PrintSystemObject)printQueue).Refresh();
 			int num = 0;
-			if (printQueue.get_NumberOfJobs() > 0)
+			if (printQueue.NumberOfJobs > 0)
 			{
 				PrintJobInfoCollection printJobInfoCollection = printQueue.GetPrintJobInfoCollection();
 				{
