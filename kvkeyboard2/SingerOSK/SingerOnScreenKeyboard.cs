@@ -8,14 +8,14 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Markup;
 
 namespace SingerOSK
 {
-	public class SingerOnScreenKeyboard : UserControl, IComponentConnector
+	public partial class SingerOnScreenKeyboard : UserControl, IComponentConnector
 	{
 		private List<Button> keyCollection = new List<Button>();
 
@@ -25,7 +25,7 @@ namespace SingerOSK
 
 		private IntPtr handleRef;
 
-		internal Grid allKeysGrid;
+		/*internal Grid allKeysGrid;
 
 		internal Grid keyboardGrid;
 
@@ -139,7 +139,7 @@ namespace SingerOSK
 
 		internal Button countryButton;
 
-		private bool _contentLoaded;
+		private bool _contentLoaded;*/
 
 		[DllImport("user32.dll")]
 		public static extern int SetWindowLong(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
@@ -148,21 +148,18 @@ namespace SingerOSK
 		public static extern uint GetWindowLong(IntPtr hWnd, int nIndex);
 
 		public SingerOnScreenKeyboard(Window parent)
-			: this()
 		{
 			parentWindow = parent;
 			setupKeyboardControl();
 		}
 
 		public SingerOnScreenKeyboard(IntPtr parentHWnd)
-			: this()
 		{
 			handleRef = parentHWnd;
 			setupKeyboardControl();
 		}
 
 		public SingerOnScreenKeyboard(IInputElement elementToFocusOn)
-			: this()
 		{
 			focusedInputElement = elementToFocusOn;
 			setupKeyboardControl();
@@ -170,7 +167,7 @@ namespace SingerOSK
 
 		private void setupKeyboardControl()
 		{
-			InitializeComponent();
+			//InitializeComponent();
 			addAllKeysToInternalCollection();
 			installAllClickEventsForCollection(keyCollection);
 			switchCase(keyCollection);
@@ -182,10 +179,10 @@ namespace SingerOSK
 			//IL_001f: Expected O, but got Unknown
 			//IL_0033: Unknown result type (might be due to invalid IL or missing references)
 			//IL_0039: Expected O, but got Unknown
-			foreach (Panel child in ((Panel)allKeysGrid).get_Children())
+			foreach (Panel child in ((Panel)allKeysGrid).Children)
 			{
 				Panel val = (Panel)(object)child;
-				foreach (Button child2 in val.get_Children())
+				foreach (Button child2 in val.Children)
 				{
 					Button item = (Button)(object)child2;
 					keyCollection.Add(item);
@@ -199,7 +196,8 @@ namespace SingerOSK
 			//IL_0023: Expected O, but got Unknown
 			foreach (Button item in keysToInstall)
 			{
-				((ButtonBase)item).add_Click((RoutedEventHandler)(object)new RoutedEventHandler(buttonElement_Click));
+                ((ButtonBase)item).AddHandler(ButtonBase.ClickEvent, (RoutedEventHandler)(object)new RoutedEventHandler(buttonElement_Click));
+                //((ButtonBase)item).add_Click((RoutedEventHandler)(object)new RoutedEventHandler(buttonElement_Click));
 			}
 		}
 
@@ -214,13 +212,13 @@ namespace SingerOSK
 		{
 			foreach (Button item in keysToSwitch)
 			{
-				if (((ContentControl)item).get_Content().ToString().Length == 1)
+				if (((ContentControl)item).Content.ToString().Length == 1)
 				{
-					((ContentControl)item).set_Content((object)switchCase(((ContentControl)item).get_Content().ToString()));
-					((ButtonBase)item).set_CommandParameter((object)switchCase(((ButtonBase)item).get_CommandParameter().ToString()));
+					((ContentControl)item).Content = (object)switchCase(((ContentControl)item).Content.ToString());
+					((ButtonBase)item).CommandParameter = (object)switchCase(((ButtonBase)item).CommandParameter.ToString());
 				}
 			}
-			((ContentControl)shiftButton).set_Content((object)switchCase(((ContentControl)shiftButton).get_Content().ToString()));
+			((ContentControl)shiftButton).Content = (object)switchCase(((ContentControl)shiftButton).Content.ToString());
 		}
 
 		private string switchCase(string inputString)
@@ -244,8 +242,8 @@ namespace SingerOSK
 			string text = "";
 			try
 			{
-				e.set_Handled(true);
-				text = ((ButtonBase)(Button)sender).get_CommandParameter().ToString();
+				e.Handled = true;
+				text = ((ButtonBase)(Button)sender).CommandParameter.ToString();
 				if (text.ToLower() == "f16")
 				{
 					text = text.ToUpper();
@@ -268,7 +266,7 @@ namespace SingerOSK
 					}
 					else
 					{
-						SendKeys.SendWait(text);
+                        System.Windows.Forms.SendKeys.SendWait(text);
 					}
 				}
 			}
@@ -288,7 +286,7 @@ namespace SingerOSK
 			//IL_000f: Unknown result type (might be due to invalid IL or missing references)
 			if (parentWindow != null)
 			{
-				handleRef = new WindowInteropHelper(parentWindow).get_Handle();
+				handleRef = new WindowInteropHelper(parentWindow).Handle;
 			}
 			controlFocusIssues(handleRef);
 		}
@@ -303,7 +301,7 @@ namespace SingerOSK
 			{
 			}
 		}
-
+        /*
 		[GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
 		[DebuggerNonUserCode]
 		public void InitializeComponent()
@@ -315,7 +313,7 @@ namespace SingerOSK
 				Application.LoadComponent((object)this, uri);
 			}
 		}
-
+        
 		[GeneratedCode("PresentationBuildTasks", "4.0.0.0")]
 		[EditorBrowsable(EditorBrowsableState.Never)]
 		[DebuggerNonUserCode]
@@ -444,7 +442,8 @@ namespace SingerOSK
 			switch (connectionId)
 			{
 			case 1:
-				((FrameworkElement)(SingerOnScreenKeyboard)target).add_Loaded((RoutedEventHandler)(object)new RoutedEventHandler(UserControl_Loaded));
+                ((FrameworkElement)target).AddHandler(FrameworkElement.LoadedEvent, (RoutedEventHandler)(object)new RoutedEventHandler(UserControl_Loaded));
+                //((FrameworkElement)(SingerOnScreenKeyboard)target).add_Loaded((RoutedEventHandler)(object)new RoutedEventHandler(UserControl_Loaded));
 				break;
 			case 2:
 				allKeysGrid = (Grid)(object)(Grid)target;
@@ -571,7 +570,8 @@ namespace SingerOSK
 				break;
 			case 43:
 				shiftButton = (Button)(object)(Button)target;
-				((ButtonBase)shiftButton).add_Click((RoutedEventHandler)(object)new RoutedEventHandler(shiftButton_Click));
+                ((ButtonBase)shiftButton).AddHandler(ButtonBase.ClickEvent, (RoutedEventHandler)(object)new RoutedEventHandler(shiftButton_Click));
+                //((ButtonBase)shiftButton).add_Click((RoutedEventHandler)(object)new RoutedEventHandler(shiftButton_Click));
 				break;
 			case 44:
 				spaceButton = (Button)(object)(Button)target;
@@ -617,12 +617,13 @@ namespace SingerOSK
 				break;
 			case 58:
 				countryButton = (Button)(object)(Button)target;
-				((ButtonBase)countryButton).add_Click((RoutedEventHandler)(object)new RoutedEventHandler(countryButton_Click));
+                ((ButtonBase)countryButton).AddHandler(ButtonBase.ClickEvent, (RoutedEventHandler)(object)new RoutedEventHandler(countryButton_Click));
+				//((ButtonBase)countryButton).add_Click((RoutedEventHandler)(object)new RoutedEventHandler(countryButton_Click));
 				break;
 			default:
 				_contentLoaded = true;
 				break;
 			}
-		}
-	}
+		}*/
+    }
 }

@@ -29,9 +29,9 @@ namespace KVKeyboard
 		{
 			Idioma = _idioma;
 			InitializeComponent();
-			VTeclat.set_Child((UIElement)(object)new SingerOnScreenKeyboard(base.Handle));
+			VTeclat.Child = (UIElement)(object)new SingerOnScreenKeyboard(base.Handle);
 			base.Width = Screen.PrimaryScreen.WorkingArea.Width;
-			base.Location = new Point(0, Screen.PrimaryScreen.WorkingArea.Bottom - base.Height);
+			base.Location = new System.Drawing.Point(0, Screen.PrimaryScreen.WorkingArea.Bottom - base.Height);
 			_pipeServer = new PipeServer();
 			_pipeServer.PipeMessage += PipesMessageHandler;
 			tServer.Enabled = true;
@@ -88,7 +88,7 @@ namespace KVKeyboard
 			((System.Windows.Forms.Control)(object)VTeclat).Size = new System.Drawing.Size(718, 171);
 			((System.Windows.Forms.Control)(object)VTeclat).TabIndex = 0;
 			((System.Windows.Forms.Control)(object)VTeclat).Text = "elementHost1";
-			VTeclat.set_Child((UIElement)null);
+			VTeclat.Child = (UIElement)null;
 			tServer.Interval = 500;
 			tServer.Tick += new System.EventHandler(tServer_Tick);
 			base.AutoScaleDimensions = new System.Drawing.SizeF(6f, 13f);
