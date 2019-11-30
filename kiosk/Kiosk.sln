@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckSystem", "..\checksyst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurnKiosk", "..\turnkiosk\TurnKiosk.csproj", "{11A18BB9-4FCC-4916-AB3F-7DD5CA9C9A8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KVKeyboard2", "..\kvkeyboard2\KVKeyboard2.csproj", "{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,12 @@ Global
 		{11A18BB9-4FCC-4916-AB3F-7DD5CA9C9A8E}.Release|Any CPU.ActiveCfg = Release|x86
 		{11A18BB9-4FCC-4916-AB3F-7DD5CA9C9A8E}.Release|x86.ActiveCfg = Release|x86
 		{11A18BB9-4FCC-4916-AB3F-7DD5CA9C9A8E}.Release|x86.Build.0 = Release|x86
+		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Debug|x86.ActiveCfg = Debug|x86
+		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Debug|x86.Build.0 = Debug|x86
+		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Release|Any CPU.ActiveCfg = Release|x86
+		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Release|x86.ActiveCfg = Release|x86
+		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
