@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{3BBB3A07-870C-4BCA-AEA1-098529D43468}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -7,9 +7,10 @@
     <OutputType>WinExe</OutputType>
     <LangVersion>8.0</LangVersion>
     <AssemblyName>KioskTweak</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -25,6 +26,12 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Windows.Forms">
@@ -48,31 +55,58 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GLib\PasswordBox.cs" />
+    <Compile Include="GLib\PasswordBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="InstallKiosk\CheckCommands.cs" />
     <Compile Include="InstallKiosk\Constants.cs" />
     <Compile Include="InstallKiosk\Working_List.cs" />
     <Compile Include="Kiosk.Properties\Resources.cs" />
     <Compile Include="Kiosk.Properties\Settings.cs" />
-    <Compile Include="Kiosk\DLG_Calibrar.cs" />
-    <Compile Include="Kiosk\DLG_Info.cs" />
-    <Compile Include="Kiosk\DLG_Ports.cs" />
-    <Compile Include="Kiosk\DLG_Printer.cs" />
-    <Compile Include="Kiosk\DLG_VNC.cs" />
-    <Compile Include="Kiosk\DLG_Wifi.cs" />
-    <Compile Include="Kiosk\DLG_Wifi_Connect.cs" />
-    <Compile Include="Kiosk\FormTweak.cs" />
-    <Compile Include="Kiosk\MessageWait.cs" />
-    <Compile Include="Kiosk\MSG_Ok.cs" />
+    <Compile Include="Kiosk\DLG_Calibrar.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\DLG_Info.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\DLG_Ports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\DLG_Printer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\DLG_VNC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\DLG_Wifi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\DLG_Wifi_Connect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\FormTweak.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\MessageWait.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Kiosk\MSG_Ok.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Kiosk\NativeMethods.cs" />
     <Compile Include="Kiosk\PasswordBox.cs" />
     <Compile Include="Kiosk\Program.cs" />
-    <Compile Include="Kiosk\Splash.cs" />
+    <Compile Include="Kiosk\Splash.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="GLib\PasswordBox.resx" />
     <EmbeddedResource Include="Kiosk.Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
