@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_TicketCredits
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,170 +5,186 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_TicketCredits : Form
-  {
-    private int check = 0;
-    private IContainer components = (IContainer) null;
-    public bool OK;
-    public Configuracion opciones;
-    public MainWindow MWin;
-    private string eBar;
-    private Label lTicket;
-    private Label lTime;
-    private Label lVal;
-    private Label lCODE;
-    private Timer tAUTO;
+	public class DLG_TicketCredits : Form
+	{
+		public bool OK;
 
-    public DLG_TicketCredits(ref Configuracion _opc)
-    {
-      this.OK = false;
-      this.opciones = _opc;
-      this.MWin = (MainWindow) null;
-      this.InitializeComponent();
-      this.Localize();
-      this.lCODE.Text = "-";
-      this.lVal.Text = "-";
-      this.lTime.Text = "-";
-      this.check = 0;
-      this.BackColor = Color.Gray;
-    }
+		public Configuracion opciones;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.ResumeLayout();
-    }
+		public MainWindow MWin;
 
-    public void Update_Info()
-    {
-      this.lCODE.Text = this.opciones.Ticket_Verificar.CRC;
-      this.lVal.Text = string.Format("{0}.{1:00} {2}", (object) (this.opciones.Ticket_Verificar.Pago / 100), (object) (this.opciones.Ticket_Verificar.Pago % 100), (object) this.opciones.Localize.Text("Euros"));
-      this.lTime.Text = string.Format("{2:00}:{3:00} {0}/{1:00}", (object) this.opciones.Ticket_Verificar.DataT.Day, (object) this.opciones.Ticket_Verificar.DataT.Month, (object) this.opciones.Ticket_Verificar.DataT.Hour, (object) this.opciones.Ticket_Verificar.DataT.Minute);
-      switch (this.opciones.Ticket_Verificar.Verificado)
-      {
-        case 0:
-          this.BackColor = Color.Green;
-          break;
-        case 1:
-          this.lVal.Text = "X";
-          this.BackColor = Color.Red;
-          break;
-        case 2:
-          this.lVal.Text = "INVALID";
-          this.BackColor = Color.Red;
-          break;
-        default:
-          this.lVal.Text = "INVALID";
-          this.BackColor = Color.Red;
-          break;
-      }
-      if (this.check == 0)
-        this.tAUTO.Enabled = true;
-      this.Invalidate();
-    }
+		private string eBar;
 
-    public void GoExit()
-    {
-      this.MWin.TicketToCheck = "";
-      this.MWin.TicketOK = 0;
-      this.Close();
-    }
+		private int check = 0;
 
-    public string Ticket
-    {
-      get
-      {
-        return this.eBar;
-      }
-      set
-      {
-        this.lTicket.Text = value;
-        this.eBar = value;
-        this.Invalidate();
-      }
-    }
+		private IContainer components = null;
 
-    private void tAUTO_Tick(object sender, EventArgs e)
-    {
-      this.check = 1;
-      this.tAUTO.Enabled = false;
-      if (this.opciones.Ticket_Verificar.Verificado == 0)
-      {
-        this.MWin.Srv_Anular_Ticket(int.Parse(this.lTicket.Text.Substring(1, 11)), true, 0);
-        this.MWin.Internal_Add_Credits(this.opciones.Ticket_Verificar.Pago);
-      }
-      this.Close();
-    }
+		private Label lTicket;
 
-    private void DLG_TicketCredits_Load(object sender, EventArgs e)
-    {
-    }
+		private Label lTime;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		private Label lVal;
 
-    private void InitializeComponent()
-    {
-      this.components = (IContainer) new Container();
-      this.lTicket = new Label();
-      this.lTime = new Label();
-      this.lVal = new Label();
-      this.lCODE = new Label();
-      this.tAUTO = new Timer(this.components);
-      this.SuspendLayout();
-      this.lTicket.Dock = DockStyle.Top;
-      this.lTicket.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lTicket.Location = new Point(0, 124);
-      this.lTicket.Name = "lTicket";
-      this.lTicket.Size = new Size(287, 32);
-      this.lTicket.TabIndex = 31;
-      this.lTicket.Text = "-";
-      this.lTicket.TextAlign = ContentAlignment.MiddleCenter;
-      this.lTime.Dock = DockStyle.Top;
-      this.lTime.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lTime.Location = new Point(0, 92);
-      this.lTime.Name = "lTime";
-      this.lTime.Size = new Size(287, 32);
-      this.lTime.TabIndex = 32;
-      this.lTime.Text = "-";
-      this.lTime.TextAlign = ContentAlignment.MiddleCenter;
-      this.lVal.Dock = DockStyle.Top;
-      this.lVal.Font = new Font("Microsoft Sans Serif", 25f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lVal.Location = new Point(0, 46);
-      this.lVal.Name = "lVal";
-      this.lVal.Size = new Size(287, 46);
-      this.lVal.TabIndex = 33;
-      this.lVal.Text = "-";
-      this.lVal.TextAlign = ContentAlignment.MiddleCenter;
-      this.lCODE.Dock = DockStyle.Top;
-      this.lCODE.Font = new Font("Microsoft Sans Serif", 32f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lCODE.Location = new Point(0, 0);
-      this.lCODE.Name = "lCODE";
-      this.lCODE.Size = new Size(287, 46);
-      this.lCODE.TabIndex = 29;
-      this.lCODE.Text = "-";
-      this.lCODE.TextAlign = ContentAlignment.MiddleCenter;
-      this.tAUTO.Interval = 2000;
-      this.tAUTO.Tick += new EventHandler(this.tAUTO_Tick);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(287, 198);
-      this.Controls.Add((Control) this.lTicket);
-      this.Controls.Add((Control) this.lTime);
-      this.Controls.Add((Control) this.lVal);
-      this.Controls.Add((Control) this.lCODE);
-      this.FormBorderStyle = FormBorderStyle.None;
-      this.Name = nameof (DLG_TicketCredits);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.Text = nameof (DLG_TicketCredits);
-      this.TopMost = true;
-      this.Load += new EventHandler(this.DLG_TicketCredits_Load);
-      this.ResumeLayout(false);
-    }
-  }
+		private Label lCODE;
+
+		private Timer tAUTO;
+
+		public string Ticket
+		{
+			get
+			{
+				return eBar;
+			}
+			set
+			{
+				lTicket.Text = value;
+				eBar = value;
+				Invalidate();
+			}
+		}
+
+		public DLG_TicketCredits(ref Configuracion _opc)
+		{
+			OK = false;
+			opciones = _opc;
+			MWin = null;
+			InitializeComponent();
+			Localize();
+			lCODE.Text = "-";
+			lVal.Text = "-";
+			lTime.Text = "-";
+			check = 0;
+			BackColor = Color.Gray;
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			ResumeLayout();
+		}
+
+		public void Update_Info()
+		{
+			lCODE.Text = opciones.Ticket_Verificar.CRC;
+			lVal.Text = string.Format("{0}.{1:00} {2}", opciones.Ticket_Verificar.Pago / 100, opciones.Ticket_Verificar.Pago % 100, opciones.Localize.Text("Euros"));
+			lTime.Text = string.Format("{2:00}:{3:00} {0}/{1:00}", opciones.Ticket_Verificar.DataT.Day, opciones.Ticket_Verificar.DataT.Month, opciones.Ticket_Verificar.DataT.Hour, opciones.Ticket_Verificar.DataT.Minute);
+			switch (opciones.Ticket_Verificar.Verificado)
+			{
+			case 0:
+				BackColor = Color.Green;
+				break;
+			case 1:
+				lVal.Text = "X";
+				BackColor = Color.Red;
+				break;
+			case 2:
+				lVal.Text = "INVALID";
+				BackColor = Color.Red;
+				break;
+			default:
+				lVal.Text = "INVALID";
+				BackColor = Color.Red;
+				break;
+			}
+			if (check == 0)
+			{
+				tAUTO.Enabled = true;
+			}
+			Invalidate();
+		}
+
+		public void GoExit()
+		{
+			MWin.TicketToCheck = "";
+			MWin.TicketOK = 0;
+			Close();
+		}
+
+		private void tAUTO_Tick(object sender, EventArgs e)
+		{
+			check = 1;
+			tAUTO.Enabled = false;
+			if (opciones.Ticket_Verificar.Verificado == 0)
+			{
+				string s = lTicket.Text.Substring(1, 11);
+				int tck = int.Parse(s);
+				MWin.Srv_Anular_Ticket(tck, _est: true, 0);
+				MWin.Internal_Add_Credits(opciones.Ticket_Verificar.Pago);
+			}
+			Close();
+		}
+
+		private void DLG_TicketCredits_Load(object sender, EventArgs e)
+		{
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			lTicket = new System.Windows.Forms.Label();
+			lTime = new System.Windows.Forms.Label();
+			lVal = new System.Windows.Forms.Label();
+			lCODE = new System.Windows.Forms.Label();
+			tAUTO = new System.Windows.Forms.Timer(components);
+			SuspendLayout();
+			lTicket.Dock = System.Windows.Forms.DockStyle.Top;
+			lTicket.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lTicket.Location = new System.Drawing.Point(0, 124);
+			lTicket.Name = "lTicket";
+			lTicket.Size = new System.Drawing.Size(287, 32);
+			lTicket.TabIndex = 31;
+			lTicket.Text = "-";
+			lTicket.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			lTime.Dock = System.Windows.Forms.DockStyle.Top;
+			lTime.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lTime.Location = new System.Drawing.Point(0, 92);
+			lTime.Name = "lTime";
+			lTime.Size = new System.Drawing.Size(287, 32);
+			lTime.TabIndex = 32;
+			lTime.Text = "-";
+			lTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			lVal.Dock = System.Windows.Forms.DockStyle.Top;
+			lVal.Font = new System.Drawing.Font("Microsoft Sans Serif", 25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lVal.Location = new System.Drawing.Point(0, 46);
+			lVal.Name = "lVal";
+			lVal.Size = new System.Drawing.Size(287, 46);
+			lVal.TabIndex = 33;
+			lVal.Text = "-";
+			lVal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			lCODE.Dock = System.Windows.Forms.DockStyle.Top;
+			lCODE.Font = new System.Drawing.Font("Microsoft Sans Serif", 32f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lCODE.Location = new System.Drawing.Point(0, 0);
+			lCODE.Name = "lCODE";
+			lCODE.Size = new System.Drawing.Size(287, 46);
+			lCODE.TabIndex = 29;
+			lCODE.Text = "-";
+			lCODE.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			tAUTO.Interval = 2000;
+			tAUTO.Tick += new System.EventHandler(tAUTO_Tick);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(287, 198);
+			base.Controls.Add(lTicket);
+			base.Controls.Add(lTime);
+			base.Controls.Add(lVal);
+			base.Controls.Add(lCODE);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			base.Name = "DLG_TicketCredits";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = "DLG_TicketCredits";
+			base.TopMost = true;
+			base.Load += new System.EventHandler(DLG_TicketCredits_Load);
+			ResumeLayout(false);
+		}
+	}
 }

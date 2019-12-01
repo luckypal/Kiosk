@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Barcode
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using GLib;
 using Kiosk.Properties;
 using System;
@@ -13,591 +7,687 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Barcode : Form
-  {
-    private IContainer components = (IContainer) null;
-    public bool OK;
-    public Configuracion opciones;
-    public MainWindow MWin;
-    private TextBox eBar;
-    private Button bOK;
-    private Button bRestet;
-    private Label lP1;
-    private Timer tScan;
-    private Button tG;
-    private Button tF;
-    private Button tE;
-    private Button tD;
-    private Button tC;
-    private Button tB;
-    private Button tA;
-    private Button t0;
-    private Button t9;
-    private Button t8;
-    private Button t7;
-    private Button t6;
-    private Button t5;
-    private Button t4;
-    private Button t3;
-    private Button t2;
-    private Button t1;
-    private Button button1;
-    private Button tX;
+	public class DLG_Barcode : Form
+	{
+		public bool OK;
 
-    public DLG_Barcode(ref Configuracion _opc)
-    {
-      this.OK = false;
-      this.opciones = _opc;
-      this.MWin = (MainWindow) null;
-      this.InitializeComponent();
-      this.Localize();
-    }
+		public Configuracion opciones;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.lP1.Text = this.opciones.Localize.Text("Scan code");
-      this.ResumeLayout();
-    }
+		public MainWindow MWin;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-      KeyPressEventArgs e1 = new KeyPressEventArgs('\r');
-      this.eBar_KeyPress(sender, e1);
-      this.Close();
-    }
+		private IContainer components = null;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text = "";
-    }
+		private TextBox eBar;
 
-    private void bRestet_Click(object sender, EventArgs e)
-    {
-      this.MWin.TicketToCheck = "";
-      this.MWin.TicketOK = 0;
-      this.MWin.Parser_Ticket(this.opciones.Srv_User, this.eBar.Text, 0);
-      this.eBar.Text = "";
-      if (this.MWin.TicketOK != 1)
-        return;
-      this.MWin.Validate_Ticket();
-      this.Close();
-    }
+		private Button bOK;
 
-    private void eBar_KeyPress(object sender, KeyPressEventArgs e)
-    {
-      if (e.KeyChar != '\r')
-        return;
-      this.MWin.TicketToCheck = "";
-      this.MWin.TicketOK = 0;
-      int num = this.MWin.Parser_Ticket(this.opciones.Srv_User, this.eBar.Text, 1);
-      this.MWin.LastTicket = this.eBar.Text;
-      this.eBar.Text = "";
-      if (this.MWin.TicketOK == 1)
-      {
-        if (num == 1)
-        {
-          int _ticket = 0;
-          int _id = 0;
-          Gestion.Decode_Mod10(this.MWin.LastTicket, out _ticket, out _id);
-          this.opciones.TicketTemps = _ticket;
-          this.opciones.IdTicketTemps = _id;
-          if (this.opciones.IdTicketTemps > 0)
-            this.MWin.Srv_Sub_Ticket(_id, 0);
-        }
-        if (num == 2)
-        {
-          if (this.MWin.ValidacioTicket == null)
-          {
-            this.MWin.ValidacioTicket = new DLG_ValidarTicket(ref this.opciones);
-            this.MWin.ValidacioTicket.MWin = this.MWin;
-          }
-          if (this.MWin.ValidacioTicket.IsDisposed)
-          {
-            this.MWin.ValidacioTicket = new DLG_ValidarTicket(ref this.opciones);
-            this.MWin.ValidacioTicket.MWin = this.MWin;
-          }
-          this.MWin.ValidacioTicket.Ticket = this.MWin.LastTicket;
-          try
-          {
-            this.MWin.Opcions.Verificar_Ticket = int.Parse(this.MWin.LastTicket.Substring(1, 11));
-          }
-          catch
-          {
-          }
-          this.MWin.Srv_Verificar_Ticket(this.MWin.Opcions.Verificar_Ticket, 0);
-          this.MWin.ValidacioTicket.Show();
-          this.Close();
-        }
-      }
-    }
+		private Button bRestet;
 
-    private void DLG_Barcode_Load(object sender, EventArgs e)
-    {
-      this.MWin.TicketOK = 0;
-      this.tScan.Enabled = true;
-      this.opciones.LastMouseMove = DateTime.Now;
-    }
+		private Label lP1;
 
-    private void tScan_Tick(object sender, EventArgs e)
-    {
-      if (this.MWin != null && this.MWin.TicketOK == 1)
-      {
-        if (this.opciones.ModoPS2 == 1)
-          this.eBar.Text = "OK";
-        else
-          this.Close();
-      }
-      if ((int) (DateTime.Now - this.opciones.LastMouseMove).TotalSeconds <= 60)
-        return;
-      this.Close();
-    }
+		private Timer tScan;
 
-    private void t1_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "1";
-    }
+		private Button tG;
 
-    private void t2_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "2";
-    }
+		private Button tF;
 
-    private void t3_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "3";
-    }
+		private Button tE;
 
-    private void t4_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "4";
-    }
+		private Button tD;
 
-    private void t5_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "5";
-    }
+		private Button tC;
 
-    private void t6_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "6";
-    }
+		private Button tB;
 
-    private void tB_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "B";
-    }
+		private Button tA;
 
-    private void tA_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "A";
-    }
+		private Button t0;
 
-    private void t7_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "7";
-    }
+		private Button t9;
 
-    private void t8_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "8";
-    }
+		private Button t8;
 
-    private void t9_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "9";
-    }
+		private Button t7;
 
-    private void t0_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "0";
-    }
+		private Button t6;
 
-    private void tC_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "C";
-    }
+		private Button t5;
 
-    private void tD_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "D";
-    }
+		private Button t4;
 
-    private void tE_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "E";
-    }
+		private Button t3;
 
-    private void tF_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "F";
-    }
+		private Button t2;
 
-    private void tG_Click(object sender, EventArgs e)
-    {
-      this.eBar.Text += "G";
-    }
+		private Button t1;
 
-    private void t1_KeyPress(object sender, KeyPressEventArgs e)
-    {
-      if (e.KeyChar == '1')
-        this.eBar.Text += "1";
-      if (e.KeyChar == '2')
-        this.eBar.Text += "2";
-      if (e.KeyChar == '3')
-        this.eBar.Text += "3";
-      if (e.KeyChar == '4')
-        this.eBar.Text += "4";
-      if (e.KeyChar == '5')
-        this.eBar.Text += "5";
-      if (e.KeyChar == '6')
-        this.eBar.Text += "6";
-      if (e.KeyChar == '7')
-        this.eBar.Text += "7";
-      if (e.KeyChar == '8')
-        this.eBar.Text += "8";
-      if (e.KeyChar == '9')
-        this.eBar.Text += "9";
-      if (e.KeyChar == '0')
-        this.eBar.Text += "0";
-      if (e.KeyChar == 'A')
-        this.eBar.Text += "A";
-      if (e.KeyChar == 'a')
-        this.eBar.Text += "A";
-      if (e.KeyChar == 'B')
-        this.eBar.Text += "B";
-      if (e.KeyChar == 'b')
-        this.eBar.Text += "B";
-      if (e.KeyChar == 'C')
-        this.eBar.Text += "C";
-      if (e.KeyChar == 'c')
-        this.eBar.Text += "C";
-      if (e.KeyChar == 'D')
-        this.eBar.Text += "D";
-      if (e.KeyChar == 'd')
-        this.eBar.Text += "D";
-      if (e.KeyChar == 'E')
-        this.eBar.Text += "E";
-      if (e.KeyChar == 'e')
-        this.eBar.Text += "E";
-      if (e.KeyChar == 'F')
-        this.eBar.Text += "F";
-      if (e.KeyChar == 'f')
-        this.eBar.Text += "F";
-      if (e.KeyChar == 'G')
-        this.eBar.Text += "G";
-      if (e.KeyChar == 'g')
-        this.eBar.Text += "G";
-      if (e.KeyChar == '\b' && this.eBar.Text.Length > 0)
-        this.eBar.Text = this.eBar.Text.Substring(0, this.eBar.Text.Length - 1);
-      if (e.KeyChar == '\r')
-        this.eBar_KeyPress(sender, e);
-      if (e.KeyChar != '\x001B')
-        return;
-      this.Close();
-    }
+		private Button button1;
 
-    private void tX_Click(object sender, EventArgs e)
-    {
-      if (this.eBar.Text.Length <= 0)
-        return;
-      this.eBar.Text = this.eBar.Text.Substring(0, this.eBar.Text.Length - 1);
-    }
+		private Button tX;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public DLG_Barcode(ref Configuracion _opc)
+		{
+			OK = false;
+			opciones = _opc;
+			MWin = null;
+			InitializeComponent();
+			Localize();
+		}
 
-    private void InitializeComponent()
-    {
-      this.components = (IContainer) new Container();
-      this.eBar = new TextBox();
-      this.lP1 = new Label();
-      this.tScan = new Timer(this.components);
-      this.tG = new Button();
-      this.tF = new Button();
-      this.tE = new Button();
-      this.tD = new Button();
-      this.tC = new Button();
-      this.tB = new Button();
-      this.tA = new Button();
-      this.t0 = new Button();
-      this.t9 = new Button();
-      this.t8 = new Button();
-      this.t7 = new Button();
-      this.t6 = new Button();
-      this.t5 = new Button();
-      this.t4 = new Button();
-      this.t3 = new Button();
-      this.t2 = new Button();
-      this.t1 = new Button();
-      this.tX = new Button();
-      this.button1 = new Button();
-      this.bRestet = new Button();
-      this.bOK = new Button();
-      this.SuspendLayout();
-      this.eBar.AcceptsReturn = true;
-      this.eBar.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eBar.Location = new Point(13, 44);
-      this.eBar.Name = "eBar";
-      this.eBar.Size = new Size(276, 38);
-      this.eBar.TabIndex = 0;
-      this.eBar.KeyPress += new KeyPressEventHandler(this.eBar_KeyPress);
-      this.lP1.AutoSize = true;
-      this.lP1.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lP1.Location = new Point(79, 6);
-      this.lP1.Name = "lP1";
-      this.lP1.Size = new Size(142, 31);
-      this.lP1.TabIndex = 14;
-      this.lP1.Text = "Scan code";
-      this.tScan.Interval = 500;
-      this.tScan.Tick += new EventHandler(this.tScan_Tick);
-      this.tG.FlatStyle = FlatStyle.Flat;
-      this.tG.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tG.Location = new Point(68, 253);
-      this.tG.Name = "tG";
-      this.tG.Size = new Size(56, 56);
-      this.tG.TabIndex = 17;
-      this.tG.Text = "G";
-      this.tG.UseVisualStyleBackColor = true;
-      this.tG.Click += new EventHandler(this.tG_Click);
-      this.tG.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tF.FlatStyle = FlatStyle.Flat;
-      this.tF.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tF.Location = new Point(13, 253);
-      this.tF.Name = "tF";
-      this.tF.Size = new Size(56, 56);
-      this.tF.TabIndex = 16;
-      this.tF.Text = "F";
-      this.tF.UseVisualStyleBackColor = true;
-      this.tF.Click += new EventHandler(this.tF_Click);
-      this.tF.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tE.FlatStyle = FlatStyle.Flat;
-      this.tE.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tE.Location = new Point(233, 198);
-      this.tE.Name = "tE";
-      this.tE.Size = new Size(56, 56);
-      this.tE.TabIndex = 15;
-      this.tE.Text = "E";
-      this.tE.UseVisualStyleBackColor = true;
-      this.tE.Click += new EventHandler(this.tE_Click);
-      this.tE.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tD.FlatStyle = FlatStyle.Flat;
-      this.tD.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tD.Location = new Point(178, 198);
-      this.tD.Name = "tD";
-      this.tD.Size = new Size(56, 56);
-      this.tD.TabIndex = 14;
-      this.tD.Text = "D";
-      this.tD.UseVisualStyleBackColor = true;
-      this.tD.Click += new EventHandler(this.tD_Click);
-      this.tD.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tC.FlatStyle = FlatStyle.Flat;
-      this.tC.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tC.Location = new Point(123, 198);
-      this.tC.Name = "tC";
-      this.tC.Size = new Size(56, 56);
-      this.tC.TabIndex = 13;
-      this.tC.Text = "C";
-      this.tC.UseVisualStyleBackColor = true;
-      this.tC.Click += new EventHandler(this.tC_Click);
-      this.tC.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tB.FlatStyle = FlatStyle.Flat;
-      this.tB.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tB.Location = new Point(68, 198);
-      this.tB.Name = "tB";
-      this.tB.Size = new Size(56, 56);
-      this.tB.TabIndex = 12;
-      this.tB.Text = "B";
-      this.tB.UseVisualStyleBackColor = true;
-      this.tB.Click += new EventHandler(this.tB_Click);
-      this.tB.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tA.FlatStyle = FlatStyle.Flat;
-      this.tA.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.tA.Location = new Point(13, 198);
-      this.tA.Name = "tA";
-      this.tA.Size = new Size(56, 56);
-      this.tA.TabIndex = 11;
-      this.tA.Text = "A";
-      this.tA.UseVisualStyleBackColor = true;
-      this.tA.Click += new EventHandler(this.tA_Click);
-      this.tA.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t0.FlatStyle = FlatStyle.Flat;
-      this.t0.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t0.Location = new Point(233, 143);
-      this.t0.Name = "t0";
-      this.t0.Size = new Size(56, 56);
-      this.t0.TabIndex = 10;
-      this.t0.Text = "0";
-      this.t0.UseVisualStyleBackColor = true;
-      this.t0.Click += new EventHandler(this.t0_Click);
-      this.t0.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t9.FlatStyle = FlatStyle.Flat;
-      this.t9.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t9.Location = new Point(178, 143);
-      this.t9.Name = "t9";
-      this.t9.Size = new Size(56, 56);
-      this.t9.TabIndex = 9;
-      this.t9.Text = "9";
-      this.t9.UseVisualStyleBackColor = true;
-      this.t9.Click += new EventHandler(this.t9_Click);
-      this.t9.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t8.FlatStyle = FlatStyle.Flat;
-      this.t8.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t8.Location = new Point(123, 143);
-      this.t8.Name = "t8";
-      this.t8.Size = new Size(56, 56);
-      this.t8.TabIndex = 8;
-      this.t8.Text = "8";
-      this.t8.UseVisualStyleBackColor = true;
-      this.t8.Click += new EventHandler(this.t8_Click);
-      this.t8.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t7.FlatStyle = FlatStyle.Flat;
-      this.t7.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t7.Location = new Point(68, 143);
-      this.t7.Name = "t7";
-      this.t7.Size = new Size(56, 56);
-      this.t7.TabIndex = 7;
-      this.t7.Text = "7";
-      this.t7.UseVisualStyleBackColor = true;
-      this.t7.Click += new EventHandler(this.t7_Click);
-      this.t7.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t6.FlatStyle = FlatStyle.Flat;
-      this.t6.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t6.Location = new Point(13, 143);
-      this.t6.Name = "t6";
-      this.t6.Size = new Size(56, 56);
-      this.t6.TabIndex = 6;
-      this.t6.Text = "6";
-      this.t6.UseVisualStyleBackColor = true;
-      this.t6.Click += new EventHandler(this.t6_Click);
-      this.t6.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t5.FlatStyle = FlatStyle.Flat;
-      this.t5.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t5.Location = new Point(233, 88);
-      this.t5.Name = "t5";
-      this.t5.Size = new Size(56, 56);
-      this.t5.TabIndex = 5;
-      this.t5.Text = "5";
-      this.t5.UseVisualStyleBackColor = true;
-      this.t5.Click += new EventHandler(this.t5_Click);
-      this.t5.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t4.FlatStyle = FlatStyle.Flat;
-      this.t4.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t4.Location = new Point(178, 88);
-      this.t4.Name = "t4";
-      this.t4.Size = new Size(56, 56);
-      this.t4.TabIndex = 4;
-      this.t4.Text = "4";
-      this.t4.UseVisualStyleBackColor = true;
-      this.t4.Click += new EventHandler(this.t4_Click);
-      this.t4.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t3.FlatStyle = FlatStyle.Flat;
-      this.t3.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t3.Location = new Point(123, 88);
-      this.t3.Name = "t3";
-      this.t3.Size = new Size(56, 56);
-      this.t3.TabIndex = 3;
-      this.t3.Text = "3";
-      this.t3.UseVisualStyleBackColor = true;
-      this.t3.Click += new EventHandler(this.t3_Click);
-      this.t3.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t2.FlatStyle = FlatStyle.Flat;
-      this.t2.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t2.Location = new Point(68, 88);
-      this.t2.Name = "t2";
-      this.t2.Size = new Size(56, 56);
-      this.t2.TabIndex = 2;
-      this.t2.Text = "2";
-      this.t2.UseVisualStyleBackColor = true;
-      this.t2.Click += new EventHandler(this.t2_Click);
-      this.t2.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.t1.FlatStyle = FlatStyle.Flat;
-      this.t1.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.t1.Location = new Point(13, 88);
-      this.t1.Name = "t1";
-      this.t1.Size = new Size(56, 56);
-      this.t1.TabIndex = 1;
-      this.t1.Text = "1";
-      this.t1.UseVisualStyleBackColor = true;
-      this.t1.Click += new EventHandler(this.t1_Click);
-      this.t1.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.tX.FlatStyle = FlatStyle.Flat;
-      this.tX.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.tX.Image = (Image) Resources.backspace;
-      this.tX.Location = new Point(123, 253);
-      this.tX.Name = "tX";
-      this.tX.Size = new Size(56, 56);
-      this.tX.TabIndex = 18;
-      this.tX.UseVisualStyleBackColor = true;
-      this.tX.Click += new EventHandler(this.tX_Click);
-      this.tX.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.button1.FlatStyle = FlatStyle.Flat;
-      this.button1.Image = (Image) Resources.ico_barcodeX;
-      this.button1.Location = new Point(178, 253);
-      this.button1.Name = "button1";
-      this.button1.Size = new Size(56, 56);
-      this.button1.TabIndex = 19;
-      this.button1.UseVisualStyleBackColor = true;
-      this.button1.Click += new EventHandler(this.bCancel_Click);
-      this.button1.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.bRestet.FlatStyle = FlatStyle.Flat;
-      this.bRestet.Image = (Image) Resources.ico_barcode;
-      this.bRestet.Location = new Point(13, 315);
-      this.bRestet.Name = "bRestet";
-      this.bRestet.Size = new Size(111, 48);
-      this.bRestet.TabIndex = 20;
-      this.bRestet.UseVisualStyleBackColor = true;
-      this.bRestet.Click += new EventHandler(this.bRestet_Click);
-      this.bRestet.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.bOK.FlatStyle = FlatStyle.Flat;
-      this.bOK.Image = (Image) Resources.ico_ok;
-      this.bOK.Location = new Point(178, 315);
-      this.bOK.Name = "bOK";
-      this.bOK.Size = new Size(111, 48);
-      this.bOK.TabIndex = 21;
-      this.bOK.UseVisualStyleBackColor = true;
-      this.bOK.Click += new EventHandler(this.bOK_Click);
-      this.bOK.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(301, 374);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.tX);
-      this.Controls.Add((Control) this.tG);
-      this.Controls.Add((Control) this.tF);
-      this.Controls.Add((Control) this.tE);
-      this.Controls.Add((Control) this.tD);
-      this.Controls.Add((Control) this.tC);
-      this.Controls.Add((Control) this.tB);
-      this.Controls.Add((Control) this.tA);
-      this.Controls.Add((Control) this.t0);
-      this.Controls.Add((Control) this.t9);
-      this.Controls.Add((Control) this.t8);
-      this.Controls.Add((Control) this.t7);
-      this.Controls.Add((Control) this.t6);
-      this.Controls.Add((Control) this.t5);
-      this.Controls.Add((Control) this.t4);
-      this.Controls.Add((Control) this.t3);
-      this.Controls.Add((Control) this.t2);
-      this.Controls.Add((Control) this.t1);
-      this.Controls.Add((Control) this.button1);
-      this.Controls.Add((Control) this.lP1);
-      this.Controls.Add((Control) this.bRestet);
-      this.Controls.Add((Control) this.bOK);
-      this.Controls.Add((Control) this.eBar);
-      this.FormBorderStyle = FormBorderStyle.None;
-      this.Name = nameof (DLG_Barcode);
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterParent;
-      this.Text = nameof (DLG_Barcode);
-      this.TopMost = true;
-      this.Load += new EventHandler(this.DLG_Barcode_Load);
-      this.KeyPress += new KeyPressEventHandler(this.t1_KeyPress);
-      this.ResumeLayout(false);
-      this.PerformLayout();
-    }
-  }
+		private void Localize()
+		{
+			SuspendLayout();
+			lP1.Text = opciones.Localize.Text("Scan code");
+			ResumeLayout();
+		}
+
+		private void bOK_Click(object sender, EventArgs e)
+		{
+			KeyPressEventArgs e2 = new KeyPressEventArgs('\r');
+			eBar_KeyPress(sender, e2);
+			Close();
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			eBar.Text = "";
+		}
+
+		private void bRestet_Click(object sender, EventArgs e)
+		{
+			MWin.TicketToCheck = "";
+			MWin.TicketOK = 0;
+			MWin.Parser_Ticket(opciones.Srv_User, eBar.Text, 0);
+			eBar.Text = "";
+			if (MWin.TicketOK == 1)
+			{
+				MWin.Validate_Ticket();
+				Close();
+			}
+		}
+
+		private void eBar_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar != '\r')
+			{
+				return;
+			}
+			MWin.TicketToCheck = "";
+			MWin.TicketOK = 0;
+			int num = MWin.Parser_Ticket(opciones.Srv_User, eBar.Text, 1);
+			MWin.LastTicket = eBar.Text;
+			eBar.Text = "";
+			if (MWin.TicketOK != 1)
+			{
+				return;
+			}
+			if (num == 1)
+			{
+				int _ticket = 0;
+				int _id = 0;
+				Gestion.Decode_Mod10(MWin.LastTicket, out _ticket, out _id);
+				opciones.TicketTemps = _ticket;
+				opciones.IdTicketTemps = _id;
+				if (opciones.IdTicketTemps > 0)
+				{
+					MWin.Srv_Sub_Ticket(_id, 0);
+				}
+			}
+			if (num == 2)
+			{
+				bool flag = false;
+				if (MWin.ValidacioTicket == null)
+				{
+					MWin.ValidacioTicket = new DLG_ValidarTicket(ref opciones);
+					MWin.ValidacioTicket.MWin = MWin;
+				}
+				if (MWin.ValidacioTicket.IsDisposed)
+				{
+					MWin.ValidacioTicket = new DLG_ValidarTicket(ref opciones);
+					MWin.ValidacioTicket.MWin = MWin;
+				}
+				MWin.ValidacioTicket.Ticket = MWin.LastTicket;
+				try
+				{
+					MWin.Opcions.Verificar_Ticket = int.Parse(MWin.LastTicket.Substring(1, 11));
+				}
+				catch
+				{
+				}
+				MWin.Srv_Verificar_Ticket(MWin.Opcions.Verificar_Ticket, 0);
+				MWin.ValidacioTicket.Show();
+				Close();
+			}
+		}
+
+		private void DLG_Barcode_Load(object sender, EventArgs e)
+		{
+			MWin.TicketOK = 0;
+			tScan.Enabled = true;
+			opciones.LastMouseMove = DateTime.Now;
+		}
+
+		private void tScan_Tick(object sender, EventArgs e)
+		{
+			if (MWin != null && MWin.TicketOK == 1)
+			{
+				if (opciones.ModoPS2 == 1)
+				{
+					eBar.Text = "OK";
+				}
+				else
+				{
+					Close();
+				}
+			}
+			int num = (int)(DateTime.Now - opciones.LastMouseMove).TotalSeconds;
+			if (num > 60)
+			{
+				Close();
+			}
+		}
+
+		private void t1_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "1";
+		}
+
+		private void t2_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "2";
+		}
+
+		private void t3_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "3";
+		}
+
+		private void t4_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "4";
+		}
+
+		private void t5_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "5";
+		}
+
+		private void t6_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "6";
+		}
+
+		private void tB_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "B";
+		}
+
+		private void tA_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "A";
+		}
+
+		private void t7_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "7";
+		}
+
+		private void t8_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "8";
+		}
+
+		private void t9_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "9";
+		}
+
+		private void t0_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "0";
+		}
+
+		private void tC_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "C";
+		}
+
+		private void tD_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "D";
+		}
+
+		private void tE_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "E";
+		}
+
+		private void tF_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "F";
+		}
+
+		private void tG_Click(object sender, EventArgs e)
+		{
+			eBar.Text += "G";
+		}
+
+		private void t1_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == '1')
+			{
+				eBar.Text += "1";
+			}
+			if (e.KeyChar == '2')
+			{
+				eBar.Text += "2";
+			}
+			if (e.KeyChar == '3')
+			{
+				eBar.Text += "3";
+			}
+			if (e.KeyChar == '4')
+			{
+				eBar.Text += "4";
+			}
+			if (e.KeyChar == '5')
+			{
+				eBar.Text += "5";
+			}
+			if (e.KeyChar == '6')
+			{
+				eBar.Text += "6";
+			}
+			if (e.KeyChar == '7')
+			{
+				eBar.Text += "7";
+			}
+			if (e.KeyChar == '8')
+			{
+				eBar.Text += "8";
+			}
+			if (e.KeyChar == '9')
+			{
+				eBar.Text += "9";
+			}
+			if (e.KeyChar == '0')
+			{
+				eBar.Text += "0";
+			}
+			if (e.KeyChar == 'A')
+			{
+				eBar.Text += "A";
+			}
+			if (e.KeyChar == 'a')
+			{
+				eBar.Text += "A";
+			}
+			if (e.KeyChar == 'B')
+			{
+				eBar.Text += "B";
+			}
+			if (e.KeyChar == 'b')
+			{
+				eBar.Text += "B";
+			}
+			if (e.KeyChar == 'C')
+			{
+				eBar.Text += "C";
+			}
+			if (e.KeyChar == 'c')
+			{
+				eBar.Text += "C";
+			}
+			if (e.KeyChar == 'D')
+			{
+				eBar.Text += "D";
+			}
+			if (e.KeyChar == 'd')
+			{
+				eBar.Text += "D";
+			}
+			if (e.KeyChar == 'E')
+			{
+				eBar.Text += "E";
+			}
+			if (e.KeyChar == 'e')
+			{
+				eBar.Text += "E";
+			}
+			if (e.KeyChar == 'F')
+			{
+				eBar.Text += "F";
+			}
+			if (e.KeyChar == 'f')
+			{
+				eBar.Text += "F";
+			}
+			if (e.KeyChar == 'G')
+			{
+				eBar.Text += "G";
+			}
+			if (e.KeyChar == 'g')
+			{
+				eBar.Text += "G";
+			}
+			if (e.KeyChar == '\b' && eBar.Text.Length > 0)
+			{
+				eBar.Text = eBar.Text.Substring(0, eBar.Text.Length - 1);
+			}
+			if (e.KeyChar == '\r')
+			{
+				eBar_KeyPress(sender, e);
+			}
+			if (e.KeyChar == '\u001b')
+			{
+				Close();
+			}
+		}
+
+		private void tX_Click(object sender, EventArgs e)
+		{
+			if (eBar.Text.Length > 0)
+			{
+				eBar.Text = eBar.Text.Substring(0, eBar.Text.Length - 1);
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			eBar = new System.Windows.Forms.TextBox();
+			lP1 = new System.Windows.Forms.Label();
+			tScan = new System.Windows.Forms.Timer(components);
+			tG = new System.Windows.Forms.Button();
+			tF = new System.Windows.Forms.Button();
+			tE = new System.Windows.Forms.Button();
+			tD = new System.Windows.Forms.Button();
+			tC = new System.Windows.Forms.Button();
+			tB = new System.Windows.Forms.Button();
+			tA = new System.Windows.Forms.Button();
+			t0 = new System.Windows.Forms.Button();
+			t9 = new System.Windows.Forms.Button();
+			t8 = new System.Windows.Forms.Button();
+			t7 = new System.Windows.Forms.Button();
+			t6 = new System.Windows.Forms.Button();
+			t5 = new System.Windows.Forms.Button();
+			t4 = new System.Windows.Forms.Button();
+			t3 = new System.Windows.Forms.Button();
+			t2 = new System.Windows.Forms.Button();
+			t1 = new System.Windows.Forms.Button();
+			tX = new System.Windows.Forms.Button();
+			button1 = new System.Windows.Forms.Button();
+			bRestet = new System.Windows.Forms.Button();
+			bOK = new System.Windows.Forms.Button();
+			SuspendLayout();
+			eBar.AcceptsReturn = true;
+			eBar.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eBar.Location = new System.Drawing.Point(13, 44);
+			eBar.Name = "eBar";
+			eBar.Size = new System.Drawing.Size(276, 38);
+			eBar.TabIndex = 0;
+			eBar.KeyPress += new System.Windows.Forms.KeyPressEventHandler(eBar_KeyPress);
+			lP1.AutoSize = true;
+			lP1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lP1.Location = new System.Drawing.Point(79, 6);
+			lP1.Name = "lP1";
+			lP1.Size = new System.Drawing.Size(142, 31);
+			lP1.TabIndex = 14;
+			lP1.Text = "Scan code";
+			tScan.Interval = 500;
+			tScan.Tick += new System.EventHandler(tScan_Tick);
+			tG.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tG.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tG.Location = new System.Drawing.Point(68, 253);
+			tG.Name = "tG";
+			tG.Size = new System.Drawing.Size(56, 56);
+			tG.TabIndex = 17;
+			tG.Text = "G";
+			tG.UseVisualStyleBackColor = true;
+			tG.Click += new System.EventHandler(tG_Click);
+			tG.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tF.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tF.Location = new System.Drawing.Point(13, 253);
+			tF.Name = "tF";
+			tF.Size = new System.Drawing.Size(56, 56);
+			tF.TabIndex = 16;
+			tF.Text = "F";
+			tF.UseVisualStyleBackColor = true;
+			tF.Click += new System.EventHandler(tF_Click);
+			tF.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tE.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tE.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tE.Location = new System.Drawing.Point(233, 198);
+			tE.Name = "tE";
+			tE.Size = new System.Drawing.Size(56, 56);
+			tE.TabIndex = 15;
+			tE.Text = "E";
+			tE.UseVisualStyleBackColor = true;
+			tE.Click += new System.EventHandler(tE_Click);
+			tE.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tD.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tD.Location = new System.Drawing.Point(178, 198);
+			tD.Name = "tD";
+			tD.Size = new System.Drawing.Size(56, 56);
+			tD.TabIndex = 14;
+			tD.Text = "D";
+			tD.UseVisualStyleBackColor = true;
+			tD.Click += new System.EventHandler(tD_Click);
+			tD.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tC.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tC.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tC.Location = new System.Drawing.Point(123, 198);
+			tC.Name = "tC";
+			tC.Size = new System.Drawing.Size(56, 56);
+			tC.TabIndex = 13;
+			tC.Text = "C";
+			tC.UseVisualStyleBackColor = true;
+			tC.Click += new System.EventHandler(tC_Click);
+			tC.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tB.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tB.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tB.Location = new System.Drawing.Point(68, 198);
+			tB.Name = "tB";
+			tB.Size = new System.Drawing.Size(56, 56);
+			tB.TabIndex = 12;
+			tB.Text = "B";
+			tB.UseVisualStyleBackColor = true;
+			tB.Click += new System.EventHandler(tB_Click);
+			tB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tA.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tA.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			tA.Location = new System.Drawing.Point(13, 198);
+			tA.Name = "tA";
+			tA.Size = new System.Drawing.Size(56, 56);
+			tA.TabIndex = 11;
+			tA.Text = "A";
+			tA.UseVisualStyleBackColor = true;
+			tA.Click += new System.EventHandler(tA_Click);
+			tA.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t0.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t0.Location = new System.Drawing.Point(233, 143);
+			t0.Name = "t0";
+			t0.Size = new System.Drawing.Size(56, 56);
+			t0.TabIndex = 10;
+			t0.Text = "0";
+			t0.UseVisualStyleBackColor = true;
+			t0.Click += new System.EventHandler(t0_Click);
+			t0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t9.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t9.Location = new System.Drawing.Point(178, 143);
+			t9.Name = "t9";
+			t9.Size = new System.Drawing.Size(56, 56);
+			t9.TabIndex = 9;
+			t9.Text = "9";
+			t9.UseVisualStyleBackColor = true;
+			t9.Click += new System.EventHandler(t9_Click);
+			t9.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t8.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t8.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t8.Location = new System.Drawing.Point(123, 143);
+			t8.Name = "t8";
+			t8.Size = new System.Drawing.Size(56, 56);
+			t8.TabIndex = 8;
+			t8.Text = "8";
+			t8.UseVisualStyleBackColor = true;
+			t8.Click += new System.EventHandler(t8_Click);
+			t8.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t7.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t7.Location = new System.Drawing.Point(68, 143);
+			t7.Name = "t7";
+			t7.Size = new System.Drawing.Size(56, 56);
+			t7.TabIndex = 7;
+			t7.Text = "7";
+			t7.UseVisualStyleBackColor = true;
+			t7.Click += new System.EventHandler(t7_Click);
+			t7.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t6.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t6.Location = new System.Drawing.Point(13, 143);
+			t6.Name = "t6";
+			t6.Size = new System.Drawing.Size(56, 56);
+			t6.TabIndex = 6;
+			t6.Text = "6";
+			t6.UseVisualStyleBackColor = true;
+			t6.Click += new System.EventHandler(t6_Click);
+			t6.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t5.Location = new System.Drawing.Point(233, 88);
+			t5.Name = "t5";
+			t5.Size = new System.Drawing.Size(56, 56);
+			t5.TabIndex = 5;
+			t5.Text = "5";
+			t5.UseVisualStyleBackColor = true;
+			t5.Click += new System.EventHandler(t5_Click);
+			t5.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t4.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t4.Location = new System.Drawing.Point(178, 88);
+			t4.Name = "t4";
+			t4.Size = new System.Drawing.Size(56, 56);
+			t4.TabIndex = 4;
+			t4.Text = "4";
+			t4.UseVisualStyleBackColor = true;
+			t4.Click += new System.EventHandler(t4_Click);
+			t4.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t3.Location = new System.Drawing.Point(123, 88);
+			t3.Name = "t3";
+			t3.Size = new System.Drawing.Size(56, 56);
+			t3.TabIndex = 3;
+			t3.Text = "3";
+			t3.UseVisualStyleBackColor = true;
+			t3.Click += new System.EventHandler(t3_Click);
+			t3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t2.Location = new System.Drawing.Point(68, 88);
+			t2.Name = "t2";
+			t2.Size = new System.Drawing.Size(56, 56);
+			t2.TabIndex = 2;
+			t2.Text = "2";
+			t2.UseVisualStyleBackColor = true;
+			t2.Click += new System.EventHandler(t2_Click);
+			t2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			t1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			t1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			t1.Location = new System.Drawing.Point(13, 88);
+			t1.Name = "t1";
+			t1.Size = new System.Drawing.Size(56, 56);
+			t1.TabIndex = 1;
+			t1.Text = "1";
+			t1.UseVisualStyleBackColor = true;
+			t1.Click += new System.EventHandler(t1_Click);
+			t1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			tX.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			tX.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			tX.Image = Kiosk.Properties.Resources.backspace;
+			tX.Location = new System.Drawing.Point(123, 253);
+			tX.Name = "tX";
+			tX.Size = new System.Drawing.Size(56, 56);
+			tX.TabIndex = 18;
+			tX.UseVisualStyleBackColor = true;
+			tX.Click += new System.EventHandler(tX_Click);
+			tX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			button1.Image = Kiosk.Properties.Resources.ico_barcodeX;
+			button1.Location = new System.Drawing.Point(178, 253);
+			button1.Name = "button1";
+			button1.Size = new System.Drawing.Size(56, 56);
+			button1.TabIndex = 19;
+			button1.UseVisualStyleBackColor = true;
+			button1.Click += new System.EventHandler(bCancel_Click);
+			button1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			bRestet.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			bRestet.Image = Kiosk.Properties.Resources.ico_barcode;
+			bRestet.Location = new System.Drawing.Point(13, 315);
+			bRestet.Name = "bRestet";
+			bRestet.Size = new System.Drawing.Size(111, 48);
+			bRestet.TabIndex = 20;
+			bRestet.UseVisualStyleBackColor = true;
+			bRestet.Click += new System.EventHandler(bRestet_Click);
+			bRestet.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			bOK.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+			bOK.Image = Kiosk.Properties.Resources.ico_ok;
+			bOK.Location = new System.Drawing.Point(178, 315);
+			bOK.Name = "bOK";
+			bOK.Size = new System.Drawing.Size(111, 48);
+			bOK.TabIndex = 21;
+			bOK.UseVisualStyleBackColor = true;
+			bOK.Click += new System.EventHandler(bOK_Click);
+			bOK.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(301, 374);
+			base.ControlBox = false;
+			base.Controls.Add(tX);
+			base.Controls.Add(tG);
+			base.Controls.Add(tF);
+			base.Controls.Add(tE);
+			base.Controls.Add(tD);
+			base.Controls.Add(tC);
+			base.Controls.Add(tB);
+			base.Controls.Add(tA);
+			base.Controls.Add(t0);
+			base.Controls.Add(t9);
+			base.Controls.Add(t8);
+			base.Controls.Add(t7);
+			base.Controls.Add(t6);
+			base.Controls.Add(t5);
+			base.Controls.Add(t4);
+			base.Controls.Add(t3);
+			base.Controls.Add(t2);
+			base.Controls.Add(t1);
+			base.Controls.Add(button1);
+			base.Controls.Add(lP1);
+			base.Controls.Add(bRestet);
+			base.Controls.Add(bOK);
+			base.Controls.Add(eBar);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			base.Name = "DLG_Barcode";
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			Text = "DLG_Barcode";
+			base.TopMost = true;
+			base.Load += new System.EventHandler(DLG_Barcode_Load);
+			base.KeyPress += new System.Windows.Forms.KeyPressEventHandler(t1_KeyPress);
+			ResumeLayout(false);
+			PerformLayout();
+		}
+	}
 }

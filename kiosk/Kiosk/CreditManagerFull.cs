@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.CreditManagerFull
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using Kiosk.Properties;
 using LCDLabel;
 using System;
@@ -13,153 +7,170 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class CreditManagerFull : Form
-  {
-    private IContainer components = (IContainer) null;
-    private Decimal ucrd;
-    public Configuracion opciones;
-    private Button bOK;
-    private Button bAddTime;
-    private LcdLabel lcdClock;
-    private Label lBuy;
-    private Label lCredits;
-    private Timer timerCredits;
+	public class CreditManagerFull : Form
+	{
+		private decimal ucrd;
 
-    public CreditManagerFull(ref Configuracion _opc)
-    {
-      this.opciones = _opc;
-      this.InitializeComponent();
-      this.lcdClock.Text = string.Format("{0:00}:{1:00}", (object) (this.opciones.Temps / 60), (object) (this.opciones.Temps % 60));
-      this.lCredits.Text = string.Format("{0}: {1}", (object) this.opciones.Localize.Text("Credits"), (object) this.opciones.Credits);
-      this.ucrd = this.opciones.Credits;
-      this.Localize();
-    }
+		public Configuracion opciones;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.lBuy.Text = this.opciones.Localize.Text("Buy time");
-      this.lCredits.Text = this.opciones.Localize.Text("Credits:");
-      this.ResumeLayout();
-    }
+		private IContainer components = null;
 
-    private void bExit_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
+		private Button bOK;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-      this.opciones.ComprarTemps = 0;
-      this.Close();
-    }
+		private Button bAddTime;
 
-    private void bAddTime_Click(object sender, EventArgs e)
-    {
-      if (this.opciones.Sub_Credits > new Decimal(0))
-        return;
-      int num = 0;
-      if (this.opciones.Credits >= (Decimal) this.opciones.ValorTemps)
-        num = this.opciones.ValorTemps;
-      if (num > 0)
-      {
-        this.opciones.Temps += 60;
-        this.opciones.Sub_Credits = (Decimal) num;
-      }
-      this.lcdClock.Text = string.Format("{0:00}:{1:00}", (object) (this.opciones.Temps / 60), (object) (this.opciones.Temps % 60));
-    }
+		private LcdLabel lcdClock;
 
-    private void timerCredits_Tick(object sender, EventArgs e)
-    {
-      if (this.ucrd != this.opciones.Credits)
-        this.lCredits.Text = string.Format("{0}: {1}", (object) this.opciones.Localize.Text("Credits"), (object) this.opciones.Credits);
-      this.ucrd = this.opciones.Credits;
-    }
+		private Label lBuy;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		private Label lCredits;
 
-    private void InitializeComponent()
-    {
-      this.components = (IContainer) new Container();
-      this.bOK = new Button();
-      this.bAddTime = new Button();
-      this.lBuy = new Label();
-      this.lCredits = new Label();
-      this.lcdClock = new LcdLabel();
-      this.timerCredits = new Timer(this.components);
-      this.SuspendLayout();
-      this.bOK.BackgroundImageLayout = ImageLayout.Center;
-      this.bOK.Image = (Image) Resources.ico_ok;
-      this.bOK.Location = new Point(146, 108);
-      this.bOK.Name = "bOK";
-      this.bOK.Size = new Size(48, 48);
-      this.bOK.TabIndex = 0;
-      this.bOK.UseVisualStyleBackColor = true;
-      this.bOK.Click += new EventHandler(this.bOK_Click);
-      this.bAddTime.Image = (Image) Resources.ico_add;
-      this.bAddTime.Location = new Point(90, 108);
-      this.bAddTime.Name = "bAddTime";
-      this.bAddTime.Size = new Size(48, 48);
-      this.bAddTime.TabIndex = 1;
-      this.bAddTime.UseVisualStyleBackColor = true;
-      this.bAddTime.Click += new EventHandler(this.bAddTime_Click);
-      this.lBuy.Dock = DockStyle.Top;
-      this.lBuy.Font = new Font("Microsoft Sans Serif", 16f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.lBuy.Location = new Point(0, 0);
-      this.lBuy.Name = "lBuy";
-      this.lBuy.Size = new Size(284, 36);
-      this.lBuy.TabIndex = 10;
-      this.lBuy.Text = "Buy Time";
-      this.lBuy.TextAlign = ContentAlignment.MiddleCenter;
-      this.lCredits.Font = new Font("Microsoft Sans Serif", 16f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.lCredits.Location = new Point(0, 64);
-      this.lCredits.Name = "lCredits";
-      this.lCredits.Size = new Size(284, 36);
-      this.lCredits.TabIndex = 12;
-      this.lCredits.Text = "Credits: 0";
-      this.lCredits.TextAlign = ContentAlignment.MiddleCenter;
-      this.lcdClock.BackGround = SystemColors.Control;
-      this.lcdClock.BorderColor = Color.Black;
-      this.lcdClock.BorderSpace = 3;
-      this.lcdClock.CharSpacing = 2;
-      this.lcdClock.DotMatrix = DotMatrix.mat5x7;
-      this.lcdClock.LineSpacing = 2;
-      this.lcdClock.Location = new Point(99, 36);
-      this.lcdClock.Name = "lcdClock";
-      this.lcdClock.NumberOfCharacters = 5;
-      this.lcdClock.PixelHeight = 2;
-      this.lcdClock.PixelOff = Color.FromArgb(0, 170, 170, 170);
-      this.lcdClock.PixelOn = Color.Black;
-      this.lcdClock.PixelShape = PixelShape.Square;
-      this.lcdClock.PixelSize = PixelSize.pix2x2;
-      this.lcdClock.PixelSpacing = 1;
-      this.lcdClock.PixelWidth = 2;
-      this.lcdClock.Size = new Size(86, 28);
-      this.lcdClock.TabIndex = 9;
-      this.lcdClock.Text = "00:00";
-      this.lcdClock.TextLines = 1;
-      this.timerCredits.Enabled = true;
-      this.timerCredits.Tick += new EventHandler(this.timerCredits_Tick);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(284, 174);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.lCredits);
-      this.Controls.Add((Control) this.lBuy);
-      this.Controls.Add((Control) this.lcdClock);
-      this.Controls.Add((Control) this.bOK);
-      this.Controls.Add((Control) this.bAddTime);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.Name = nameof (CreditManagerFull);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.TopMost = true;
-      this.ResumeLayout(false);
-    }
-  }
+		private Timer timerCredits;
+
+		public CreditManagerFull(ref Configuracion _opc)
+		{
+			opciones = _opc;
+			InitializeComponent();
+			string text = $"{opciones.Temps / 60:00}:{opciones.Temps % 60:00}";
+			lcdClock.Text = text;
+			lCredits.Text = string.Format("{0}: {1}", opciones.Localize.Text("Credits"), opciones.Credits);
+			ucrd = opciones.Credits;
+			Localize();
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			lBuy.Text = opciones.Localize.Text("Buy time");
+			lCredits.Text = opciones.Localize.Text("Credits:");
+			ResumeLayout();
+		}
+
+		private void bExit_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		private void bOK_Click(object sender, EventArgs e)
+		{
+			opciones.ComprarTemps = 0;
+			Close();
+		}
+
+		private void bAddTime_Click(object sender, EventArgs e)
+		{
+			if (!(opciones.Sub_Credits > 0m))
+			{
+				int num = 0;
+				if (opciones.Credits >= (decimal)opciones.ValorTemps)
+				{
+					num = opciones.ValorTemps;
+				}
+				if (num > 0)
+				{
+					opciones.Temps += 60;
+					opciones.Sub_Credits = num;
+				}
+				string text = $"{opciones.Temps / 60:00}:{opciones.Temps % 60:00}";
+				lcdClock.Text = text;
+			}
+		}
+
+		private void timerCredits_Tick(object sender, EventArgs e)
+		{
+			if (ucrd != opciones.Credits)
+			{
+				lCredits.Text = string.Format("{0}: {1}", opciones.Localize.Text("Credits"), opciones.Credits);
+			}
+			ucrd = opciones.Credits;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			bOK = new System.Windows.Forms.Button();
+			bAddTime = new System.Windows.Forms.Button();
+			lBuy = new System.Windows.Forms.Label();
+			lCredits = new System.Windows.Forms.Label();
+			lcdClock = new LCDLabel.LcdLabel();
+			timerCredits = new System.Windows.Forms.Timer(components);
+			SuspendLayout();
+			bOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			bOK.Image = Kiosk.Properties.Resources.ico_ok;
+			bOK.Location = new System.Drawing.Point(146, 108);
+			bOK.Name = "bOK";
+			bOK.Size = new System.Drawing.Size(48, 48);
+			bOK.TabIndex = 0;
+			bOK.UseVisualStyleBackColor = true;
+			bOK.Click += new System.EventHandler(bOK_Click);
+			bAddTime.Image = Kiosk.Properties.Resources.ico_add;
+			bAddTime.Location = new System.Drawing.Point(90, 108);
+			bAddTime.Name = "bAddTime";
+			bAddTime.Size = new System.Drawing.Size(48, 48);
+			bAddTime.TabIndex = 1;
+			bAddTime.UseVisualStyleBackColor = true;
+			bAddTime.Click += new System.EventHandler(bAddTime_Click);
+			lBuy.Dock = System.Windows.Forms.DockStyle.Top;
+			lBuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			lBuy.Location = new System.Drawing.Point(0, 0);
+			lBuy.Name = "lBuy";
+			lBuy.Size = new System.Drawing.Size(284, 36);
+			lBuy.TabIndex = 10;
+			lBuy.Text = "Buy Time";
+			lBuy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			lCredits.Font = new System.Drawing.Font("Microsoft Sans Serif", 16f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			lCredits.Location = new System.Drawing.Point(0, 64);
+			lCredits.Name = "lCredits";
+			lCredits.Size = new System.Drawing.Size(284, 36);
+			lCredits.TabIndex = 12;
+			lCredits.Text = "Credits: 0";
+			lCredits.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			lcdClock.BackGround = System.Drawing.SystemColors.Control;
+			lcdClock.BorderColor = System.Drawing.Color.Black;
+			lcdClock.BorderSpace = 3;
+			lcdClock.CharSpacing = 2;
+			lcdClock.DotMatrix = LCDLabel.DotMatrix.mat5x7;
+			lcdClock.LineSpacing = 2;
+			lcdClock.Location = new System.Drawing.Point(99, 36);
+			lcdClock.Name = "lcdClock";
+			lcdClock.NumberOfCharacters = 5;
+			lcdClock.PixelHeight = 2;
+			lcdClock.PixelOff = System.Drawing.Color.FromArgb(0, 170, 170, 170);
+			lcdClock.PixelOn = System.Drawing.Color.Black;
+			lcdClock.PixelShape = LCDLabel.PixelShape.Square;
+			lcdClock.PixelSize = LCDLabel.PixelSize.pix2x2;
+			lcdClock.PixelSpacing = 1;
+			lcdClock.PixelWidth = 2;
+			lcdClock.Size = new System.Drawing.Size(86, 28);
+			lcdClock.TabIndex = 9;
+			lcdClock.Text = "00:00";
+			lcdClock.TextLines = 1;
+			timerCredits.Enabled = true;
+			timerCredits.Tick += new System.EventHandler(timerCredits_Tick);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(284, 174);
+			base.ControlBox = false;
+			base.Controls.Add(lCredits);
+			base.Controls.Add(lBuy);
+			base.Controls.Add(lcdClock);
+			base.Controls.Add(bOK);
+			base.Controls.Add(bAddTime);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.Name = "CreditManagerFull";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			base.TopMost = true;
+			ResumeLayout(false);
+		}
+	}
 }

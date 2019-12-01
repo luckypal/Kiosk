@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Wifi_Connect
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using Kiosk.Properties;
 using System;
 using System.ComponentModel;
@@ -12,254 +6,297 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Wifi_Connect : Form
-  {
-    private IContainer components = (IContainer) null;
-    public bool OK;
-    public bool IsClosed;
-    public Configuracion opciones;
-    public string SID;
-    public string Password;
-    public string SEC;
-    public bool AlwaysConnect;
-    public bool NewProfile;
-    private Panel pBOTTOM;
-    private Button bCancel;
-    private Button bOk;
-    private Label lPassword;
-    private TextBox tSID;
-    private Label lSID;
-    private Label lSec;
-    private ComboBox cSec;
-    private CheckBox cNew;
-    private CheckBox cAlways;
-    private TextBox ePassword;
+	public class DLG_Wifi_Connect : Form
+	{
+		public bool OK;
 
-    public DLG_Wifi_Connect(ref Configuracion _opc, string _sid, string _pw, string _sec)
-    {
-      this.IsClosed = false;
-      this.OK = false;
-      this.opciones = _opc;
-      this.AlwaysConnect = true;
-      this.NewProfile = false;
-      this.InitializeComponent();
-      this.Localize();
-      this.Password = _pw;
-      this.SID = _sid;
-      this.ePassword.Text = this.Password;
-      this.tSID.Text = this.SID;
-      this.SEC = _sec;
-      switch (_sec)
-      {
-        case "IEEE80211_Open":
-          this.cSec.Text = "OPEN";
-          break;
-        case "IEEE80211_SharedKey":
-          this.cSec.Text = "WEP";
-          break;
-        case "WPA":
-          this.cSec.Text = "WPA";
-          break;
-        case "WPA_PSK":
-          this.cSec.Text = "WPA PSK";
-          break;
-        case "RSNA":
-          this.cSec.Text = "WPA2";
-          break;
-        case "RSNA_PSK":
-          this.cSec.Text = "WPA2 PSK";
-          break;
-      }
-    }
+		public bool IsClosed;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.lSID.Text = this.opciones.Localize.Text("SID");
-      this.lPassword.Text = this.opciones.Localize.Text("New Password");
-      this.lSec.Text = this.opciones.Localize.Text("Security");
-      this.ResumeLayout();
-    }
+		public Configuracion opciones;
 
-    private void bOk_Click(object sender, EventArgs e)
-    {
-      this.SID = this.tSID.Text;
-      this.Password = this.ePassword.Text;
-      this.OK = true;
-      switch (this.cSec.Text)
-      {
-        case "OPEN":
-          this.SEC = "IEEE80211_Open";
-          break;
-        case "WEP":
-          this.SEC = "IEEE80211_SharedKey";
-          break;
-        case "WPA":
-          this.SEC = "WPA";
-          break;
-        case "WPA PSK":
-          this.SEC = "WPA_PSK";
-          break;
-        case "RSNA":
-          this.SEC = "WPA2";
-          break;
-        case "RSNA PSK":
-          this.SEC = "WPA2_PSK";
-          break;
-      }
-      this.NewProfile = this.cNew.Checked;
-      this.AlwaysConnect = this.cAlways.Checked;
-      this.Close();
-    }
+		public string SID;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.OK = false;
-      this.Close();
-    }
+		public string Password;
 
-    private void DLG_Wifi_Connect_FormClosed(object sender, FormClosedEventArgs e)
-    {
-      this.IsClosed = true;
-    }
+		public string SEC;
 
-    private void DLG_Wifi_Connect_Load(object sender, EventArgs e)
-    {
-    }
+		public bool AlwaysConnect;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public bool NewProfile;
 
-    private void InitializeComponent()
-    {
-      this.pBOTTOM = new Panel();
-      this.cNew = new CheckBox();
-      this.bCancel = new Button();
-      this.bOk = new Button();
-      this.lPassword = new Label();
-      this.tSID = new TextBox();
-      this.lSID = new Label();
-      this.lSec = new Label();
-      this.cSec = new ComboBox();
-      this.cAlways = new CheckBox();
-      this.ePassword = new TextBox();
-      this.pBOTTOM.SuspendLayout();
-      this.SuspendLayout();
-      this.pBOTTOM.Controls.Add((Control) this.cNew);
-      this.pBOTTOM.Controls.Add((Control) this.bCancel);
-      this.pBOTTOM.Controls.Add((Control) this.bOk);
-      this.pBOTTOM.Dock = DockStyle.Bottom;
-      this.pBOTTOM.Location = new Point(0, 230);
-      this.pBOTTOM.Name = "pBOTTOM";
-      this.pBOTTOM.Size = new Size(453, 48);
-      this.pBOTTOM.TabIndex = 6;
-      this.cNew.AutoSize = true;
-      this.cNew.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.cNew.Location = new Point(15, 21);
-      this.cNew.Name = "cNew";
-      this.cNew.Size = new Size(197, 28);
-      this.cNew.TabIndex = 13;
-      this.cNew.Text = "Is a new connection";
-      this.cNew.UseVisualStyleBackColor = true;
-      this.bCancel.Dock = DockStyle.Right;
-      this.bCancel.Image = (Image) Resources.ico_del;
-      this.bCancel.Location = new Point(357, 0);
-      this.bCancel.Name = "bCancel";
-      this.bCancel.Size = new Size(48, 48);
-      this.bCancel.TabIndex = 1;
-      this.bCancel.UseVisualStyleBackColor = true;
-      this.bCancel.Click += new EventHandler(this.bCancel_Click);
-      this.bOk.Dock = DockStyle.Right;
-      this.bOk.Image = (Image) Resources.ico_ok;
-      this.bOk.Location = new Point(405, 0);
-      this.bOk.Name = "bOk";
-      this.bOk.Size = new Size(48, 48);
-      this.bOk.TabIndex = 0;
-      this.bOk.UseVisualStyleBackColor = true;
-      this.bOk.Click += new EventHandler(this.bOk_Click);
-      this.lPassword.AutoSize = true;
-      this.lPassword.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lPassword.Location = new Point(10, 81);
-      this.lPassword.Name = "lPassword";
-      this.lPassword.Size = new Size(16, 24);
-      this.lPassword.TabIndex = 8;
-      this.lPassword.Text = "-";
-      this.tSID.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.tSID.Location = new Point(12, 42);
-      this.tSID.Name = "tSID";
-      this.tSID.Size = new Size(430, 29);
-      this.tSID.TabIndex = 0;
-      this.lSID.AutoSize = true;
-      this.lSID.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lSID.Location = new Point(11, 15);
-      this.lSID.Name = "lSID";
-      this.lSID.Size = new Size(16, 24);
-      this.lSID.TabIndex = 10;
-      this.lSID.Text = "-";
-      this.lSec.AutoSize = true;
-      this.lSec.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lSec.Location = new Point(11, 155);
-      this.lSec.Name = "lSec";
-      this.lSec.Size = new Size(16, 24);
-      this.lSec.TabIndex = 11;
-      this.lSec.Text = "-";
-      this.cSec.DropDownStyle = ComboBoxStyle.DropDownList;
-      this.cSec.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.cSec.FormattingEnabled = true;
-      this.cSec.Items.AddRange(new object[5]
-      {
-        (object) "WEP",
-        (object) "WPA",
-        (object) "WPA PSK",
-        (object) "WPA2",
-        (object) "WPA2 PSK"
-      });
-      this.cSec.Location = new Point(11, 182);
-      this.cSec.Name = "cSec";
-      this.cSec.Size = new Size(430, 32);
-      this.cSec.TabIndex = 2;
-      this.cAlways.AutoSize = true;
-      this.cAlways.Checked = true;
-      this.cAlways.CheckState = CheckState.Checked;
-      this.cAlways.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.cAlways.Location = new Point(14, 225);
-      this.cAlways.Name = "cAlways";
-      this.cAlways.Size = new Size(230, 28);
-      this.cAlways.TabIndex = 12;
-      this.cAlways.Text = "Connect when available";
-      this.cAlways.UseVisualStyleBackColor = true;
-      this.ePassword.Font = new Font("Microsoft Sans Serif", 14f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.ePassword.Location = new Point(11, 108);
-      this.ePassword.Name = "ePassword";
-      this.ePassword.Size = new Size(430, 29);
-      this.ePassword.TabIndex = 13;
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(453, 278);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.ePassword);
-      this.Controls.Add((Control) this.cAlways);
-      this.Controls.Add((Control) this.cSec);
-      this.Controls.Add((Control) this.lSec);
-      this.Controls.Add((Control) this.lSID);
-      this.Controls.Add((Control) this.tSID);
-      this.Controls.Add((Control) this.lPassword);
-      this.Controls.Add((Control) this.pBOTTOM);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.Name = nameof (DLG_Wifi_Connect);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.Text = " ";
-      this.FormClosed += new FormClosedEventHandler(this.DLG_Wifi_Connect_FormClosed);
-      this.Load += new EventHandler(this.DLG_Wifi_Connect_Load);
-      this.pBOTTOM.ResumeLayout(false);
-      this.pBOTTOM.PerformLayout();
-      this.ResumeLayout(false);
-      this.PerformLayout();
-    }
-  }
+		private IContainer components = null;
+
+		private Panel pBOTTOM;
+
+		private Button bCancel;
+
+		private Button bOk;
+
+		private Label lPassword;
+
+		private TextBox tSID;
+
+		private Label lSID;
+
+		private Label lSec;
+
+		private ComboBox cSec;
+
+		private CheckBox cNew;
+
+		private CheckBox cAlways;
+
+		private TextBox ePassword;
+
+		public DLG_Wifi_Connect(ref Configuracion _opc, string _sid, string _pw, string _sec)
+		{
+			IsClosed = false;
+			OK = false;
+			opciones = _opc;
+			AlwaysConnect = true;
+			NewProfile = false;
+			InitializeComponent();
+			Localize();
+			Password = _pw;
+			SID = _sid;
+			ePassword.Text = Password;
+			tSID.Text = SID;
+			SEC = _sec;
+			if (_sec == null)
+			{
+				return;
+			}
+			if (!(_sec == "IEEE80211_Open"))
+			{
+				if (!(_sec == "IEEE80211_SharedKey"))
+				{
+					if (!(_sec == "WPA"))
+					{
+						if (!(_sec == "WPA_PSK"))
+						{
+							if (!(_sec == "RSNA"))
+							{
+								if (_sec == "RSNA_PSK")
+								{
+									cSec.Text = "WPA2 PSK";
+								}
+							}
+							else
+							{
+								cSec.Text = "WPA2";
+							}
+						}
+						else
+						{
+							cSec.Text = "WPA PSK";
+						}
+					}
+					else
+					{
+						cSec.Text = "WPA";
+					}
+				}
+				else
+				{
+					cSec.Text = "WEP";
+				}
+			}
+			else
+			{
+				cSec.Text = "OPEN";
+			}
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			lSID.Text = opciones.Localize.Text("SID");
+			lPassword.Text = opciones.Localize.Text("New Password");
+			lSec.Text = opciones.Localize.Text("Security");
+			ResumeLayout();
+		}
+
+		private void bOk_Click(object sender, EventArgs e)
+		{
+			SID = tSID.Text;
+			Password = ePassword.Text;
+			OK = true;
+			switch (cSec.Text)
+			{
+			case "OPEN":
+				SEC = "IEEE80211_Open";
+				break;
+			case "WEP":
+				SEC = "IEEE80211_SharedKey";
+				break;
+			case "WPA":
+				SEC = "WPA";
+				break;
+			case "WPA PSK":
+				SEC = "WPA_PSK";
+				break;
+			case "RSNA":
+				SEC = "WPA2";
+				break;
+			case "RSNA PSK":
+				SEC = "WPA2_PSK";
+				break;
+			}
+			NewProfile = cNew.Checked;
+			AlwaysConnect = cAlways.Checked;
+			Close();
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			OK = false;
+			Close();
+		}
+
+		private void DLG_Wifi_Connect_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			IsClosed = true;
+		}
+
+		private void DLG_Wifi_Connect_Load(object sender, EventArgs e)
+		{
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			pBOTTOM = new System.Windows.Forms.Panel();
+			cNew = new System.Windows.Forms.CheckBox();
+			bCancel = new System.Windows.Forms.Button();
+			bOk = new System.Windows.Forms.Button();
+			lPassword = new System.Windows.Forms.Label();
+			tSID = new System.Windows.Forms.TextBox();
+			lSID = new System.Windows.Forms.Label();
+			lSec = new System.Windows.Forms.Label();
+			cSec = new System.Windows.Forms.ComboBox();
+			cAlways = new System.Windows.Forms.CheckBox();
+			ePassword = new System.Windows.Forms.TextBox();
+			pBOTTOM.SuspendLayout();
+			SuspendLayout();
+			pBOTTOM.Controls.Add(cNew);
+			pBOTTOM.Controls.Add(bCancel);
+			pBOTTOM.Controls.Add(bOk);
+			pBOTTOM.Dock = System.Windows.Forms.DockStyle.Bottom;
+			pBOTTOM.Location = new System.Drawing.Point(0, 230);
+			pBOTTOM.Name = "pBOTTOM";
+			pBOTTOM.Size = new System.Drawing.Size(453, 48);
+			pBOTTOM.TabIndex = 6;
+			cNew.AutoSize = true;
+			cNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			cNew.Location = new System.Drawing.Point(15, 21);
+			cNew.Name = "cNew";
+			cNew.Size = new System.Drawing.Size(197, 28);
+			cNew.TabIndex = 13;
+			cNew.Text = "Is a new connection";
+			cNew.UseVisualStyleBackColor = true;
+			bCancel.Dock = System.Windows.Forms.DockStyle.Right;
+			bCancel.Image = Kiosk.Properties.Resources.ico_del;
+			bCancel.Location = new System.Drawing.Point(357, 0);
+			bCancel.Name = "bCancel";
+			bCancel.Size = new System.Drawing.Size(48, 48);
+			bCancel.TabIndex = 1;
+			bCancel.UseVisualStyleBackColor = true;
+			bCancel.Click += new System.EventHandler(bCancel_Click);
+			bOk.Dock = System.Windows.Forms.DockStyle.Right;
+			bOk.Image = Kiosk.Properties.Resources.ico_ok;
+			bOk.Location = new System.Drawing.Point(405, 0);
+			bOk.Name = "bOk";
+			bOk.Size = new System.Drawing.Size(48, 48);
+			bOk.TabIndex = 0;
+			bOk.UseVisualStyleBackColor = true;
+			bOk.Click += new System.EventHandler(bOk_Click);
+			lPassword.AutoSize = true;
+			lPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lPassword.Location = new System.Drawing.Point(10, 81);
+			lPassword.Name = "lPassword";
+			lPassword.Size = new System.Drawing.Size(16, 24);
+			lPassword.TabIndex = 8;
+			lPassword.Text = "-";
+			tSID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			tSID.Location = new System.Drawing.Point(12, 42);
+			tSID.Name = "tSID";
+			tSID.Size = new System.Drawing.Size(430, 29);
+			tSID.TabIndex = 0;
+			lSID.AutoSize = true;
+			lSID.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lSID.Location = new System.Drawing.Point(11, 15);
+			lSID.Name = "lSID";
+			lSID.Size = new System.Drawing.Size(16, 24);
+			lSID.TabIndex = 10;
+			lSID.Text = "-";
+			lSec.AutoSize = true;
+			lSec.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lSec.Location = new System.Drawing.Point(11, 155);
+			lSec.Name = "lSec";
+			lSec.Size = new System.Drawing.Size(16, 24);
+			lSec.TabIndex = 11;
+			lSec.Text = "-";
+			cSec.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			cSec.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			cSec.FormattingEnabled = true;
+			cSec.Items.AddRange(new object[5]
+			{
+				"WEP",
+				"WPA",
+				"WPA PSK",
+				"WPA2",
+				"WPA2 PSK"
+			});
+			cSec.Location = new System.Drawing.Point(11, 182);
+			cSec.Name = "cSec";
+			cSec.Size = new System.Drawing.Size(430, 32);
+			cSec.TabIndex = 2;
+			cAlways.AutoSize = true;
+			cAlways.Checked = true;
+			cAlways.CheckState = System.Windows.Forms.CheckState.Checked;
+			cAlways.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			cAlways.Location = new System.Drawing.Point(14, 225);
+			cAlways.Name = "cAlways";
+			cAlways.Size = new System.Drawing.Size(230, 28);
+			cAlways.TabIndex = 12;
+			cAlways.Text = "Connect when available";
+			cAlways.UseVisualStyleBackColor = true;
+			ePassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 14f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			ePassword.Location = new System.Drawing.Point(11, 108);
+			ePassword.Name = "ePassword";
+			ePassword.Size = new System.Drawing.Size(430, 29);
+			ePassword.TabIndex = 13;
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(453, 278);
+			base.ControlBox = false;
+			base.Controls.Add(ePassword);
+			base.Controls.Add(cAlways);
+			base.Controls.Add(cSec);
+			base.Controls.Add(lSec);
+			base.Controls.Add(lSID);
+			base.Controls.Add(tSID);
+			base.Controls.Add(lPassword);
+			base.Controls.Add(pBOTTOM);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.Name = "DLG_Wifi_Connect";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = " ";
+			base.FormClosed += new System.Windows.Forms.FormClosedEventHandler(DLG_Wifi_Connect_FormClosed);
+			base.Load += new System.EventHandler(DLG_Wifi_Connect_Load);
+			pBOTTOM.ResumeLayout(false);
+			pBOTTOM.PerformLayout();
+			ResumeLayout(false);
+			PerformLayout();
+		}
+	}
 }

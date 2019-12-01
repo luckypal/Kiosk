@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.Devices_Wizard
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using GLib.Devices;
 using GLib.Forms;
 using Kiosk.Properties;
@@ -19,2319 +13,2540 @@ using System.Xml;
 
 namespace Kiosk
 {
-  public class Devices_Wizard : Form
-  {
-    private bool run = false;
-    private bool enint = false;
-    private int Canales = 16;
-    public string SSP_Com = "?";
-    public string SSP3_Com = "?";
-    public string SIO_Com = "?";
-    public string Tri_Com = "?";
-    public string F40_Com = "?";
-    public string RM5_Com = "?";
-    public string CCT2_Com = "?";
-    private Control_Comestero rm5 = (Control_Comestero) null;
-    private Control_CCTALK_COIN cct2 = (Control_CCTALK_COIN) null;
-    private Control_NV_SSP ssp = (Control_NV_SSP) null;
-    private Control_NV_SSP_P6 ssp3 = (Control_NV_SSP_P6) null;
-    private Control_NV_SIO sio = (Control_NV_SIO) null;
-    private Control_F40_CCTalk f40 = (Control_F40_CCTalk) null;
-    private Control_Trilogy tri = (Control_Trilogy) null;
-    private Devices_Wizard.Wizard Fase = Devices_Wizard.Wizard.Nulo;
-    public bool CoinDetected = false;
-    public string CoinModel = "?";
-    public string CoinModel_P = "?";
-    public bool BillDetected = false;
-    public string BillModel = "?";
-    public string BillModel_P = "?";
-    private IContainer components = (IContainer) null;
-    public bool OK;
-    public Configuracion opciones;
-    public int[] SSP_Value;
-    public int[] SSP_Inhibit;
-    public int[] SSP_Enabled;
-    public int[] SSP3_Value;
-    public int[] SSP3_Inhibit;
-    public int[] SSP3_Enabled;
-    public int[] SIO_Value;
-    public int[] SIO_Inhibit;
-    public int[] SIO_Enabled;
-    public int[] Tri_Value;
-    public int[] Tri_Inhibit;
-    public int[] Tri_Enabled;
-    public int[] F40_Value;
-    public int[] F40_Inhibit;
-    public int[] F40_Enabled;
-    public int[] RM5_Value;
-    public int[] RM5_Inhibit;
-    public int[] RM5_Enabled;
-    public int[] CCT2_Value;
-    public int[] CCT2_Inhibit;
-    public int[] CCT2_Enabled;
-    private string error;
-    private Panel pBotons;
-    private Button bCancel;
-    private Button bSig;
-    private Button bAnt;
-    private Button bOK;
-    private TabControl tabs;
-    private TabPage tInfo;
-    private TabPage tCoin_Mode;
-    private TabPage tBill_Mode;
-    private TabPage tCoin_Detect;
-    private TextBox infoWizard;
-    private GradientPanel hCoin_Mode;
-    private RadioButton rCoin_M3;
-    private RadioButton rCoin_M1;
-    private RadioButton rCoin_M2;
-    private GradientPanel hInfo;
-    private CheckBox dRM5;
-    private GradientPanel hCoin_Detect;
-    private RadioButton rBill_M3;
-    private RadioButton rBill_M1;
-    private RadioButton rBill_M2;
-    private GradientPanel pBillMode;
-    private BackgroundWorker bgControl;
-    private TabPage tBill_Detect;
-    private CheckBox dTrilogy;
-    private CheckBox dF40;
-    private CheckBox dNV9_SSP;
-    private CheckBox dNV9_SSP3;
-    private GradientPanel pBillDetect;
-    private TabPage tBill_Config;
-    private TabPage tResum;
-    private Label iCom;
-    private ComboBox lCom;
-    private GradientPanel pTitle;
-    private ProgressBar pCoin;
-    private ProgressBar pBill;
-    private CheckBox dNV_SIO;
-    private CheckBox eCANAL_16;
-    private CheckBox eCANAL_15;
-    private CheckBox eCANAL_14;
-    private CheckBox eCANAL_13;
-    private CheckBox eCANAL_12;
-    private CheckBox eCANAL_11;
-    private CheckBox eCANAL_10;
-    private CheckBox eCANAL_9;
-    private CheckBox eCANAL_8;
-    private CheckBox eCANAL_7;
-    private CheckBox eCANAL_6;
-    private CheckBox eCANAL_5;
-    private CheckBox eCANAL_4;
-    private CheckBox eCANAL_3;
-    private CheckBox eCANAL_2;
-    private CheckBox eCANAL_1;
-    private CheckBox dCCT2;
+	public class Devices_Wizard : Form
+	{
+		private enum Wizard
+		{
+			Nulo,
+			StartUp,
+			Info,
+			CoinMode,
+			CoinDetecting,
+			CoinDetectingWait_RM5,
+			CoinDetectingWait_CCT2,
+			CoinDetected,
+			BillMode,
+			BillDetecting,
+			BillDetectingWait,
+			BillDetectingWait_SSP,
+			BillDetectingWait_SSP3,
+			BillDetectingWait_SIO,
+			BillDetectingWait_F40,
+			BillDetectingWait_Tri,
+			BillDetected,
+			RM5Config,
+			RM5Test,
+			CCT2Config,
+			CCT2Test,
+			SIOConfig,
+			SIOTest,
+			SSPConfig,
+			SSPTest,
+			SSP3Config,
+			SSP3Test,
+			F40Config,
+			F40Test,
+			TriConfig,
+			TriTest,
+			Resumen
+		}
 
-    public Devices_Wizard(ref Configuracion _opc)
-    {
-      this.OK = false;
-      this.run = false;
-      this.enint = false;
-      this.Fase = Devices_Wizard.Wizard.Nulo;
-      this.InitializeComponent();
-      this.Fase = Devices_Wizard.Wizard.StartUp;
-      this.Init_Vars();
-      this.Load_Cfg("devices.cfg");
-      this.Localize();
-      this.opciones = _opc;
-    }
+		public bool OK;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.ResumeLayout();
-    }
+		public Configuracion opciones;
 
-    public Devices_Wizard(string _cfg)
-    {
-      this.Init_Vars();
-      this.Load_Cfg(_cfg);
-    }
+		private bool run = false;
 
-    private void Init_Vars()
-    {
-      this.SSP_Com = "?";
-      this.SSP_Value = new int[this.Canales];
-      this.SSP_Inhibit = new int[this.Canales];
-      this.SSP_Enabled = new int[this.Canales];
-      this.SSP3_Com = "?";
-      this.SSP3_Value = new int[this.Canales];
-      this.SSP3_Inhibit = new int[this.Canales];
-      this.SSP3_Enabled = new int[this.Canales];
-      this.SIO_Com = "?";
-      this.SIO_Value = new int[this.Canales];
-      this.SIO_Inhibit = new int[this.Canales];
-      this.SIO_Enabled = new int[this.Canales];
-      this.Tri_Com = "?";
-      this.Tri_Value = new int[this.Canales];
-      this.Tri_Inhibit = new int[this.Canales];
-      this.Tri_Enabled = new int[this.Canales];
-      this.F40_Com = "?";
-      this.F40_Value = new int[this.Canales];
-      this.F40_Inhibit = new int[this.Canales];
-      this.F40_Enabled = new int[this.Canales];
-      this.RM5_Com = "?";
-      this.RM5_Value = new int[this.Canales];
-      this.RM5_Inhibit = new int[this.Canales];
-      this.RM5_Enabled = new int[this.Canales];
-      this.CCT2_Com = "?";
-      this.CCT2_Value = new int[this.Canales];
-      this.CCT2_Inhibit = new int[this.Canales];
-      this.CCT2_Enabled = new int[this.Canales];
-      this.CoinModel = "?";
-      this.CoinModel_P = "?";
-      this.BillModel = "?";
-      this.BillModel_P = "?";
-    }
+		private bool enint = false;
 
-    private void Refresh_SSP()
-    {
-      this.pTitle.Title = "Configure NV SSP";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.SSP_Com;
-      if (this.SSP_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.ssp == null)
-        {
-          this.ssp = new Control_NV_SSP();
-          this.ssp.port = this.SSP_Com;
-          this.ssp.Open();
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.ssp.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            if (!this.ssp.GetChannelEnabled(index + 1))
-            {
-              ((CheckBox) controlArray[0]).ThreeState = true;
-              ((CheckBox) controlArray[0]).CheckState = CheckState.Indeterminate;
-            }
-            else
-            {
-              ((CheckBox) controlArray[0]).ThreeState = false;
-              ((CheckBox) controlArray[0]).CheckState = !this.ssp.GetChannelInhibit(index + 1) ? CheckState.Checked : CheckState.Unchecked;
-            }
-            if (this.ssp.GetChannelValue(index + 1) < this.ssp.Multiplicador)
-              controlArray[0].Text = "0." + (object) this.ssp.GetChannelValue(index + 1) + " " + this.ssp.GetChannelCurrency(index + 1);
-            else
-              controlArray[0].Text = (this.ssp.GetChannelValue(index + 1) / this.ssp.Multiplicador).ToString() + " " + this.ssp.GetChannelCurrency(index + 1);
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		private int Canales = 16;
 
-    private void Refresh_SSP3()
-    {
-      this.pTitle.Title = "Configure NV SSP v3";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.SSP3_Com;
-      if (this.SSP3_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.ssp3 == null)
-        {
-          this.ssp3 = new Control_NV_SSP_P6();
-          this.ssp3.port = this.SSP_Com;
-          this.ssp3.Open();
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.ssp3.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            if (!this.ssp3.GetChannelEnabled(index + 1))
-            {
-              ((CheckBox) controlArray[0]).ThreeState = true;
-              ((CheckBox) controlArray[0]).CheckState = CheckState.Indeterminate;
-            }
-            else
-            {
-              ((CheckBox) controlArray[0]).ThreeState = false;
-              ((CheckBox) controlArray[0]).CheckState = !this.ssp3.GetChannelInhibit(index + 1) ? CheckState.Checked : CheckState.Unchecked;
-            }
-            if (this.ssp3.GetChannelValue(index + 1) < (Decimal) this.ssp3.Multiplier)
-              controlArray[0].Text = "0." + (object) this.ssp3.GetChannelValue(index + 1) + " " + this.ssp3.GetChannelCurrency(index + 1);
-            else
-              controlArray[0].Text = (this.ssp3.GetChannelValue(index + 1) / (Decimal) this.ssp3.Multiplier).ToString() + " " + this.ssp3.GetChannelCurrency(index + 1);
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		public string SSP_Com = "?";
 
-    private void Refresh_F40()
-    {
-      this.pTitle.Title = "Configure PayPrint F40 CCTalk";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.F40_Com;
-      if (this.F40_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.f40 == null)
-        {
-          this.f40 = new Control_F40_CCTalk();
-          this.f40.port = this.F40_Com;
-          this.f40.Open();
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.f40.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else if (this.f40.Canal[index] == 0)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            ((CheckBox) controlArray[0]).ThreeState = false;
-            ((CheckBox) controlArray[0]).CheckState = this.f40.eCanal[index] == 1 ? CheckState.Checked : CheckState.Unchecked;
-            controlArray[0].Text = !((Decimal) this.f40.Canal[index] < this.f40.Base) ? string.Concat((object) this.f40.Canal[index]) : "0." + (object) this.f40.Canal[index];
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		public int[] SSP_Value;
 
-    private void Refresh_Trilogy()
-    {
-      this.pTitle.Title = "Configure Pyramid Trilogy";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.Tri_Com;
-      if (this.Tri_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.tri == null)
-        {
-          this.tri = new Control_Trilogy();
-          this.tri.port = this.Tri_Com;
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.tri.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else if (this.tri.Canal[index] == 0)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            ((CheckBox) controlArray[0]).ThreeState = false;
-            ((CheckBox) controlArray[0]).CheckState = this.tri.eCanal[index] == 1 ? CheckState.Checked : CheckState.Unchecked;
-            controlArray[0].Text = !((Decimal) this.tri.Canal[index] < this.tri.Base) ? string.Concat((object) this.tri.Canal[index]) : "0." + (object) this.tri.Canal[index];
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		public int[] SSP_Inhibit;
 
-    private void Refresh_SIO()
-    {
-      this.pTitle.Title = "Configure NV SIO";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.SIO_Com;
-      if (this.SIO_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.sio == null)
-        {
-          this.sio = new Control_NV_SIO();
-          this.sio.port = this.SIO_Com;
-          this.sio.Open();
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.sio.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else if (this.sio.Canal[index] == 0)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            ((CheckBox) controlArray[0]).ThreeState = false;
-            ((CheckBox) controlArray[0]).CheckState = this.sio.eCanal[index] == 1 ? CheckState.Checked : CheckState.Unchecked;
-            controlArray[0].Text = !((Decimal) this.sio.Canal[index] < this.sio.Base) ? string.Concat((object) this.sio.Canal[index]) : "0." + (object) this.sio.Canal[index];
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		public int[] SSP_Enabled;
 
-    private void Refresh_RM5()
-    {
-      this.pTitle.Title = "Configure Comestero RM5";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.RM5_Com;
-      if (this.RM5_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.rm5 == null)
-        {
-          this.rm5 = new Control_Comestero();
-          this.rm5.port = this.RM5_Com;
-          this.rm5.Open();
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.rm5.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else if (this.rm5.Canal[index] == 0)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            ((CheckBox) controlArray[0]).ThreeState = false;
-            ((CheckBox) controlArray[0]).CheckState = this.rm5.eCanal[index] == 1 ? CheckState.Checked : CheckState.Unchecked;
-            controlArray[0].Text = !((Decimal) this.rm5.Canal[index] < this.rm5.Base) ? string.Concat((object) this.rm5.Canal[index]) : "0." + (object) this.rm5.Canal[index];
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		public string SSP3_Com = "?";
 
-    private void Refresh_CCT2()
-    {
-      this.pTitle.Title = "Configure CCTalk COIN ACCEPTOR (ID 2)";
-      string[] portNames = SerialPort.GetPortNames();
-      this.lCom.Items.Clear();
-      this.lCom.Items.Add((object) "?");
-      if (portNames != null)
-      {
-        for (int index = 0; index < portNames.Length; ++index)
-          this.lCom.Items.Add((object) portNames[index]);
-      }
-      this.lCom.Text = this.CCT2_Com;
-      if (this.CCT2_Com != "?")
-      {
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          controlArray[0].Visible = true;
-          ((CheckBox) controlArray[0]).ThreeState = false;
-          ((CheckBox) controlArray[0]).CheckState = CheckState.Unchecked;
-          controlArray[0].Text = "0.0";
-        }
-      }
-      else
-      {
-        if (this.cct2 == null)
-        {
-          this.cct2 = new Control_CCTALK_COIN();
-          this.cct2.port = this.CCT2_Com;
-          this.cct2.Open();
-        }
-        for (int index = 0; index < 16; ++index)
-        {
-          Control[] controlArray = this.tBill_Config.Controls.Find("eCANAL_" + (object) (index + 1), false);
-          if (index >= this.cct2.Canales)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else if (this.cct2.Canal[index] == 0)
-          {
-            controlArray[0].Visible = false;
-            controlArray[0].Invalidate();
-          }
-          else
-          {
-            ((CheckBox) controlArray[0]).ThreeState = false;
-            ((CheckBox) controlArray[0]).CheckState = this.cct2.eCanal[index] == 1 ? CheckState.Checked : CheckState.Unchecked;
-            controlArray[0].Text = this.cct2.Canal[index] >= this.cct2.Base ? string.Concat((object) this.cct2.Canal[index]) : "0." + (object) this.cct2.Canal[index];
-            controlArray[0].Visible = true;
-            controlArray[0].Invalidate();
-          }
-        }
-      }
-    }
+		public int[] SSP3_Value;
 
-    private void SetFase(Devices_Wizard.Wizard _f)
-    {
-      switch (_f)
-      {
-        case Devices_Wizard.Wizard.Nulo:
-        case Devices_Wizard.Wizard.StartUp:
-        case Devices_Wizard.Wizard.CoinDetecting:
-        case Devices_Wizard.Wizard.BillDetecting:
-          this.bAnt.Enabled = false;
-          this.bSig.Enabled = false;
-          this.bOK.Enabled = false;
-          break;
-        case Devices_Wizard.Wizard.Info:
-          this.bAnt.Enabled = false;
-          this.bSig.Enabled = true;
-          this.bOK.Enabled = false;
-          break;
-        case Devices_Wizard.Wizard.CoinMode:
-        case Devices_Wizard.Wizard.CoinDetected:
-        case Devices_Wizard.Wizard.BillMode:
-        case Devices_Wizard.Wizard.BillDetected:
-        case Devices_Wizard.Wizard.RM5Config:
-        case Devices_Wizard.Wizard.CCT2Config:
-        case Devices_Wizard.Wizard.SIOConfig:
-        case Devices_Wizard.Wizard.SSPConfig:
-        case Devices_Wizard.Wizard.SSP3Config:
-        case Devices_Wizard.Wizard.F40Config:
-        case Devices_Wizard.Wizard.TriConfig:
-          this.bAnt.Enabled = true;
-          this.bSig.Enabled = true;
-          this.bOK.Enabled = false;
-          break;
-        case Devices_Wizard.Wizard.Resumen:
-          this.bAnt.Enabled = true;
-          this.bSig.Enabled = false;
-          this.bOK.Enabled = true;
-          break;
-      }
-      switch (_f)
-      {
-        case Devices_Wizard.Wizard.Info:
-          this.tabs.SelectTab("tInfo");
-          break;
-        case Devices_Wizard.Wizard.CoinMode:
-          this.tabs.SelectTab("tCoin_Mode");
-          break;
-        case Devices_Wizard.Wizard.CoinDetecting:
-          this.rCoin_M1.Checked = false;
-          this.rCoin_M2.Checked = false;
-          this.rCoin_M3.Checked = false;
-          this.tabs.SelectTab("tCoin_Detect");
-          break;
-        case Devices_Wizard.Wizard.CoinDetected:
-          this.tabs.SelectTab("tCoin_Detect");
-          break;
-        case Devices_Wizard.Wizard.BillMode:
-          this.tabs.SelectTab("tBill_Mode");
-          break;
-        case Devices_Wizard.Wizard.BillDetecting:
-          this.rBill_M1.Checked = false;
-          this.rBill_M2.Checked = false;
-          this.rBill_M3.Checked = false;
-          this.tabs.SelectTab("tBill_Detect");
-          break;
-        case Devices_Wizard.Wizard.BillDetected:
-          this.pBill.Visible = false;
-          this.tabs.SelectTab("tBill_Detect");
-          break;
-        case Devices_Wizard.Wizard.RM5Config:
-          this.Refresh_RM5();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.CCT2Config:
-          this.Refresh_CCT2();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.SIOConfig:
-          this.Refresh_SIO();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.SSPConfig:
-          this.Refresh_SSP();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.SSP3Config:
-          this.Refresh_SSP3();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.F40Config:
-          this.Refresh_F40();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.TriConfig:
-          this.Refresh_Trilogy();
-          this.tabs.SelectTab("tBill_Config");
-          break;
-        case Devices_Wizard.Wizard.Resumen:
-          this.tabs.SelectTab("tResum");
-          break;
-      }
-      this.Fase = _f;
-    }
+		public int[] SSP3_Inhibit;
 
-    private void bSig_Click(object sender, EventArgs e)
-    {
-      switch (this.Fase)
-      {
-        case Devices_Wizard.Wizard.Info:
-          this.SetFase(Devices_Wizard.Wizard.CoinMode);
-          break;
-        case Devices_Wizard.Wizard.CoinMode:
-          if (this.rCoin_M1.Checked)
-            this.SetFase(Devices_Wizard.Wizard.CoinDetecting);
-          if (this.rCoin_M2.Checked)
-          {
-            this.CoinModel = "-";
-            this.SetFase(Devices_Wizard.Wizard.BillMode);
-          }
-          if (!this.rCoin_M3.Checked)
-            break;
-          this.SetFase(Devices_Wizard.Wizard.CCT2Config);
-          break;
-        case Devices_Wizard.Wizard.CoinDetected:
-          if (this.CoinDetected)
-          {
-            switch (this.CoinModel.ToLower())
-            {
-              case "rm5":
-                this.SetFase(Devices_Wizard.Wizard.RM5Config);
-                return;
-              case "cct2":
-                this.SetFase(Devices_Wizard.Wizard.CCT2Config);
-                return;
-              default:
-                this.SetFase(Devices_Wizard.Wizard.BillMode);
-                return;
-            }
-          }
-          else
-          {
-            this.SetFase(Devices_Wizard.Wizard.BillMode);
-            break;
-          }
-        case Devices_Wizard.Wizard.BillMode:
-          if (this.rBill_M1.Checked)
-            this.SetFase(Devices_Wizard.Wizard.BillDetecting);
-          if (this.rBill_M2.Checked)
-          {
-            this.BillModel = "-";
-            this.SetFase(Devices_Wizard.Wizard.Resumen);
-          }
-          if (!this.rBill_M3.Checked)
-            break;
-          this.SetFase(Devices_Wizard.Wizard.SSPConfig);
-          break;
-        case Devices_Wizard.Wizard.BillDetected:
-          this.pBill.Visible = false;
-          if (this.BillDetected)
-          {
-            switch (this.BillModel)
-            {
-              case "ssp":
-                if (this.ssp == null)
-                {
-                  this.ssp = new Control_NV_SSP();
-                  this.ssp.Start_Find_Device();
-                  Thread.Sleep(100);
-                  this.ssp.Poll();
-                  Thread.Sleep(100);
-                  this.ssp.Poll();
-                  Thread.Sleep(100);
-                }
-                this.SetFase(Devices_Wizard.Wizard.SSPConfig);
-                return;
-              case "ssp3":
-                if (this.ssp3 == null)
-                {
-                  this.ssp3 = new Control_NV_SSP_P6();
-                  this.ssp3.Start_Find_Device();
-                  Thread.Sleep(100);
-                  this.ssp3.Poll();
-                  Thread.Sleep(100);
-                  this.ssp3.Poll();
-                  Thread.Sleep(100);
-                }
-                this.SetFase(Devices_Wizard.Wizard.SSP3Config);
-                return;
-              case "f40":
-                this.SetFase(Devices_Wizard.Wizard.F40Config);
-                return;
-              case "sio":
-                this.SetFase(Devices_Wizard.Wizard.SIOConfig);
-                return;
-              case "tri":
-                this.SetFase(Devices_Wizard.Wizard.TriConfig);
-                return;
-              default:
-                this.SetFase(Devices_Wizard.Wizard.Resumen);
-                return;
-            }
-          }
-          else
-          {
-            this.SetFase(Devices_Wizard.Wizard.Resumen);
-            break;
-          }
-        case Devices_Wizard.Wizard.RM5Config:
-          if (this.RM5_Com != "-" && this.RM5_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.rm5.Canales)
-              {
-                this.RM5_Enabled[index] = this.rm5.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.RM5_Inhibit[index] = this.rm5.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.RM5_Value[index] = this.rm5.GetChannelValue(index + 1);
-              }
-              else
-                this.RM5_Enabled[index] = this.RM5_Inhibit[index] = this.RM5_Value[index] = 0;
-            }
-            this.CoinModel = "rm5";
-            this.CoinModel_P = this.RM5_Com;
-          }
-          this.SetFase(Devices_Wizard.Wizard.BillMode);
-          break;
-        case Devices_Wizard.Wizard.CCT2Config:
-          if (this.CCT2_Com != "-" && this.CCT2_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.cct2.Canales)
-              {
-                this.CCT2_Enabled[index] = this.cct2.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.CCT2_Inhibit[index] = this.cct2.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.CCT2_Value[index] = (int) this.cct2.GetChannelValue(index + 1);
-              }
-              else
-                this.CCT2_Enabled[index] = this.CCT2_Inhibit[index] = this.CCT2_Value[index] = 0;
-            }
-            this.CoinModel = "cct2";
-            this.CoinModel_P = this.CCT2_Com;
-            this.SetFase(Devices_Wizard.Wizard.BillMode);
-            break;
-          }
-          this.SetFase(Devices_Wizard.Wizard.RM5Config);
-          break;
-        case Devices_Wizard.Wizard.SIOConfig:
-          if (this.SIO_Com != "-" && this.SIO_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.sio.Canales)
-              {
-                this.SIO_Enabled[index] = this.sio.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.SIO_Inhibit[index] = this.sio.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.SIO_Value[index] = this.sio.GetChannelValue(index + 1);
-              }
-              else
-                this.SIO_Enabled[index] = this.SIO_Inhibit[index] = this.SIO_Value[index] = 0;
-            }
-            this.BillModel = "sio";
-            this.BillModel_P = this.SIO_Com;
-            this.SetFase(Devices_Wizard.Wizard.Resumen);
-            break;
-          }
-          this.SetFase(Devices_Wizard.Wizard.TriConfig);
-          break;
-        case Devices_Wizard.Wizard.SSPConfig:
-          if (this.SSP_Com != "-" && this.SSP_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.ssp.Canales)
-              {
-                this.SSP_Enabled[index] = this.ssp.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.SSP_Inhibit[index] = this.ssp.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.SSP_Value[index] = this.ssp.GetChannelValue(index + 1);
-              }
-              else
-                this.SSP_Enabled[index] = this.SSP_Inhibit[index] = this.SSP_Value[index] = 0;
-            }
-            this.BillModel = "ssp";
-            this.BillModel_P = this.SSP_Com;
-            this.SetFase(Devices_Wizard.Wizard.Resumen);
-            break;
-          }
-          this.SetFase(Devices_Wizard.Wizard.SIOConfig);
-          break;
-        case Devices_Wizard.Wizard.SSP3Config:
-          if (this.SSP3_Com != "-" && this.SSP3_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.ssp3.Canales)
-              {
-                this.SSP3_Enabled[index] = this.ssp3.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.SSP3_Inhibit[index] = this.ssp3.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.SSP3_Value[index] = (int) this.ssp3.GetChannelValue(index + 1);
-              }
-              else
-                this.SSP3_Enabled[index] = this.SSP3_Inhibit[index] = this.SSP3_Value[index] = 0;
-            }
-            this.BillModel = "ssp3";
-            this.BillModel_P = this.SSP3_Com;
-            this.SetFase(Devices_Wizard.Wizard.Resumen);
-            break;
-          }
-          this.SetFase(Devices_Wizard.Wizard.SIOConfig);
-          break;
-        case Devices_Wizard.Wizard.F40Config:
-          if (this.F40_Com != "-" && this.F40_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.f40.Canales)
-              {
-                this.F40_Enabled[index] = this.f40.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.F40_Inhibit[index] = this.f40.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.F40_Value[index] = this.f40.GetChannelValue(index + 1);
-              }
-              else
-                this.F40_Enabled[index] = this.F40_Inhibit[index] = this.F40_Value[index] = 0;
-            }
-            this.BillModel = "f40";
-            this.BillModel_P = this.F40_Com;
-          }
-          this.SetFase(Devices_Wizard.Wizard.Resumen);
-          break;
-        case Devices_Wizard.Wizard.TriConfig:
-          if (this.Tri_Com != "-" && this.Tri_Com != "?")
-          {
-            for (int index = 0; index < this.Canales; ++index)
-            {
-              if (index < this.tri.Canales)
-              {
-                this.Tri_Enabled[index] = this.tri.GetChannelEnabled(index + 1) ? 1 : 0;
-                this.Tri_Inhibit[index] = this.tri.GetChannelInhibit(index + 1) ? 0 : 1;
-                this.Tri_Value[index] = this.tri.GetChannelValue(index + 1);
-              }
-              else
-                this.Tri_Enabled[index] = this.Tri_Inhibit[index] = this.Tri_Value[index] = 0;
-            }
-            this.BillModel = "tri";
-            this.BillModel_P = this.Tri_Com;
-            this.SetFase(Devices_Wizard.Wizard.Resumen);
-            break;
-          }
-          this.SetFase(Devices_Wizard.Wizard.F40Config);
-          break;
-      }
-    }
+		public int[] SSP3_Enabled;
 
-    private void Devices_Wizard_Load(object sender, EventArgs e)
-    {
-      this.run = true;
-      this.bgControl.RunWorkerAsync();
-      this.SetFase(Devices_Wizard.Wizard.Info);
-    }
+		public string SIO_Com = "?";
 
-    private void Devices_Wizard_FormClosing(object sender, FormClosingEventArgs e)
-    {
-      this.run = false;
-      this.bgControl.CancelAsync();
-      this.bgControl.Dispose();
-      if (this.sio != null)
-        this.sio.Close();
-      if (this.ssp != null)
-        this.ssp.Close();
-      if (this.ssp3 != null)
-        this.ssp3.Close();
-      if (this.rm5 != null)
-        this.rm5.Close();
-      if (this.cct2 != null)
-        this.cct2.Close();
-      if (this.f40 != null)
-        this.f40.Close();
-      if (this.tri == null)
-        return;
-      this.tri.Close();
-    }
+		public int[] SIO_Value;
 
-    private void bgControl_DoWork(object sender, DoWorkEventArgs e)
-    {
-      while (this.run)
-      {
-        this.bgControl.ReportProgress(0);
-        Thread.Sleep(100);
-      }
-    }
+		public int[] SIO_Inhibit;
 
-    private void bgControl_ProgressChanged(object sender, ProgressChangedEventArgs e)
-    {
-      if (this.enint)
-        return;
-      this.enint = true;
-      switch (this.Fase)
-      {
-        case Devices_Wizard.Wizard.CoinDetecting:
-          this.SetFase(Devices_Wizard.Wizard.CoinDetectingWait_CCT2);
-          this.CoinModel = "?";
-          this.CoinModel_P = "?";
-          this.pCoin.Visible = true;
-          this.pCoin.Invalidate();
-          break;
-        case Devices_Wizard.Wizard.CoinDetectingWait_RM5:
-          if (this.rm5 == null)
-          {
-            this.rm5 = new Control_Comestero();
-            this.rm5.Start_Find_Device();
-          }
-          Thread.Sleep(100);
-          if (this.rm5.Poll_Find_Device())
-          {
-            this.rm5.Stop_Find_Device();
-            if (this.rm5._f_resp_scom != "-")
-            {
-              this.CoinDetected = true;
-              this.CoinModel = "rm5";
-              this.RM5_Com = this.rm5._f_resp_scom;
-              this.dRM5.CheckState = CheckState.Checked;
-              this.dRM5.Checked = true;
-            }
-            else
-            {
-              this.RM5_Com = "-";
-              this.dRM5.CheckState = CheckState.Indeterminate;
-            }
-            this.pCoin.Visible = false;
-            this.SetFase(Devices_Wizard.Wizard.CoinDetected);
-          }
-          this.pCoin.Invalidate();
-          break;
-        case Devices_Wizard.Wizard.CoinDetectingWait_CCT2:
-          if (this.cct2 == null)
-          {
-            this.cct2 = new Control_CCTALK_COIN();
-            this.cct2.Start_Find_Device();
-          }
-          Thread.Sleep(100);
-          if (this.cct2.Poll_Find_Device())
-          {
-            this.cct2.Stop_Find_Device();
-            if (this.cct2._f_resp_scom != "-")
-            {
-              this.CoinDetected = true;
-              this.CoinModel = "cct2";
-              this.CCT2_Com = this.cct2._f_resp_scom;
-              this.dCCT2.CheckState = CheckState.Checked;
-              this.dCCT2.Checked = true;
-              this.pCoin.Visible = false;
-              this.SetFase(Devices_Wizard.Wizard.CoinDetected);
-            }
-            else
-            {
-              this.CCT2_Com = "-";
-              this.dCCT2.CheckState = CheckState.Indeterminate;
-              this.pCoin.Visible = false;
-              this.SetFase(Devices_Wizard.Wizard.CoinDetectingWait_RM5);
-            }
-          }
-          this.pCoin.Invalidate();
-          break;
-        case Devices_Wizard.Wizard.BillMode:
-          if (this.f40 != null)
-            this.f40.Poll();
-          if (this.tri != null)
-            this.tri.Poll();
-          if (this.ssp != null)
-            this.ssp.Poll();
-          if (this.ssp3 != null)
-            this.ssp3.Poll();
-          if (this.sio != null)
-          {
-            this.sio.Poll();
-            break;
-          }
-          break;
-        case Devices_Wizard.Wizard.BillDetecting:
-          this.BillModel = "?";
-          this.BillModel_P = "?";
-          this.SetFase(Devices_Wizard.Wizard.BillDetectingWait);
-          this.pBill.Visible = true;
-          this.pBill.Invalidate();
-          break;
-        case Devices_Wizard.Wizard.BillDetectingWait:
-          this.SetFase(Devices_Wizard.Wizard.BillDetectingWait_SSP);
-          break;
-        case Devices_Wizard.Wizard.BillDetectingWait_SSP:
-          this.pBill.Invalidate();
-          if (this.ssp == null)
-          {
-            this.ssp = new Control_NV_SSP();
-            this.ssp.Start_Find_Device();
-          }
-          Thread.Sleep(100);
-          if (this.ssp.Poll_Find_Device())
-          {
-            this.ssp.Stop_Find_Device();
-            if (this.ssp._f_resp_scom != "-")
-            {
-              this.BillDetected = true;
-              this.BillModel = "ssp";
-              this.SSP_Com = this.ssp._f_resp_scom;
-              this.dNV9_SSP.CheckState = CheckState.Checked;
-              this.dNV9_SSP.Checked = true;
-              this.dNV9_SSP.Text = "NV SSP (" + this.SSP_Com + ")";
-              this.SetFase(Devices_Wizard.Wizard.BillDetected);
-            }
-            else
-            {
-              this.SSP_Com = "-";
-              this.dNV9_SSP.CheckState = CheckState.Indeterminate;
-              this.SetFase(Devices_Wizard.Wizard.BillDetectingWait_SSP3);
-            }
-            this.pBill.Visible = false;
-            this.ssp.Close();
-            this.ssp = (Control_NV_SSP) null;
-          }
-          Thread.Sleep(100);
-          break;
-        case Devices_Wizard.Wizard.BillDetectingWait_SSP3:
-          this.pBill.Invalidate();
-          if (this.ssp3 == null)
-          {
-            this.ssp3 = new Control_NV_SSP_P6();
-            this.ssp3.Start_Find_Device();
-          }
-          Thread.Sleep(100);
-          if (this.ssp3.Poll_Find_Device())
-          {
-            this.ssp3.Stop_Find_Device();
-            if (this.ssp3._f_resp_scom != "-")
-            {
-              this.BillDetected = true;
-              this.BillModel = "ssp3";
-              this.SSP3_Com = this.ssp3._f_resp_scom;
-              this.dNV9_SSP3.CheckState = CheckState.Checked;
-              this.dNV9_SSP3.Checked = true;
-              this.dNV9_SSP3.Text = "NV SSP v3 (" + this.SSP3_Com + ")";
-              this.SetFase(Devices_Wizard.Wizard.BillDetected);
-            }
-            else
-            {
-              this.SSP3_Com = "-";
-              this.dNV9_SSP3.CheckState = CheckState.Indeterminate;
-              this.SetFase(Devices_Wizard.Wizard.BillDetectingWait_SIO);
-            }
-            this.pBill.Visible = false;
-            this.ssp3.Close();
-            this.ssp3 = (Control_NV_SSP_P6) null;
-          }
-          Thread.Sleep(100);
-          break;
-        case Devices_Wizard.Wizard.BillDetectingWait_SIO:
-          this.pBill.Invalidate();
-          if (this.sio == null)
-            this.sio = new Control_NV_SIO();
-          Thread.Sleep(100);
-          this.SIO_Com = this.sio.Find_Device();
-          if (this.sio._f_resp_scom != "-")
-          {
-            this.BillDetected = true;
-            this.BillModel = "sio";
-            this.dNV_SIO.CheckState = CheckState.Checked;
-            this.dNV_SIO.Checked = true;
-            this.dNV_SIO.Text = "NV SIO (300bps) (" + this.SIO_Com + ")";
-            this.SetFase(Devices_Wizard.Wizard.BillDetected);
-          }
-          else
-          {
-            this.SIO_Com = "-";
-            this.dNV_SIO.CheckState = CheckState.Indeterminate;
-            this.SetFase(Devices_Wizard.Wizard.BillDetectingWait_F40);
-          }
-          this.sio.Close();
-          this.sio = (Control_NV_SIO) null;
-          Thread.Sleep(100);
-          break;
-        case Devices_Wizard.Wizard.BillDetectingWait_F40:
-          this.pBill.Invalidate();
-          if (this.f40 == null)
-          {
-            this.f40 = new Control_F40_CCTalk();
-            this.f40.Start_Find_Device();
-          }
-          Thread.Sleep(100);
-          this.F40_Com = this.f40.Find_Device();
-          if (this.f40._f_resp_scom != "-" && this.CoinModel_P != this.F40_Com)
-          {
-            this.BillDetected = true;
-            this.BillModel = "f40";
-            this.dF40.CheckState = CheckState.Checked;
-            this.dF40.Checked = true;
-            this.dF40.Text = "ccTalk (ID 40) (" + this.F40_Com + ")";
-            this.SetFase(Devices_Wizard.Wizard.BillDetected);
-          }
-          else
-          {
-            this.F40_Com = "-";
-            this.dF40.CheckState = CheckState.Indeterminate;
-            this.SetFase(Devices_Wizard.Wizard.BillDetectingWait_Tri);
-          }
-          this.f40.Close();
-          this.f40 = (Control_F40_CCTalk) null;
-          Thread.Sleep(100);
-          break;
-        case Devices_Wizard.Wizard.BillDetectingWait_Tri:
-          this.pBill.Invalidate();
-          if (this.tri == null)
-          {
-            this.tri = new Control_Trilogy();
-            this.tri.Start_Find_Device();
-          }
-          Thread.Sleep(100);
-          this.Tri_Com = this.tri.Find_Device();
-          if (this.tri._f_resp_scom != "-")
-          {
-            this.BillDetected = true;
-            this.BillModel = "tri";
-            this.dTrilogy.CheckState = CheckState.Checked;
-            this.dTrilogy.Checked = true;
-            this.dTrilogy.Text = "Trilogy (" + this.Tri_Com + ")";
-            this.SetFase(Devices_Wizard.Wizard.BillDetected);
-          }
-          else
-          {
-            this.Tri_Com = "-";
-            this.dTrilogy.CheckState = CheckState.Indeterminate;
-            this.SetFase(Devices_Wizard.Wizard.BillDetected);
-          }
-          this.tri.Close();
-          this.tri = (Control_Trilogy) null;
-          Thread.Sleep(100);
-          break;
-        case Devices_Wizard.Wizard.SIOConfig:
-          if (this.sio != null)
-          {
-            this.sio.Poll();
-            this.sio.Parser();
-            break;
-          }
-          if (this.SIO_Com != "-" && this.SIO_Com != "?")
-          {
-            this.sio = new Control_NV_SIO();
-            this.sio.port = this.SIO_Com;
-            this.sio.Open();
-          }
-          break;
-        case Devices_Wizard.Wizard.SSPConfig:
-          if (this.ssp != null)
-          {
-            this.ssp.Poll();
-            break;
-          }
-          if (this.SSP_Com != "-" && this.SSP_Com != "?")
-          {
-            this.ssp = new Control_NV_SSP();
-            this.ssp.port = this.SSP_Com;
-            this.ssp.Open();
-          }
-          break;
-        case Devices_Wizard.Wizard.SSP3Config:
-          if (this.ssp3 != null)
-          {
-            this.ssp3.Poll();
-            break;
-          }
-          if (this.SSP3_Com != "-" && this.SSP3_Com != "?")
-          {
-            this.ssp3 = new Control_NV_SSP_P6();
-            this.ssp3.port = this.SSP3_Com;
-            this.ssp3.Open();
-          }
-          break;
-        case Devices_Wizard.Wizard.F40Config:
-          if (this.f40 != null)
-          {
-            this.f40.Poll();
-            break;
-          }
-          if (this.F40_Com != "-" && this.F40_Com != "?")
-          {
-            this.f40 = new Control_F40_CCTalk();
-            this.f40.port = this.F40_Com;
-            this.f40.Open();
-          }
-          break;
-        case Devices_Wizard.Wizard.TriConfig:
-          if (this.tri != null)
-          {
-            this.tri.Poll();
-            break;
-          }
-          if (this.Tri_Com != "-" && this.Tri_Com != "?")
-          {
-            this.tri = new Control_Trilogy();
-            this.tri.port = this.Tri_Com;
-            this.tri.Open();
-          }
-          break;
-      }
-      this.enint = false;
-    }
+		public int[] SIO_Enabled;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.Close();
-    }
+		public string Tri_Com = "?";
 
-    public void Save(string _cfg)
-    {
-      string str1 = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + _cfg;
-      string str2 = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + _cfg + ".tmp";
-      XmlTextWriter xmlTextWriter = new XmlTextWriter(str2, Encoding.ASCII);
-      xmlTextWriter.Formatting = Formatting.Indented;
-      xmlTextWriter.WriteStartDocument();
-      try
-      {
-        xmlTextWriter.WriteStartElement("config".ToLower());
-        xmlTextWriter.WriteStartElement("select".ToLower());
-        xmlTextWriter.WriteAttributeString("coin".ToLower(), this.CoinModel);
-        xmlTextWriter.WriteAttributeString("coin_p".ToLower(), this.CoinModel_P);
-        xmlTextWriter.WriteAttributeString("bnv".ToLower(), this.BillModel);
-        xmlTextWriter.WriteAttributeString("bnv_p".ToLower(), this.BillModel_P);
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteStartElement("devices".ToLower());
-        xmlTextWriter.WriteStartElement("ssp");
-        xmlTextWriter.WriteAttributeString("com", this.SSP_Com);
-        for (int index = 0; index < this.Canales; ++index)
-        {
-          xmlTextWriter.WriteStartElement("channel_" + (object) (index + 1));
-          if (this.SSP_Enabled[index] == 1)
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), this.SSP_Value[index].ToString());
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), this.SSP_Enabled[index].ToString());
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), this.SSP_Inhibit[index].ToString());
-          }
-          else
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), "1");
-          }
-          xmlTextWriter.WriteEndElement();
-        }
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteStartElement("ssp3");
-        xmlTextWriter.WriteAttributeString("com", this.SSP3_Com);
-        for (int index = 0; index < this.Canales; ++index)
-        {
-          xmlTextWriter.WriteStartElement("channel_" + (object) (index + 1));
-          if (this.SSP3_Enabled[index] == 1)
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), this.SSP3_Value[index].ToString());
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), this.SSP3_Enabled[index].ToString());
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), this.SSP3_Inhibit[index].ToString());
-          }
-          else
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), "1");
-          }
-          xmlTextWriter.WriteEndElement();
-        }
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteStartElement("sio");
-        xmlTextWriter.WriteAttributeString("com", this.SIO_Com);
-        for (int index = 0; index < this.Canales; ++index)
-        {
-          xmlTextWriter.WriteStartElement("channel_" + (object) (index + 1));
-          if (this.SIO_Enabled[index] == 1)
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), this.SIO_Value[index].ToString());
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), this.SIO_Enabled[index].ToString());
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), this.SIO_Inhibit[index].ToString());
-          }
-          else
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), "1");
-          }
-          xmlTextWriter.WriteEndElement();
-        }
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteStartElement("rm5");
-        xmlTextWriter.WriteAttributeString("com", this.RM5_Com);
-        for (int index = 0; index < this.Canales; ++index)
-        {
-          xmlTextWriter.WriteStartElement("channel_" + (object) (index + 1));
-          if (this.RM5_Enabled[index] == 1)
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), this.RM5_Value[index].ToString());
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), this.RM5_Enabled[index].ToString());
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), this.RM5_Inhibit[index].ToString());
-          }
-          else
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), "1");
-          }
-          xmlTextWriter.WriteEndElement();
-        }
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteStartElement("f40");
-        xmlTextWriter.WriteAttributeString("com", this.F40_Com);
-        for (int index = 0; index < this.Canales; ++index)
-        {
-          xmlTextWriter.WriteStartElement("channel_" + (object) (index + 1));
-          if (this.F40_Enabled[index] == 1)
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), this.F40_Value[index].ToString());
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), this.F40_Enabled[index].ToString());
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), this.F40_Inhibit[index].ToString());
-          }
-          else
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), "1");
-          }
-          xmlTextWriter.WriteEndElement();
-        }
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteStartElement("tri");
-        xmlTextWriter.WriteAttributeString("com", this.Tri_Com);
-        for (int index = 0; index < this.Canales; ++index)
-        {
-          xmlTextWriter.WriteStartElement("channel_" + (object) (index + 1));
-          if (this.Tri_Enabled[index] == 1)
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), this.Tri_Value[index].ToString());
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), this.Tri_Enabled[index].ToString());
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), this.Tri_Inhibit[index].ToString());
-          }
-          else
-          {
-            xmlTextWriter.WriteAttributeString("value" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("enabled" + (object) (index + 1), "0");
-            xmlTextWriter.WriteAttributeString("inhibit" + (object) (index + 1), "1");
-          }
-          xmlTextWriter.WriteEndElement();
-        }
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteEndElement();
-        xmlTextWriter.WriteEndElement();
-      }
-      catch (Exception ex)
-      {
-        this.error = ex.Message;
-        xmlTextWriter.Flush();
-        xmlTextWriter.Close();
-        File.Delete(str2);
-        return;
-      }
-      xmlTextWriter.Flush();
-      xmlTextWriter.Close();
-      if (File.Exists(str1))
-        File.Delete(str1);
-      File.Copy(str2, str1);
-      File.Delete(str2);
-    }
+		public int[] Tri_Value;
 
-    public bool Load_Cfg(string _cfg)
-    {
-      string url = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + _cfg;
-      try
-      {
-        XmlTextReader xmlTextReader = new XmlTextReader(url);
-        xmlTextReader.Read();
-        xmlTextReader.Close();
-      }
-      catch (Exception ex)
-      {
-        return false;
-      }
-      try
-      {
-        XmlTextReader xmlTextReader = new XmlTextReader(url);
-        while (xmlTextReader.Read())
-        {
-          if (xmlTextReader.NodeType == XmlNodeType.Element)
-          {
-            if (xmlTextReader.Name.ToLower() == "select".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "coin".ToLower())
-                  this.CoinModel = xmlTextReader.Value;
-                else if (xmlTextReader.Name.ToLower() == "coin_p".ToLower())
-                  this.CoinModel_P = xmlTextReader.Value;
-                else if (xmlTextReader.Name.ToLower() == "bnv".ToLower())
-                  this.BillModel = xmlTextReader.Value;
-                else if (xmlTextReader.Name.ToLower() == "bnv_p".ToLower())
-                  this.BillModel_P = xmlTextReader.Value;
-              }
-            }
-            if (xmlTextReader.Name.ToLower() == "ssp".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "com".ToLower())
-                {
-                  this.SSP_Com = xmlTextReader.Value;
-                }
-                else
-                {
-                  for (int index = 0; index < this.Canales; ++index)
-                  {
-                    string str = "channel" + (object) (index + 1);
-                    if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.SSP_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                    else if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.SSP_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                  }
-                }
-              }
-            }
-            if (xmlTextReader.Name.ToLower() == "ssp3".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "com".ToLower())
-                {
-                  this.SSP3_Com = xmlTextReader.Value;
-                }
-                else
-                {
-                  for (int index = 0; index < this.Canales; ++index)
-                  {
-                    string str = "channel" + (object) (index + 1);
-                    if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.SSP3_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                    else if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.SSP3_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                  }
-                }
-              }
-            }
-            if (xmlTextReader.Name.ToLower() == "sio".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "com".ToLower())
-                {
-                  this.SIO_Com = xmlTextReader.Value;
-                }
-                else
-                {
-                  for (int index = 0; index < this.Canales; ++index)
-                  {
-                    string str = "channel" + (object) (index + 1);
-                    if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.SIO_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                    else if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.SIO_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                  }
-                }
-              }
-            }
-            if (xmlTextReader.Name.ToLower() == "rm5".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "com".ToLower())
-                {
-                  this.RM5_Com = xmlTextReader.Value;
-                }
-                else
-                {
-                  for (int index = 0; index < this.Canales; ++index)
-                  {
-                    string str = "channel" + (object) (index + 1);
-                    if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.RM5_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                    else if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.RM5_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                  }
-                }
-              }
-            }
-            if (xmlTextReader.Name.ToLower() == "tri".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "com".ToLower())
-                {
-                  this.Tri_Com = xmlTextReader.Value;
-                }
-                else
-                {
-                  for (int index = 0; index < this.Canales; ++index)
-                  {
-                    string str = "channel" + (object) (index + 1);
-                    if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.Tri_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                    else if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.Tri_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                  }
-                }
-              }
-            }
-            if (xmlTextReader.Name.ToLower() == "f40".ToLower() && xmlTextReader.HasAttributes)
-            {
-              for (int i = 0; i < xmlTextReader.AttributeCount; ++i)
-              {
-                xmlTextReader.MoveToAttribute(i);
-                if (xmlTextReader.Name.ToLower() == "com".ToLower())
-                {
-                  this.F40_Com = xmlTextReader.Value;
-                }
-                else
-                {
-                  for (int index = 0; index < this.Canales; ++index)
-                  {
-                    string str = "channel" + (object) (index + 1);
-                    if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.F40_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                    else if (xmlTextReader.Name.ToLower() == str.ToLower())
-                      this.F40_Value[index] = Convert.ToInt32(xmlTextReader.Value);
-                  }
-                }
-              }
-            }
-          }
-        }
-        xmlTextReader.Close();
-      }
-      catch (Exception ex)
-      {
-        this.error = ex.Message;
-        return false;
-      }
-      return true;
-    }
+		public int[] Tri_Inhibit;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-      this.Save("devices.cfg");
-      if (this.opciones != null)
-      {
-        this.opciones.Dev_BNV = this.BillModel;
-        this.opciones.Dev_BNV_P = this.BillModel_P;
-        this.opciones.Dev_Coin = this.CoinModel;
-        this.opciones.Dev_Coin_P = this.CoinModel_P;
-      }
-      this.OK = true;
-      this.Close();
-    }
+		public int[] Tri_Enabled;
 
-    private void lCom_SelectionChangeCommitted(object sender, EventArgs e)
-    {
-      switch (this.Fase)
-      {
-        case Devices_Wizard.Wizard.RM5Config:
-          this.RM5_Com = this.lCom.Text;
-          break;
-        case Devices_Wizard.Wizard.SIOConfig:
-          this.SIO_Com = this.lCom.Text;
-          break;
-        case Devices_Wizard.Wizard.SSPConfig:
-          this.SSP_Com = this.lCom.Text;
-          break;
-        case Devices_Wizard.Wizard.SSP3Config:
-          this.SSP3_Com = this.lCom.Text;
-          break;
-        case Devices_Wizard.Wizard.F40Config:
-          this.F40_Com = this.lCom.Text;
-          break;
-        case Devices_Wizard.Wizard.TriConfig:
-          this.Tri_Com = this.lCom.Text;
-          break;
-      }
-    }
+		public string F40_Com = "?";
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public int[] F40_Value;
 
-    private void InitializeComponent()
-    {
-      ComponentResourceManager componentResourceManager = new ComponentResourceManager(typeof (Devices_Wizard));
-      this.pBotons = new Panel();
-      this.bCancel = new Button();
-      this.bSig = new Button();
-      this.bAnt = new Button();
-      this.bOK = new Button();
-      this.tabs = new TabControl();
-      this.tInfo = new TabPage();
-      this.hInfo = new GradientPanel();
-      this.infoWizard = new TextBox();
-      this.tCoin_Mode = new TabPage();
-      this.rCoin_M3 = new RadioButton();
-      this.rCoin_M1 = new RadioButton();
-      this.rCoin_M2 = new RadioButton();
-      this.hCoin_Mode = new GradientPanel();
-      this.tCoin_Detect = new TabPage();
-      this.dCCT2 = new CheckBox();
-      this.pCoin = new ProgressBar();
-      this.dRM5 = new CheckBox();
-      this.hCoin_Detect = new GradientPanel();
-      this.tBill_Mode = new TabPage();
-      this.rBill_M3 = new RadioButton();
-      this.rBill_M1 = new RadioButton();
-      this.rBill_M2 = new RadioButton();
-      this.pBillMode = new GradientPanel();
-      this.tBill_Detect = new TabPage();
-      this.dNV_SIO = new CheckBox();
-      this.pBill = new ProgressBar();
-      this.dTrilogy = new CheckBox();
-      this.dF40 = new CheckBox();
-      this.dNV9_SSP = new CheckBox();
-      this.dNV9_SSP3 = new CheckBox();
-      this.pBillDetect = new GradientPanel();
-      this.tBill_Config = new TabPage();
-      this.eCANAL_16 = new CheckBox();
-      this.eCANAL_15 = new CheckBox();
-      this.eCANAL_14 = new CheckBox();
-      this.eCANAL_13 = new CheckBox();
-      this.eCANAL_12 = new CheckBox();
-      this.eCANAL_11 = new CheckBox();
-      this.eCANAL_10 = new CheckBox();
-      this.eCANAL_9 = new CheckBox();
-      this.eCANAL_8 = new CheckBox();
-      this.eCANAL_7 = new CheckBox();
-      this.eCANAL_6 = new CheckBox();
-      this.eCANAL_5 = new CheckBox();
-      this.eCANAL_4 = new CheckBox();
-      this.eCANAL_3 = new CheckBox();
-      this.eCANAL_2 = new CheckBox();
-      this.eCANAL_1 = new CheckBox();
-      this.iCom = new Label();
-      this.lCom = new ComboBox();
-      this.pTitle = new GradientPanel();
-      this.tResum = new TabPage();
-      this.bgControl = new BackgroundWorker();
-      this.pBotons.SuspendLayout();
-      this.tabs.SuspendLayout();
-      this.tInfo.SuspendLayout();
-      this.tCoin_Mode.SuspendLayout();
-      this.tCoin_Detect.SuspendLayout();
-      this.tBill_Mode.SuspendLayout();
-      this.tBill_Detect.SuspendLayout();
-      this.tBill_Config.SuspendLayout();
-      this.SuspendLayout();
-      this.pBotons.Controls.Add((Control) this.bCancel);
-      this.pBotons.Controls.Add((Control) this.bSig);
-      this.pBotons.Controls.Add((Control) this.bAnt);
-      this.pBotons.Controls.Add((Control) this.bOK);
-      this.pBotons.Dock = DockStyle.Bottom;
-      this.pBotons.Location = new Point(0, 415);
-      this.pBotons.Name = "pBotons";
-      this.pBotons.Size = new Size(657, 54);
-      this.pBotons.TabIndex = 0;
-      this.bCancel.Image = (Image) Resources.ico_del;
-      this.bCancel.Location = new Point(12, 7);
-      this.bCancel.Name = "bCancel";
-      this.bCancel.Size = new Size(75, 41);
-      this.bCancel.TabIndex = 0;
-      this.bCancel.UseVisualStyleBackColor = true;
-      this.bCancel.Click += new EventHandler(this.bCancel_Click);
-      this.bSig.Image = (Image) Resources.ico_right_green;
-      this.bSig.Location = new Point(489, 7);
-      this.bSig.Name = "bSig";
-      this.bSig.Size = new Size(75, 41);
-      this.bSig.TabIndex = 2;
-      this.bSig.UseVisualStyleBackColor = true;
-      this.bSig.Click += new EventHandler(this.bSig_Click);
-      this.bAnt.Image = (Image) Resources.ico_left_blue;
-      this.bAnt.Location = new Point(408, 7);
-      this.bAnt.Name = "bAnt";
-      this.bAnt.Size = new Size(75, 41);
-      this.bAnt.TabIndex = 1;
-      this.bAnt.UseVisualStyleBackColor = true;
-      this.bOK.Image = (Image) Resources.ico_ok;
-      this.bOK.Location = new Point(570, 7);
-      this.bOK.Name = "bOK";
-      this.bOK.Size = new Size(75, 41);
-      this.bOK.TabIndex = 3;
-      this.bOK.UseVisualStyleBackColor = true;
-      this.bOK.Click += new EventHandler(this.bOK_Click);
-      this.tabs.Appearance = TabAppearance.FlatButtons;
-      this.tabs.Controls.Add((Control) this.tInfo);
-      this.tabs.Controls.Add((Control) this.tCoin_Mode);
-      this.tabs.Controls.Add((Control) this.tCoin_Detect);
-      this.tabs.Controls.Add((Control) this.tBill_Mode);
-      this.tabs.Controls.Add((Control) this.tBill_Detect);
-      this.tabs.Controls.Add((Control) this.tBill_Config);
-      this.tabs.Controls.Add((Control) this.tResum);
-      this.tabs.Dock = DockStyle.Fill;
-      this.tabs.ItemSize = new Size(0, 1);
-      this.tabs.Location = new Point(0, 0);
-      this.tabs.Multiline = true;
-      this.tabs.Name = "tabs";
-      this.tabs.SelectedIndex = 0;
-      this.tabs.Size = new Size(657, 415);
-      this.tabs.SizeMode = TabSizeMode.Fixed;
-      this.tabs.TabIndex = 1;
-      this.tInfo.Controls.Add((Control) this.hInfo);
-      this.tInfo.Controls.Add((Control) this.infoWizard);
-      this.tInfo.Location = new Point(4, 5);
-      this.tInfo.Name = "tInfo";
-      this.tInfo.Padding = new Padding(3);
-      this.tInfo.Size = new Size(649, 406);
-      this.tInfo.TabIndex = 0;
-      this.hInfo.BackgroundImage = (Image) componentResourceManager.GetObject("hInfo.BackgroundImage");
-      this.hInfo.BackgroundImageLayout = ImageLayout.Stretch;
-      this.hInfo.Dock = DockStyle.Top;
-      this.hInfo.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.hInfo.Location = new Point(3, 3);
-      this.hInfo.Name = "hInfo";
-      this.hInfo.PageEndColor = Color.Empty;
-      this.hInfo.PageStartColor = Color.LightSteelBlue;
-      this.hInfo.Size = new Size(643, 60);
-      this.hInfo.TabIndex = 3;
-      this.hInfo.Title = "Configuration devices";
-      this.hInfo.Title_Alignement = GradientPanel.Alignement.Left;
-      this.infoWizard.Location = new Point(8, 68);
-      this.infoWizard.Margin = new Padding(0);
-      this.infoWizard.Multiline = true;
-      this.infoWizard.Name = "infoWizard";
-      this.infoWizard.ReadOnly = true;
-      this.infoWizard.Size = new Size(633, 333);
-      this.infoWizard.TabIndex = 2;
-      this.infoWizard.Text = "1) Install drivers.\r\n\r\n2) Connect device.\r\n\r\n3) COnfigure device.\r\n";
-      this.tCoin_Mode.Controls.Add((Control) this.rCoin_M3);
-      this.tCoin_Mode.Controls.Add((Control) this.rCoin_M1);
-      this.tCoin_Mode.Controls.Add((Control) this.rCoin_M2);
-      this.tCoin_Mode.Controls.Add((Control) this.hCoin_Mode);
-      this.tCoin_Mode.Location = new Point(4, 5);
-      this.tCoin_Mode.Name = "tCoin_Mode";
-      this.tCoin_Mode.Padding = new Padding(3);
-      this.tCoin_Mode.Size = new Size(649, 406);
-      this.tCoin_Mode.TabIndex = 1;
-      this.tCoin_Mode.UseVisualStyleBackColor = true;
-      this.rCoin_M3.AutoSize = true;
-      this.rCoin_M3.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.rCoin_M3.Location = new Point(30, 133);
-      this.rCoin_M3.Name = "rCoin_M3";
-      this.rCoin_M3.Size = new Size(120, 35);
-      this.rCoin_M3.TabIndex = 3;
-      this.rCoin_M3.Text = "Manual";
-      this.rCoin_M3.UseVisualStyleBackColor = true;
-      this.rCoin_M1.AutoSize = true;
-      this.rCoin_M1.Checked = true;
-      this.rCoin_M1.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.rCoin_M1.Location = new Point(30, 90);
-      this.rCoin_M1.Name = "rCoin_M1";
-      this.rCoin_M1.Size = new Size(112, 35);
-      this.rCoin_M1.TabIndex = 2;
-      this.rCoin_M1.TabStop = true;
-      this.rCoin_M1.Text = "Detect";
-      this.rCoin_M1.UseVisualStyleBackColor = true;
-      this.rCoin_M2.AutoSize = true;
-      this.rCoin_M2.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.rCoin_M2.Location = new Point(30, 176);
-      this.rCoin_M2.Name = "rCoin_M2";
-      this.rCoin_M2.Size = new Size(97, 35);
-      this.rCoin_M2.TabIndex = 1;
-      this.rCoin_M2.Text = "None";
-      this.rCoin_M2.UseVisualStyleBackColor = true;
-      this.hCoin_Mode.BackgroundImage = (Image) componentResourceManager.GetObject("hCoin_Mode.BackgroundImage");
-      this.hCoin_Mode.BackgroundImageLayout = ImageLayout.Stretch;
-      this.hCoin_Mode.Dock = DockStyle.Top;
-      this.hCoin_Mode.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.hCoin_Mode.Location = new Point(3, 3);
-      this.hCoin_Mode.Name = "hCoin_Mode";
-      this.hCoin_Mode.PageEndColor = Color.Empty;
-      this.hCoin_Mode.PageStartColor = Color.LightSteelBlue;
-      this.hCoin_Mode.Size = new Size(643, 60);
-      this.hCoin_Mode.TabIndex = 0;
-      this.hCoin_Mode.Title = "Coin acceptor";
-      this.hCoin_Mode.Title_Alignement = GradientPanel.Alignement.Left;
-      this.tCoin_Detect.Controls.Add((Control) this.dCCT2);
-      this.tCoin_Detect.Controls.Add((Control) this.pCoin);
-      this.tCoin_Detect.Controls.Add((Control) this.dRM5);
-      this.tCoin_Detect.Controls.Add((Control) this.hCoin_Detect);
-      this.tCoin_Detect.Location = new Point(4, 5);
-      this.tCoin_Detect.Name = "tCoin_Detect";
-      this.tCoin_Detect.Size = new Size(649, 406);
-      this.tCoin_Detect.TabIndex = 3;
-      this.tCoin_Detect.UseVisualStyleBackColor = true;
-      this.dCCT2.AutoSize = true;
-      this.dCCT2.Enabled = false;
-      this.dCCT2.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dCCT2.Location = new Point(27, 85);
-      this.dCCT2.Name = "dCCT2";
-      this.dCCT2.Size = new Size(435, 35);
-      this.dCCT2.TabIndex = 4;
-      this.dCCT2.Text = "CCTalk COIN ACCEPTOR (ID 2)";
-      this.dCCT2.ThreeState = true;
-      this.dCCT2.UseVisualStyleBackColor = true;
-      this.pCoin.Dock = DockStyle.Bottom;
-      this.pCoin.Location = new Point(0, 392);
-      this.pCoin.Name = "pCoin";
-      this.pCoin.Size = new Size(649, 14);
-      this.pCoin.Step = 100;
-      this.pCoin.Style = ProgressBarStyle.Marquee;
-      this.pCoin.TabIndex = 3;
-      this.pCoin.Value = 100;
-      this.pCoin.Visible = false;
-      this.dRM5.AutoSize = true;
-      this.dRM5.Enabled = false;
-      this.dRM5.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dRM5.Location = new Point(27, 126);
-      this.dRM5.Name = "dRM5";
-      this.dRM5.Size = new Size(230, 35);
-      this.dRM5.TabIndex = 2;
-      this.dRM5.Text = "Comestero RM5";
-      this.dRM5.ThreeState = true;
-      this.dRM5.UseVisualStyleBackColor = true;
-      this.hCoin_Detect.BackgroundImage = (Image) componentResourceManager.GetObject("hCoin_Detect.BackgroundImage");
-      this.hCoin_Detect.BackgroundImageLayout = ImageLayout.Stretch;
-      this.hCoin_Detect.Dock = DockStyle.Top;
-      this.hCoin_Detect.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.hCoin_Detect.Location = new Point(0, 0);
-      this.hCoin_Detect.Name = "hCoin_Detect";
-      this.hCoin_Detect.PageEndColor = Color.Empty;
-      this.hCoin_Detect.PageStartColor = Color.LightSteelBlue;
-      this.hCoin_Detect.Size = new Size(649, 60);
-      this.hCoin_Detect.TabIndex = 1;
-      this.hCoin_Detect.Title = "Find coin acceptor";
-      this.hCoin_Detect.Title_Alignement = GradientPanel.Alignement.Left;
-      this.tBill_Mode.Controls.Add((Control) this.rBill_M3);
-      this.tBill_Mode.Controls.Add((Control) this.rBill_M1);
-      this.tBill_Mode.Controls.Add((Control) this.rBill_M2);
-      this.tBill_Mode.Controls.Add((Control) this.pBillMode);
-      this.tBill_Mode.Location = new Point(4, 5);
-      this.tBill_Mode.Name = "tBill_Mode";
-      this.tBill_Mode.Size = new Size(649, 406);
-      this.tBill_Mode.TabIndex = 2;
-      this.tBill_Mode.UseVisualStyleBackColor = true;
-      this.rBill_M3.AutoSize = true;
-      this.rBill_M3.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.rBill_M3.Location = new Point(30, 133);
-      this.rBill_M3.Name = "rBill_M3";
-      this.rBill_M3.Size = new Size(120, 35);
-      this.rBill_M3.TabIndex = 7;
-      this.rBill_M3.Text = "Manual";
-      this.rBill_M3.UseVisualStyleBackColor = true;
-      this.rBill_M1.AutoSize = true;
-      this.rBill_M1.Checked = true;
-      this.rBill_M1.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.rBill_M1.Location = new Point(30, 90);
-      this.rBill_M1.Name = "rBill_M1";
-      this.rBill_M1.Size = new Size(112, 35);
-      this.rBill_M1.TabIndex = 6;
-      this.rBill_M1.TabStop = true;
-      this.rBill_M1.Text = "Detect";
-      this.rBill_M1.UseVisualStyleBackColor = true;
-      this.rBill_M2.AutoSize = true;
-      this.rBill_M2.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.rBill_M2.Location = new Point(30, 174);
-      this.rBill_M2.Name = "rBill_M2";
-      this.rBill_M2.Size = new Size(97, 35);
-      this.rBill_M2.TabIndex = 5;
-      this.rBill_M2.Text = "None";
-      this.rBill_M2.UseVisualStyleBackColor = true;
-      this.pBillMode.BackgroundImage = (Image) componentResourceManager.GetObject("pBillMode.BackgroundImage");
-      this.pBillMode.BackgroundImageLayout = ImageLayout.Stretch;
-      this.pBillMode.Dock = DockStyle.Top;
-      this.pBillMode.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.pBillMode.Location = new Point(0, 0);
-      this.pBillMode.Name = "pBillMode";
-      this.pBillMode.PageEndColor = Color.Empty;
-      this.pBillMode.PageStartColor = Color.LightSteelBlue;
-      this.pBillMode.Size = new Size(649, 60);
-      this.pBillMode.TabIndex = 4;
-      this.pBillMode.Title = "Validator";
-      this.pBillMode.Title_Alignement = GradientPanel.Alignement.Left;
-      this.tBill_Detect.Controls.Add((Control) this.dNV_SIO);
-      this.tBill_Detect.Controls.Add((Control) this.pBill);
-      this.tBill_Detect.Controls.Add((Control) this.dTrilogy);
-      this.tBill_Detect.Controls.Add((Control) this.dF40);
-      this.tBill_Detect.Controls.Add((Control) this.dNV9_SSP);
-      this.tBill_Detect.Controls.Add((Control) this.dNV9_SSP3);
-      this.tBill_Detect.Controls.Add((Control) this.pBillDetect);
-      this.tBill_Detect.Location = new Point(4, 5);
-      this.tBill_Detect.Name = "tBill_Detect";
-      this.tBill_Detect.Size = new Size(649, 406);
-      this.tBill_Detect.TabIndex = 6;
-      this.tBill_Detect.UseVisualStyleBackColor = true;
-      this.dNV_SIO.AutoSize = true;
-      this.dNV_SIO.Enabled = false;
-      this.dNV_SIO.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dNV_SIO.Location = new Point(30, 166);
-      this.dNV_SIO.Name = "dNV_SIO";
-      this.dNV_SIO.Size = new Size(239, 35);
-      this.dNV_SIO.TabIndex = 9;
-      this.dNV_SIO.Text = "NV SIO (300bps)";
-      this.dNV_SIO.UseVisualStyleBackColor = true;
-      this.pBill.Dock = DockStyle.Bottom;
-      this.pBill.Location = new Point(0, 392);
-      this.pBill.Name = "pBill";
-      this.pBill.Size = new Size(649, 14);
-      this.pBill.Step = 100;
-      this.pBill.Style = ProgressBarStyle.Marquee;
-      this.pBill.TabIndex = 8;
-      this.pBill.Value = 100;
-      this.pBill.Visible = false;
-      this.dTrilogy.AutoSize = true;
-      this.dTrilogy.Enabled = false;
-      this.dTrilogy.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dTrilogy.Location = new Point(30, 252);
-      this.dTrilogy.Name = "dTrilogy";
-      this.dTrilogy.Size = new Size(115, 35);
-      this.dTrilogy.TabIndex = 7;
-      this.dTrilogy.Text = "Trilogy";
-      this.dTrilogy.UseVisualStyleBackColor = true;
-      this.dF40.AutoSize = true;
-      this.dF40.Enabled = false;
-      this.dF40.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dF40.Location = new Point(30, 209);
-      this.dF40.Name = "dF40";
-      this.dF40.Size = new Size(203, 35);
-      this.dF40.TabIndex = 6;
-      this.dF40.Text = "ccTalk (ID 40)";
-      this.dF40.UseVisualStyleBackColor = true;
-      this.dNV9_SSP.AutoSize = true;
-      this.dNV9_SSP.Enabled = false;
-      this.dNV9_SSP.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dNV9_SSP.Location = new Point(30, 80);
-      this.dNV9_SSP.Name = "dNV9_SSP";
-      this.dNV9_SSP.Size = new Size(132, 35);
-      this.dNV9_SSP.TabIndex = 4;
-      this.dNV9_SSP.Text = "NV SSP";
-      this.dNV9_SSP.UseVisualStyleBackColor = true;
-      this.dNV9_SSP3.AutoSize = true;
-      this.dNV9_SSP3.Enabled = false;
-      this.dNV9_SSP3.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.dNV9_SSP3.Location = new Point(30, 123);
-      this.dNV9_SSP3.Name = "dNV9_SSP3";
-      this.dNV9_SSP3.Size = new Size(168, 35);
-      this.dNV9_SSP3.TabIndex = 4;
-      this.dNV9_SSP3.Text = "NV SSP v3";
-      this.dNV9_SSP3.UseVisualStyleBackColor = true;
-      this.pBillDetect.BackgroundImage = (Image) componentResourceManager.GetObject("pBillDetect.BackgroundImage");
-      this.pBillDetect.BackgroundImageLayout = ImageLayout.Stretch;
-      this.pBillDetect.Dock = DockStyle.Top;
-      this.pBillDetect.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.pBillDetect.Location = new Point(0, 0);
-      this.pBillDetect.Name = "pBillDetect";
-      this.pBillDetect.PageEndColor = Color.Empty;
-      this.pBillDetect.PageStartColor = Color.LightSteelBlue;
-      this.pBillDetect.Size = new Size(649, 60);
-      this.pBillDetect.TabIndex = 3;
-      this.pBillDetect.Title = "Find bill validator";
-      this.pBillDetect.Title_Alignement = GradientPanel.Alignement.Left;
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_16);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_15);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_14);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_13);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_12);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_11);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_10);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_9);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_8);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_7);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_6);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_5);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_4);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_3);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_2);
-      this.tBill_Config.Controls.Add((Control) this.eCANAL_1);
-      this.tBill_Config.Controls.Add((Control) this.iCom);
-      this.tBill_Config.Controls.Add((Control) this.lCom);
-      this.tBill_Config.Controls.Add((Control) this.pTitle);
-      this.tBill_Config.Location = new Point(4, 5);
-      this.tBill_Config.Name = "tBill_Config";
-      this.tBill_Config.Size = new Size(649, 406);
-      this.tBill_Config.TabIndex = 9;
-      this.tBill_Config.UseVisualStyleBackColor = true;
-      this.eCANAL_16.AutoSize = true;
-      this.eCANAL_16.Checked = true;
-      this.eCANAL_16.CheckState = CheckState.Indeterminate;
-      this.eCANAL_16.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_16.Location = new Point(319, 369);
-      this.eCANAL_16.Name = "eCANAL_16";
-      this.eCANAL_16.Size = new Size(33, 24);
-      this.eCANAL_16.TabIndex = 38;
-      this.eCANAL_16.Text = "-";
-      this.eCANAL_16.UseVisualStyleBackColor = true;
-      this.eCANAL_15.AutoSize = true;
-      this.eCANAL_15.Checked = true;
-      this.eCANAL_15.CheckState = CheckState.Indeterminate;
-      this.eCANAL_15.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_15.Location = new Point(319, 337);
-      this.eCANAL_15.Name = "eCANAL_15";
-      this.eCANAL_15.Size = new Size(33, 24);
-      this.eCANAL_15.TabIndex = 37;
-      this.eCANAL_15.Text = "-";
-      this.eCANAL_15.UseVisualStyleBackColor = true;
-      this.eCANAL_14.AutoSize = true;
-      this.eCANAL_14.Checked = true;
-      this.eCANAL_14.CheckState = CheckState.Indeterminate;
-      this.eCANAL_14.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_14.Location = new Point(319, 305);
-      this.eCANAL_14.Name = "eCANAL_14";
-      this.eCANAL_14.Size = new Size(33, 24);
-      this.eCANAL_14.TabIndex = 36;
-      this.eCANAL_14.Text = "-";
-      this.eCANAL_14.UseVisualStyleBackColor = true;
-      this.eCANAL_13.AutoSize = true;
-      this.eCANAL_13.Checked = true;
-      this.eCANAL_13.CheckState = CheckState.Indeterminate;
-      this.eCANAL_13.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_13.Location = new Point(319, 273);
-      this.eCANAL_13.Name = "eCANAL_13";
-      this.eCANAL_13.Size = new Size(33, 24);
-      this.eCANAL_13.TabIndex = 35;
-      this.eCANAL_13.Text = "-";
-      this.eCANAL_13.UseVisualStyleBackColor = true;
-      this.eCANAL_12.AutoSize = true;
-      this.eCANAL_12.Checked = true;
-      this.eCANAL_12.CheckState = CheckState.Indeterminate;
-      this.eCANAL_12.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_12.Location = new Point(319, 241);
-      this.eCANAL_12.Name = "eCANAL_12";
-      this.eCANAL_12.Size = new Size(33, 24);
-      this.eCANAL_12.TabIndex = 34;
-      this.eCANAL_12.Text = "-";
-      this.eCANAL_12.UseVisualStyleBackColor = true;
-      this.eCANAL_11.AutoSize = true;
-      this.eCANAL_11.Checked = true;
-      this.eCANAL_11.CheckState = CheckState.Indeterminate;
-      this.eCANAL_11.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_11.Location = new Point(319, 209);
-      this.eCANAL_11.Name = "eCANAL_11";
-      this.eCANAL_11.Size = new Size(33, 24);
-      this.eCANAL_11.TabIndex = 33;
-      this.eCANAL_11.Text = "-";
-      this.eCANAL_11.UseVisualStyleBackColor = true;
-      this.eCANAL_10.AutoSize = true;
-      this.eCANAL_10.Checked = true;
-      this.eCANAL_10.CheckState = CheckState.Indeterminate;
-      this.eCANAL_10.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_10.Location = new Point(319, 177);
-      this.eCANAL_10.Name = "eCANAL_10";
-      this.eCANAL_10.Size = new Size(33, 24);
-      this.eCANAL_10.TabIndex = 32;
-      this.eCANAL_10.Text = "-";
-      this.eCANAL_10.UseVisualStyleBackColor = true;
-      this.eCANAL_9.AutoSize = true;
-      this.eCANAL_9.Checked = true;
-      this.eCANAL_9.CheckState = CheckState.Indeterminate;
-      this.eCANAL_9.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_9.Location = new Point(319, 145);
-      this.eCANAL_9.Name = "eCANAL_9";
-      this.eCANAL_9.Size = new Size(33, 24);
-      this.eCANAL_9.TabIndex = 31;
-      this.eCANAL_9.Text = "-";
-      this.eCANAL_9.UseVisualStyleBackColor = true;
-      this.eCANAL_8.AutoSize = true;
-      this.eCANAL_8.Checked = true;
-      this.eCANAL_8.CheckState = CheckState.Indeterminate;
-      this.eCANAL_8.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_8.Location = new Point(22, 369);
-      this.eCANAL_8.Name = "eCANAL_8";
-      this.eCANAL_8.Size = new Size(33, 24);
-      this.eCANAL_8.TabIndex = 30;
-      this.eCANAL_8.Text = "-";
-      this.eCANAL_8.UseVisualStyleBackColor = true;
-      this.eCANAL_7.AutoSize = true;
-      this.eCANAL_7.Checked = true;
-      this.eCANAL_7.CheckState = CheckState.Indeterminate;
-      this.eCANAL_7.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_7.Location = new Point(22, 337);
-      this.eCANAL_7.Name = "eCANAL_7";
-      this.eCANAL_7.Size = new Size(33, 24);
-      this.eCANAL_7.TabIndex = 29;
-      this.eCANAL_7.Text = "-";
-      this.eCANAL_7.UseVisualStyleBackColor = true;
-      this.eCANAL_6.AutoSize = true;
-      this.eCANAL_6.Checked = true;
-      this.eCANAL_6.CheckState = CheckState.Indeterminate;
-      this.eCANAL_6.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_6.Location = new Point(22, 305);
-      this.eCANAL_6.Name = "eCANAL_6";
-      this.eCANAL_6.Size = new Size(33, 24);
-      this.eCANAL_6.TabIndex = 28;
-      this.eCANAL_6.Text = "-";
-      this.eCANAL_6.UseVisualStyleBackColor = true;
-      this.eCANAL_5.AutoSize = true;
-      this.eCANAL_5.Checked = true;
-      this.eCANAL_5.CheckState = CheckState.Indeterminate;
-      this.eCANAL_5.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_5.Location = new Point(22, 273);
-      this.eCANAL_5.Name = "eCANAL_5";
-      this.eCANAL_5.Size = new Size(33, 24);
-      this.eCANAL_5.TabIndex = 27;
-      this.eCANAL_5.Text = "-";
-      this.eCANAL_5.UseVisualStyleBackColor = true;
-      this.eCANAL_4.AutoSize = true;
-      this.eCANAL_4.Checked = true;
-      this.eCANAL_4.CheckState = CheckState.Indeterminate;
-      this.eCANAL_4.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_4.Location = new Point(22, 241);
-      this.eCANAL_4.Name = "eCANAL_4";
-      this.eCANAL_4.Size = new Size(33, 24);
-      this.eCANAL_4.TabIndex = 26;
-      this.eCANAL_4.Text = "-";
-      this.eCANAL_4.UseVisualStyleBackColor = true;
-      this.eCANAL_3.AutoSize = true;
-      this.eCANAL_3.Checked = true;
-      this.eCANAL_3.CheckState = CheckState.Indeterminate;
-      this.eCANAL_3.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_3.Location = new Point(22, 209);
-      this.eCANAL_3.Name = "eCANAL_3";
-      this.eCANAL_3.Size = new Size(33, 24);
-      this.eCANAL_3.TabIndex = 25;
-      this.eCANAL_3.Text = "-";
-      this.eCANAL_3.UseVisualStyleBackColor = true;
-      this.eCANAL_2.AutoSize = true;
-      this.eCANAL_2.Checked = true;
-      this.eCANAL_2.CheckState = CheckState.Indeterminate;
-      this.eCANAL_2.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_2.Location = new Point(22, 177);
-      this.eCANAL_2.Name = "eCANAL_2";
-      this.eCANAL_2.Size = new Size(33, 24);
-      this.eCANAL_2.TabIndex = 24;
-      this.eCANAL_2.Text = "-";
-      this.eCANAL_2.UseVisualStyleBackColor = true;
-      this.eCANAL_1.AutoSize = true;
-      this.eCANAL_1.Checked = true;
-      this.eCANAL_1.CheckState = CheckState.Indeterminate;
-      this.eCANAL_1.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.eCANAL_1.Location = new Point(22, 145);
-      this.eCANAL_1.Name = "eCANAL_1";
-      this.eCANAL_1.Size = new Size(33, 24);
-      this.eCANAL_1.TabIndex = 23;
-      this.eCANAL_1.Text = "-";
-      this.eCANAL_1.UseVisualStyleBackColor = true;
-      this.iCom.AutoSize = true;
-      this.iCom.Location = new Point(19, 95);
-      this.iCom.Name = "iCom";
-      this.iCom.Size = new Size(53, 13);
-      this.iCom.TabIndex = 8;
-      this.iCom.Text = "COM Port";
-      this.lCom.DropDownStyle = ComboBoxStyle.DropDownList;
-      this.lCom.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lCom.FormattingEnabled = true;
-      this.lCom.Location = new Point(78, 81);
-      this.lCom.Name = "lCom";
-      this.lCom.Size = new Size(167, 39);
-      this.lCom.TabIndex = 7;
-      this.lCom.SelectionChangeCommitted += new EventHandler(this.lCom_SelectionChangeCommitted);
-      this.pTitle.BackgroundImage = (Image) componentResourceManager.GetObject("pTitle.BackgroundImage");
-      this.pTitle.BackgroundImageLayout = ImageLayout.Stretch;
-      this.pTitle.Dock = DockStyle.Top;
-      this.pTitle.Font = new Font("Microsoft Sans Serif", 12f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.pTitle.Location = new Point(0, 0);
-      this.pTitle.Name = "pTitle";
-      this.pTitle.PageEndColor = Color.Empty;
-      this.pTitle.PageStartColor = Color.LightSteelBlue;
-      this.pTitle.Size = new Size(649, 60);
-      this.pTitle.TabIndex = 6;
-      this.pTitle.Title = "F40 Configuration";
-      this.pTitle.Title_Alignement = GradientPanel.Alignement.Left;
-      this.tResum.Location = new Point(4, 5);
-      this.tResum.Name = "tResum";
-      this.tResum.Size = new Size(649, 406);
-      this.tResum.TabIndex = 10;
-      this.tResum.UseVisualStyleBackColor = true;
-      this.bgControl.WorkerReportsProgress = true;
-      this.bgControl.WorkerSupportsCancellation = true;
-      this.bgControl.DoWork += new DoWorkEventHandler(this.bgControl_DoWork);
-      this.bgControl.ProgressChanged += new ProgressChangedEventHandler(this.bgControl_ProgressChanged);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(657, 469);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.tabs);
-      this.Controls.Add((Control) this.pBotons);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.Name = nameof (Devices_Wizard);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterParent;
-      this.Text = "Devices";
-      this.FormClosing += new FormClosingEventHandler(this.Devices_Wizard_FormClosing);
-      this.Load += new EventHandler(this.Devices_Wizard_Load);
-      this.pBotons.ResumeLayout(false);
-      this.tabs.ResumeLayout(false);
-      this.tInfo.ResumeLayout(false);
-      this.tInfo.PerformLayout();
-      this.tCoin_Mode.ResumeLayout(false);
-      this.tCoin_Mode.PerformLayout();
-      this.tCoin_Detect.ResumeLayout(false);
-      this.tCoin_Detect.PerformLayout();
-      this.tBill_Mode.ResumeLayout(false);
-      this.tBill_Mode.PerformLayout();
-      this.tBill_Detect.ResumeLayout(false);
-      this.tBill_Detect.PerformLayout();
-      this.tBill_Config.ResumeLayout(false);
-      this.tBill_Config.PerformLayout();
-      this.ResumeLayout(false);
-    }
+		public int[] F40_Inhibit;
 
-    private enum Wizard
-    {
-      Nulo,
-      StartUp,
-      Info,
-      CoinMode,
-      CoinDetecting,
-      CoinDetectingWait_RM5,
-      CoinDetectingWait_CCT2,
-      CoinDetected,
-      BillMode,
-      BillDetecting,
-      BillDetectingWait,
-      BillDetectingWait_SSP,
-      BillDetectingWait_SSP3,
-      BillDetectingWait_SIO,
-      BillDetectingWait_F40,
-      BillDetectingWait_Tri,
-      BillDetected,
-      RM5Config,
-      RM5Test,
-      CCT2Config,
-      CCT2Test,
-      SIOConfig,
-      SIOTest,
-      SSPConfig,
-      SSPTest,
-      SSP3Config,
-      SSP3Test,
-      F40Config,
-      F40Test,
-      TriConfig,
-      TriTest,
-      Resumen,
-    }
-  }
+		public int[] F40_Enabled;
+
+		public string RM5_Com = "?";
+
+		public int[] RM5_Value;
+
+		public int[] RM5_Inhibit;
+
+		public int[] RM5_Enabled;
+
+		public string CCT2_Com = "?";
+
+		public int[] CCT2_Value;
+
+		public int[] CCT2_Inhibit;
+
+		public int[] CCT2_Enabled;
+
+		private Control_Comestero rm5 = null;
+
+		private Control_CCTALK_COIN cct2 = null;
+
+		private Control_NV_SSP ssp = null;
+
+		private Control_NV_SSP_P6 ssp3 = null;
+
+		private Control_NV_SIO sio = null;
+
+		private Control_F40_CCTalk f40 = null;
+
+		private Control_Trilogy tri = null;
+
+		private Wizard Fase = Wizard.Nulo;
+
+		public bool CoinDetected = false;
+
+		public string CoinModel = "?";
+
+		public string CoinModel_P = "?";
+
+		public bool BillDetected = false;
+
+		public string BillModel = "?";
+
+		public string BillModel_P = "?";
+
+		private string error;
+
+		private IContainer components = null;
+
+		private Panel pBotons;
+
+		private Button bCancel;
+
+		private Button bSig;
+
+		private Button bAnt;
+
+		private Button bOK;
+
+		private TabControl tabs;
+
+		private TabPage tInfo;
+
+		private TabPage tCoin_Mode;
+
+		private TabPage tBill_Mode;
+
+		private TabPage tCoin_Detect;
+
+		private TextBox infoWizard;
+
+		private GradientPanel hCoin_Mode;
+
+		private RadioButton rCoin_M3;
+
+		private RadioButton rCoin_M1;
+
+		private RadioButton rCoin_M2;
+
+		private GradientPanel hInfo;
+
+		private CheckBox dRM5;
+
+		private GradientPanel hCoin_Detect;
+
+		private RadioButton rBill_M3;
+
+		private RadioButton rBill_M1;
+
+		private RadioButton rBill_M2;
+
+		private GradientPanel pBillMode;
+
+		private BackgroundWorker bgControl;
+
+		private TabPage tBill_Detect;
+
+		private CheckBox dTrilogy;
+
+		private CheckBox dF40;
+
+		private CheckBox dNV9_SSP;
+
+		private CheckBox dNV9_SSP3;
+
+		private GradientPanel pBillDetect;
+
+		private TabPage tBill_Config;
+
+		private TabPage tResum;
+
+		private Label iCom;
+
+		private ComboBox lCom;
+
+		private GradientPanel pTitle;
+
+		private ProgressBar pCoin;
+
+		private ProgressBar pBill;
+
+		private CheckBox dNV_SIO;
+
+		private CheckBox eCANAL_16;
+
+		private CheckBox eCANAL_15;
+
+		private CheckBox eCANAL_14;
+
+		private CheckBox eCANAL_13;
+
+		private CheckBox eCANAL_12;
+
+		private CheckBox eCANAL_11;
+
+		private CheckBox eCANAL_10;
+
+		private CheckBox eCANAL_9;
+
+		private CheckBox eCANAL_8;
+
+		private CheckBox eCANAL_7;
+
+		private CheckBox eCANAL_6;
+
+		private CheckBox eCANAL_5;
+
+		private CheckBox eCANAL_4;
+
+		private CheckBox eCANAL_3;
+
+		private CheckBox eCANAL_2;
+
+		private CheckBox eCANAL_1;
+
+		private CheckBox dCCT2;
+
+		public Devices_Wizard(ref Configuracion _opc)
+		{
+			OK = false;
+			run = false;
+			enint = false;
+			Fase = Wizard.Nulo;
+			InitializeComponent();
+			Fase = Wizard.StartUp;
+			Init_Vars();
+			Load_Cfg("devices.cfg");
+			Localize();
+			opciones = _opc;
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			ResumeLayout();
+		}
+
+		public Devices_Wizard(string _cfg)
+		{
+			Init_Vars();
+			Load_Cfg(_cfg);
+		}
+
+		private void Init_Vars()
+		{
+			SSP_Com = "?";
+			SSP_Value = new int[Canales];
+			SSP_Inhibit = new int[Canales];
+			SSP_Enabled = new int[Canales];
+			SSP3_Com = "?";
+			SSP3_Value = new int[Canales];
+			SSP3_Inhibit = new int[Canales];
+			SSP3_Enabled = new int[Canales];
+			SIO_Com = "?";
+			SIO_Value = new int[Canales];
+			SIO_Inhibit = new int[Canales];
+			SIO_Enabled = new int[Canales];
+			Tri_Com = "?";
+			Tri_Value = new int[Canales];
+			Tri_Inhibit = new int[Canales];
+			Tri_Enabled = new int[Canales];
+			F40_Com = "?";
+			F40_Value = new int[Canales];
+			F40_Inhibit = new int[Canales];
+			F40_Enabled = new int[Canales];
+			RM5_Com = "?";
+			RM5_Value = new int[Canales];
+			RM5_Inhibit = new int[Canales];
+			RM5_Enabled = new int[Canales];
+			CCT2_Com = "?";
+			CCT2_Value = new int[Canales];
+			CCT2_Inhibit = new int[Canales];
+			CCT2_Enabled = new int[Canales];
+			CoinModel = "?";
+			CoinModel_P = "?";
+			BillModel = "?";
+			BillModel_P = "?";
+		}
+
+		private void Refresh_SSP()
+		{
+			pTitle.Title = "Configure NV SSP";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = SSP_Com;
+			if (SSP_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (ssp == null)
+			{
+				ssp = new Control_NV_SSP();
+				ssp.port = SSP_Com;
+				ssp.Open();
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= ssp.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (!ssp.GetChannelEnabled(i + 1))
+				{
+					((CheckBox)array[0]).ThreeState = true;
+					((CheckBox)array[0]).CheckState = CheckState.Indeterminate;
+				}
+				else
+				{
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = ((!ssp.GetChannelInhibit(i + 1)) ? CheckState.Checked : CheckState.Unchecked);
+				}
+				if (ssp.GetChannelValue(i + 1) < ssp.Multiplicador)
+				{
+					array[0].Text = "0." + ssp.GetChannelValue(i + 1) + " " + ssp.GetChannelCurrency(i + 1);
+				}
+				else
+				{
+					array[0].Text = ssp.GetChannelValue(i + 1) / ssp.Multiplicador + " " + ssp.GetChannelCurrency(i + 1);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void Refresh_SSP3()
+		{
+			pTitle.Title = "Configure NV SSP v3";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = SSP3_Com;
+			if (SSP3_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (ssp3 == null)
+			{
+				ssp3 = new Control_NV_SSP_P6();
+				ssp3.port = SSP_Com;
+				ssp3.Open();
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= ssp3.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (!ssp3.GetChannelEnabled(i + 1))
+				{
+					((CheckBox)array[0]).ThreeState = true;
+					((CheckBox)array[0]).CheckState = CheckState.Indeterminate;
+				}
+				else
+				{
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = ((!ssp3.GetChannelInhibit(i + 1)) ? CheckState.Checked : CheckState.Unchecked);
+				}
+				if (ssp3.GetChannelValue(i + 1) < (decimal)ssp3.Multiplier)
+				{
+					array[0].Text = "0." + ssp3.GetChannelValue(i + 1) + " " + ssp3.GetChannelCurrency(i + 1);
+				}
+				else
+				{
+					array[0].Text = ssp3.GetChannelValue(i + 1) / (decimal)ssp3.Multiplier + " " + ssp3.GetChannelCurrency(i + 1);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void Refresh_F40()
+		{
+			pTitle.Title = "Configure PayPrint F40 CCTalk";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = F40_Com;
+			if (F40_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (f40 == null)
+			{
+				f40 = new Control_F40_CCTalk();
+				f40.port = F40_Com;
+				f40.Open();
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= f40.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (f40.Canal[i] == 0)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				((CheckBox)array[0]).ThreeState = false;
+				((CheckBox)array[0]).CheckState = ((f40.eCanal[i] == 1) ? CheckState.Checked : CheckState.Unchecked);
+				if ((decimal)f40.Canal[i] < f40.Base)
+				{
+					array[0].Text = "0." + f40.Canal[i];
+				}
+				else
+				{
+					array[0].Text = string.Concat(f40.Canal[i]);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void Refresh_Trilogy()
+		{
+			pTitle.Title = "Configure Pyramid Trilogy";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = Tri_Com;
+			if (Tri_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (tri == null)
+			{
+				tri = new Control_Trilogy();
+				tri.port = Tri_Com;
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= tri.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (tri.Canal[i] == 0)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				((CheckBox)array[0]).ThreeState = false;
+				((CheckBox)array[0]).CheckState = ((tri.eCanal[i] == 1) ? CheckState.Checked : CheckState.Unchecked);
+				if ((decimal)tri.Canal[i] < tri.Base)
+				{
+					array[0].Text = "0." + tri.Canal[i];
+				}
+				else
+				{
+					array[0].Text = string.Concat(tri.Canal[i]);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void Refresh_SIO()
+		{
+			pTitle.Title = "Configure NV SIO";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = SIO_Com;
+			if (SIO_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (sio == null)
+			{
+				sio = new Control_NV_SIO();
+				sio.port = SIO_Com;
+				sio.Open();
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= sio.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (sio.Canal[i] == 0)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				((CheckBox)array[0]).ThreeState = false;
+				((CheckBox)array[0]).CheckState = ((sio.eCanal[i] == 1) ? CheckState.Checked : CheckState.Unchecked);
+				if ((decimal)sio.Canal[i] < sio.Base)
+				{
+					array[0].Text = "0." + sio.Canal[i];
+				}
+				else
+				{
+					array[0].Text = string.Concat(sio.Canal[i]);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void Refresh_RM5()
+		{
+			pTitle.Title = "Configure Comestero RM5";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = RM5_Com;
+			if (RM5_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (rm5 == null)
+			{
+				rm5 = new Control_Comestero();
+				rm5.port = RM5_Com;
+				rm5.Open();
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= rm5.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (rm5.Canal[i] == 0)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				((CheckBox)array[0]).ThreeState = false;
+				((CheckBox)array[0]).CheckState = ((rm5.eCanal[i] == 1) ? CheckState.Checked : CheckState.Unchecked);
+				if ((decimal)rm5.Canal[i] < rm5.Base)
+				{
+					array[0].Text = "0." + rm5.Canal[i];
+				}
+				else
+				{
+					array[0].Text = string.Concat(rm5.Canal[i]);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void Refresh_CCT2()
+		{
+			pTitle.Title = "Configure CCTalk COIN ACCEPTOR (ID 2)";
+			string[] portNames = SerialPort.GetPortNames();
+			lCom.Items.Clear();
+			lCom.Items.Add("?");
+			if (portNames != null)
+			{
+				for (int i = 0; i < portNames.Length; i++)
+				{
+					lCom.Items.Add(portNames[i]);
+				}
+			}
+			lCom.Text = CCT2_Com;
+			if (CCT2_Com != "?")
+			{
+				for (int i = 0; i < 16; i++)
+				{
+					Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+					array[0].Visible = true;
+					((CheckBox)array[0]).ThreeState = false;
+					((CheckBox)array[0]).CheckState = CheckState.Unchecked;
+					array[0].Text = "0.0";
+				}
+				return;
+			}
+			if (cct2 == null)
+			{
+				cct2 = new Control_CCTALK_COIN();
+				cct2.port = CCT2_Com;
+				cct2.Open();
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				Control[] array = tBill_Config.Controls.Find("eCANAL_" + (i + 1), searchAllChildren: false);
+				if (i >= cct2.Canales)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				if (cct2.Canal[i] == 0)
+				{
+					array[0].Visible = false;
+					array[0].Invalidate();
+					continue;
+				}
+				((CheckBox)array[0]).ThreeState = false;
+				((CheckBox)array[0]).CheckState = ((cct2.eCanal[i] == 1) ? CheckState.Checked : CheckState.Unchecked);
+				if (cct2.Canal[i] < cct2.Base)
+				{
+					array[0].Text = "0." + cct2.Canal[i];
+				}
+				else
+				{
+					array[0].Text = string.Concat(cct2.Canal[i]);
+				}
+				array[0].Visible = true;
+				array[0].Invalidate();
+			}
+		}
+
+		private void SetFase(Wizard _f)
+		{
+			switch (_f)
+			{
+			case Wizard.CoinMode:
+			case Wizard.CoinDetected:
+			case Wizard.BillMode:
+			case Wizard.BillDetected:
+			case Wizard.RM5Config:
+			case Wizard.CCT2Config:
+			case Wizard.SIOConfig:
+			case Wizard.SSPConfig:
+			case Wizard.SSP3Config:
+			case Wizard.F40Config:
+			case Wizard.TriConfig:
+				bAnt.Enabled = true;
+				bSig.Enabled = true;
+				bOK.Enabled = false;
+				break;
+			case Wizard.Resumen:
+				bAnt.Enabled = true;
+				bSig.Enabled = false;
+				bOK.Enabled = true;
+				break;
+			case Wizard.Nulo:
+			case Wizard.StartUp:
+			case Wizard.CoinDetecting:
+			case Wizard.BillDetecting:
+				bAnt.Enabled = false;
+				bSig.Enabled = false;
+				bOK.Enabled = false;
+				break;
+			case Wizard.Info:
+				bAnt.Enabled = false;
+				bSig.Enabled = true;
+				bOK.Enabled = false;
+				break;
+			}
+			switch (_f)
+			{
+			case Wizard.CoinMode:
+				tabs.SelectTab("tCoin_Mode");
+				break;
+			case Wizard.BillMode:
+				tabs.SelectTab("tBill_Mode");
+				break;
+			case Wizard.CoinDetecting:
+				rCoin_M1.Checked = false;
+				rCoin_M2.Checked = false;
+				rCoin_M3.Checked = false;
+				tabs.SelectTab("tCoin_Detect");
+				break;
+			case Wizard.CoinDetected:
+				tabs.SelectTab("tCoin_Detect");
+				break;
+			case Wizard.BillDetecting:
+				rBill_M1.Checked = false;
+				rBill_M2.Checked = false;
+				rBill_M3.Checked = false;
+				tabs.SelectTab("tBill_Detect");
+				break;
+			case Wizard.BillDetected:
+				pBill.Visible = false;
+				tabs.SelectTab("tBill_Detect");
+				break;
+			case Wizard.RM5Config:
+				Refresh_RM5();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.CCT2Config:
+				Refresh_CCT2();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.SSPConfig:
+				Refresh_SSP();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.SSP3Config:
+				Refresh_SSP3();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.SIOConfig:
+				Refresh_SIO();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.F40Config:
+				Refresh_F40();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.TriConfig:
+				Refresh_Trilogy();
+				tabs.SelectTab("tBill_Config");
+				break;
+			case Wizard.Resumen:
+				tabs.SelectTab("tResum");
+				break;
+			case Wizard.Info:
+				tabs.SelectTab("tInfo");
+				break;
+			}
+			Fase = _f;
+		}
+
+		private void bSig_Click(object sender, EventArgs e)
+		{
+			switch (Fase)
+			{
+			case Wizard.Info:
+				SetFase(Wizard.CoinMode);
+				break;
+			case Wizard.CoinMode:
+				if (rCoin_M1.Checked)
+				{
+					SetFase(Wizard.CoinDetecting);
+				}
+				if (rCoin_M2.Checked)
+				{
+					CoinModel = "-";
+					SetFase(Wizard.BillMode);
+				}
+				if (rCoin_M3.Checked)
+				{
+					SetFase(Wizard.CCT2Config);
+				}
+				break;
+			case Wizard.CoinDetected:
+				if (CoinDetected)
+				{
+					switch (CoinModel.ToLower())
+					{
+					case "rm5":
+						SetFase(Wizard.RM5Config);
+						break;
+					case "cct2":
+						SetFase(Wizard.CCT2Config);
+						break;
+					default:
+						SetFase(Wizard.BillMode);
+						break;
+					}
+				}
+				else
+				{
+					SetFase(Wizard.BillMode);
+				}
+				break;
+			case Wizard.BillMode:
+				if (rBill_M1.Checked)
+				{
+					SetFase(Wizard.BillDetecting);
+				}
+				if (rBill_M2.Checked)
+				{
+					BillModel = "-";
+					SetFase(Wizard.Resumen);
+				}
+				if (rBill_M3.Checked)
+				{
+					SetFase(Wizard.SSPConfig);
+				}
+				break;
+			case Wizard.BillDetected:
+				pBill.Visible = false;
+				if (BillDetected)
+				{
+					switch (BillModel)
+					{
+					case "ssp":
+						if (ssp == null)
+						{
+							ssp = new Control_NV_SSP();
+							ssp.Start_Find_Device();
+							Thread.Sleep(100);
+							ssp.Poll();
+							Thread.Sleep(100);
+							ssp.Poll();
+							Thread.Sleep(100);
+						}
+						SetFase(Wizard.SSPConfig);
+						break;
+					case "ssp3":
+						if (ssp3 == null)
+						{
+							ssp3 = new Control_NV_SSP_P6();
+							ssp3.Start_Find_Device();
+							Thread.Sleep(100);
+							ssp3.Poll();
+							Thread.Sleep(100);
+							ssp3.Poll();
+							Thread.Sleep(100);
+						}
+						SetFase(Wizard.SSP3Config);
+						break;
+					case "f40":
+						SetFase(Wizard.F40Config);
+						break;
+					case "sio":
+						SetFase(Wizard.SIOConfig);
+						break;
+					case "tri":
+						SetFase(Wizard.TriConfig);
+						break;
+					default:
+						SetFase(Wizard.Resumen);
+						break;
+					}
+				}
+				else
+				{
+					SetFase(Wizard.Resumen);
+				}
+				break;
+			case Wizard.RM5Config:
+				if (RM5_Com != "-" && RM5_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < rm5.Canales)
+						{
+							RM5_Enabled[i] = (rm5.GetChannelEnabled(i + 1) ? 1 : 0);
+							RM5_Inhibit[i] = ((!rm5.GetChannelInhibit(i + 1)) ? 1 : 0);
+							RM5_Value[i] = rm5.GetChannelValue(i + 1);
+						}
+						else
+						{
+							RM5_Enabled[i] = (RM5_Inhibit[i] = (RM5_Value[i] = 0));
+						}
+					}
+					CoinModel = "rm5";
+					CoinModel_P = RM5_Com;
+				}
+				SetFase(Wizard.BillMode);
+				break;
+			case Wizard.CCT2Config:
+				if (CCT2_Com != "-" && CCT2_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < cct2.Canales)
+						{
+							CCT2_Enabled[i] = (cct2.GetChannelEnabled(i + 1) ? 1 : 0);
+							CCT2_Inhibit[i] = ((!cct2.GetChannelInhibit(i + 1)) ? 1 : 0);
+							CCT2_Value[i] = (int)cct2.GetChannelValue(i + 1);
+						}
+						else
+						{
+							CCT2_Enabled[i] = (CCT2_Inhibit[i] = (CCT2_Value[i] = 0));
+						}
+					}
+					CoinModel = "cct2";
+					CoinModel_P = CCT2_Com;
+					SetFase(Wizard.BillMode);
+				}
+				else
+				{
+					SetFase(Wizard.RM5Config);
+				}
+				break;
+			case Wizard.SSPConfig:
+				if (SSP_Com != "-" && SSP_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < ssp.Canales)
+						{
+							SSP_Enabled[i] = (ssp.GetChannelEnabled(i + 1) ? 1 : 0);
+							SSP_Inhibit[i] = ((!ssp.GetChannelInhibit(i + 1)) ? 1 : 0);
+							SSP_Value[i] = ssp.GetChannelValue(i + 1);
+						}
+						else
+						{
+							SSP_Enabled[i] = (SSP_Inhibit[i] = (SSP_Value[i] = 0));
+						}
+					}
+					BillModel = "ssp";
+					BillModel_P = SSP_Com;
+					SetFase(Wizard.Resumen);
+				}
+				else
+				{
+					SetFase(Wizard.SIOConfig);
+				}
+				break;
+			case Wizard.SSP3Config:
+				if (SSP3_Com != "-" && SSP3_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < ssp3.Canales)
+						{
+							SSP3_Enabled[i] = (ssp3.GetChannelEnabled(i + 1) ? 1 : 0);
+							SSP3_Inhibit[i] = ((!ssp3.GetChannelInhibit(i + 1)) ? 1 : 0);
+							SSP3_Value[i] = (int)ssp3.GetChannelValue(i + 1);
+						}
+						else
+						{
+							SSP3_Enabled[i] = (SSP3_Inhibit[i] = (SSP3_Value[i] = 0));
+						}
+					}
+					BillModel = "ssp3";
+					BillModel_P = SSP3_Com;
+					SetFase(Wizard.Resumen);
+				}
+				else
+				{
+					SetFase(Wizard.SIOConfig);
+				}
+				break;
+			case Wizard.SIOConfig:
+				if (SIO_Com != "-" && SIO_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < sio.Canales)
+						{
+							SIO_Enabled[i] = (sio.GetChannelEnabled(i + 1) ? 1 : 0);
+							SIO_Inhibit[i] = ((!sio.GetChannelInhibit(i + 1)) ? 1 : 0);
+							SIO_Value[i] = sio.GetChannelValue(i + 1);
+						}
+						else
+						{
+							SIO_Enabled[i] = (SIO_Inhibit[i] = (SIO_Value[i] = 0));
+						}
+					}
+					BillModel = "sio";
+					BillModel_P = SIO_Com;
+					SetFase(Wizard.Resumen);
+				}
+				else
+				{
+					SetFase(Wizard.TriConfig);
+				}
+				break;
+			case Wizard.TriConfig:
+				if (Tri_Com != "-" && Tri_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < tri.Canales)
+						{
+							Tri_Enabled[i] = (tri.GetChannelEnabled(i + 1) ? 1 : 0);
+							Tri_Inhibit[i] = ((!tri.GetChannelInhibit(i + 1)) ? 1 : 0);
+							Tri_Value[i] = tri.GetChannelValue(i + 1);
+						}
+						else
+						{
+							Tri_Enabled[i] = (Tri_Inhibit[i] = (Tri_Value[i] = 0));
+						}
+					}
+					BillModel = "tri";
+					BillModel_P = Tri_Com;
+					SetFase(Wizard.Resumen);
+				}
+				else
+				{
+					SetFase(Wizard.F40Config);
+				}
+				break;
+			case Wizard.F40Config:
+				if (F40_Com != "-" && F40_Com != "?")
+				{
+					for (int i = 0; i < Canales; i++)
+					{
+						if (i < f40.Canales)
+						{
+							F40_Enabled[i] = (f40.GetChannelEnabled(i + 1) ? 1 : 0);
+							F40_Inhibit[i] = ((!f40.GetChannelInhibit(i + 1)) ? 1 : 0);
+							F40_Value[i] = f40.GetChannelValue(i + 1);
+						}
+						else
+						{
+							F40_Enabled[i] = (F40_Inhibit[i] = (F40_Value[i] = 0));
+						}
+					}
+					BillModel = "f40";
+					BillModel_P = F40_Com;
+				}
+				SetFase(Wizard.Resumen);
+				break;
+			}
+		}
+
+		private void Devices_Wizard_Load(object sender, EventArgs e)
+		{
+			run = true;
+			bgControl.RunWorkerAsync();
+			SetFase(Wizard.Info);
+		}
+
+		private void Devices_Wizard_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			run = false;
+			bgControl.CancelAsync();
+			bgControl.Dispose();
+			if (sio != null)
+			{
+				sio.Close();
+			}
+			if (ssp != null)
+			{
+				ssp.Close();
+			}
+			if (ssp3 != null)
+			{
+				ssp3.Close();
+			}
+			if (rm5 != null)
+			{
+				rm5.Close();
+			}
+			if (cct2 != null)
+			{
+				cct2.Close();
+			}
+			if (f40 != null)
+			{
+				f40.Close();
+			}
+			if (tri != null)
+			{
+				tri.Close();
+			}
+		}
+
+		private void bgControl_DoWork(object sender, DoWorkEventArgs e)
+		{
+			while (run)
+			{
+				bgControl.ReportProgress(0);
+				Thread.Sleep(100);
+			}
+		}
+
+		private void bgControl_ProgressChanged(object sender, ProgressChangedEventArgs e)
+		{
+			if (enint)
+			{
+				return;
+			}
+			enint = true;
+			switch (Fase)
+			{
+			case Wizard.CoinDetecting:
+				SetFase(Wizard.CoinDetectingWait_CCT2);
+				CoinModel = "?";
+				CoinModel_P = "?";
+				pCoin.Visible = true;
+				pCoin.Invalidate();
+				break;
+			case Wizard.CoinDetectingWait_RM5:
+				if (rm5 == null)
+				{
+					rm5 = new Control_Comestero();
+					rm5.Start_Find_Device();
+				}
+				Thread.Sleep(100);
+				if (rm5.Poll_Find_Device())
+				{
+					rm5.Stop_Find_Device();
+					if (rm5._f_resp_scom != "-")
+					{
+						CoinDetected = true;
+						CoinModel = "rm5";
+						RM5_Com = rm5._f_resp_scom;
+						dRM5.CheckState = CheckState.Checked;
+						dRM5.Checked = true;
+					}
+					else
+					{
+						RM5_Com = "-";
+						dRM5.CheckState = CheckState.Indeterminate;
+					}
+					pCoin.Visible = false;
+					SetFase(Wizard.CoinDetected);
+				}
+				pCoin.Invalidate();
+				break;
+			case Wizard.CoinDetectingWait_CCT2:
+				if (cct2 == null)
+				{
+					cct2 = new Control_CCTALK_COIN();
+					cct2.Start_Find_Device();
+				}
+				Thread.Sleep(100);
+				if (cct2.Poll_Find_Device())
+				{
+					cct2.Stop_Find_Device();
+					if (cct2._f_resp_scom != "-")
+					{
+						CoinDetected = true;
+						CoinModel = "cct2";
+						CCT2_Com = cct2._f_resp_scom;
+						dCCT2.CheckState = CheckState.Checked;
+						dCCT2.Checked = true;
+						pCoin.Visible = false;
+						SetFase(Wizard.CoinDetected);
+					}
+					else
+					{
+						CCT2_Com = "-";
+						dCCT2.CheckState = CheckState.Indeterminate;
+						pCoin.Visible = false;
+						SetFase(Wizard.CoinDetectingWait_RM5);
+					}
+				}
+				pCoin.Invalidate();
+				break;
+			case Wizard.BillDetecting:
+				BillModel = "?";
+				BillModel_P = "?";
+				SetFase(Wizard.BillDetectingWait);
+				pBill.Visible = true;
+				pBill.Invalidate();
+				break;
+			case Wizard.BillDetectingWait:
+				SetFase(Wizard.BillDetectingWait_SSP);
+				break;
+			case Wizard.BillDetectingWait_SSP:
+				pBill.Invalidate();
+				if (ssp == null)
+				{
+					ssp = new Control_NV_SSP();
+					ssp.Start_Find_Device();
+				}
+				Thread.Sleep(100);
+				if (ssp.Poll_Find_Device())
+				{
+					ssp.Stop_Find_Device();
+					if (ssp._f_resp_scom != "-")
+					{
+						BillDetected = true;
+						BillModel = "ssp";
+						SSP_Com = ssp._f_resp_scom;
+						dNV9_SSP.CheckState = CheckState.Checked;
+						dNV9_SSP.Checked = true;
+						dNV9_SSP.Text = "NV SSP (" + SSP_Com + ")";
+						SetFase(Wizard.BillDetected);
+					}
+					else
+					{
+						SSP_Com = "-";
+						dNV9_SSP.CheckState = CheckState.Indeterminate;
+						SetFase(Wizard.BillDetectingWait_SSP3);
+					}
+					pBill.Visible = false;
+					ssp.Close();
+					ssp = null;
+				}
+				Thread.Sleep(100);
+				break;
+			case Wizard.BillDetectingWait_SSP3:
+				pBill.Invalidate();
+				if (ssp3 == null)
+				{
+					ssp3 = new Control_NV_SSP_P6();
+					ssp3.Start_Find_Device();
+				}
+				Thread.Sleep(100);
+				if (ssp3.Poll_Find_Device())
+				{
+					ssp3.Stop_Find_Device();
+					if (ssp3._f_resp_scom != "-")
+					{
+						BillDetected = true;
+						BillModel = "ssp3";
+						SSP3_Com = ssp3._f_resp_scom;
+						dNV9_SSP3.CheckState = CheckState.Checked;
+						dNV9_SSP3.Checked = true;
+						dNV9_SSP3.Text = "NV SSP v3 (" + SSP3_Com + ")";
+						SetFase(Wizard.BillDetected);
+					}
+					else
+					{
+						SSP3_Com = "-";
+						dNV9_SSP3.CheckState = CheckState.Indeterminate;
+						SetFase(Wizard.BillDetectingWait_SIO);
+					}
+					pBill.Visible = false;
+					ssp3.Close();
+					ssp3 = null;
+				}
+				Thread.Sleep(100);
+				break;
+			case Wizard.BillDetectingWait_F40:
+				pBill.Invalidate();
+				if (f40 == null)
+				{
+					f40 = new Control_F40_CCTalk();
+					f40.Start_Find_Device();
+				}
+				Thread.Sleep(100);
+				F40_Com = f40.Find_Device();
+				if (f40._f_resp_scom != "-" && CoinModel_P != F40_Com)
+				{
+					BillDetected = true;
+					BillModel = "f40";
+					dF40.CheckState = CheckState.Checked;
+					dF40.Checked = true;
+					dF40.Text = "ccTalk (ID 40) (" + F40_Com + ")";
+					SetFase(Wizard.BillDetected);
+				}
+				else
+				{
+					F40_Com = "-";
+					dF40.CheckState = CheckState.Indeterminate;
+					SetFase(Wizard.BillDetectingWait_Tri);
+				}
+				f40.Close();
+				f40 = null;
+				Thread.Sleep(100);
+				break;
+			case Wizard.BillDetectingWait_Tri:
+				pBill.Invalidate();
+				if (tri == null)
+				{
+					tri = new Control_Trilogy();
+					tri.Start_Find_Device();
+				}
+				Thread.Sleep(100);
+				Tri_Com = tri.Find_Device();
+				if (tri._f_resp_scom != "-")
+				{
+					BillDetected = true;
+					BillModel = "tri";
+					dTrilogy.CheckState = CheckState.Checked;
+					dTrilogy.Checked = true;
+					dTrilogy.Text = "Trilogy (" + Tri_Com + ")";
+					SetFase(Wizard.BillDetected);
+				}
+				else
+				{
+					Tri_Com = "-";
+					dTrilogy.CheckState = CheckState.Indeterminate;
+					SetFase(Wizard.BillDetected);
+				}
+				tri.Close();
+				tri = null;
+				Thread.Sleep(100);
+				break;
+			case Wizard.BillDetectingWait_SIO:
+				pBill.Invalidate();
+				if (sio == null)
+				{
+					sio = new Control_NV_SIO();
+				}
+				Thread.Sleep(100);
+				SIO_Com = sio.Find_Device();
+				if (sio._f_resp_scom != "-")
+				{
+					BillDetected = true;
+					BillModel = "sio";
+					dNV_SIO.CheckState = CheckState.Checked;
+					dNV_SIO.Checked = true;
+					dNV_SIO.Text = "NV SIO (300bps) (" + SIO_Com + ")";
+					SetFase(Wizard.BillDetected);
+				}
+				else
+				{
+					SIO_Com = "-";
+					dNV_SIO.CheckState = CheckState.Indeterminate;
+					SetFase(Wizard.BillDetectingWait_F40);
+				}
+				sio.Close();
+				sio = null;
+				Thread.Sleep(100);
+				break;
+			case Wizard.SSPConfig:
+				if (ssp != null)
+				{
+					ssp.Poll();
+				}
+				else if (SSP_Com != "-" && SSP_Com != "?")
+				{
+					ssp = new Control_NV_SSP();
+					ssp.port = SSP_Com;
+					ssp.Open();
+				}
+				break;
+			case Wizard.SSP3Config:
+				if (ssp3 != null)
+				{
+					ssp3.Poll();
+				}
+				else if (SSP3_Com != "-" && SSP3_Com != "?")
+				{
+					ssp3 = new Control_NV_SSP_P6();
+					ssp3.port = SSP3_Com;
+					ssp3.Open();
+				}
+				break;
+			case Wizard.F40Config:
+				if (f40 != null)
+				{
+					f40.Poll();
+				}
+				else if (F40_Com != "-" && F40_Com != "?")
+				{
+					f40 = new Control_F40_CCTalk();
+					f40.port = F40_Com;
+					f40.Open();
+				}
+				break;
+			case Wizard.TriConfig:
+				if (tri != null)
+				{
+					tri.Poll();
+				}
+				else if (Tri_Com != "-" && Tri_Com != "?")
+				{
+					tri = new Control_Trilogy();
+					tri.port = Tri_Com;
+					tri.Open();
+				}
+				break;
+			case Wizard.SIOConfig:
+				if (sio != null)
+				{
+					sio.Poll();
+					sio.Parser();
+				}
+				else if (SIO_Com != "-" && SIO_Com != "?")
+				{
+					sio = new Control_NV_SIO();
+					sio.port = SIO_Com;
+					sio.Open();
+				}
+				break;
+			case Wizard.BillMode:
+				if (f40 != null)
+				{
+					f40.Poll();
+				}
+				if (tri != null)
+				{
+					tri.Poll();
+				}
+				if (ssp != null)
+				{
+					ssp.Poll();
+				}
+				if (ssp3 != null)
+				{
+					ssp3.Poll();
+				}
+				if (sio != null)
+				{
+					sio.Poll();
+				}
+				break;
+			}
+			enint = false;
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+
+		public void Save(string _cfg)
+		{
+			string text = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + _cfg;
+			string text2 = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + _cfg + ".tmp";
+			XmlTextWriter xmlTextWriter = new XmlTextWriter(text2, Encoding.ASCII);
+			xmlTextWriter.Formatting = Formatting.Indented;
+			xmlTextWriter.WriteStartDocument();
+			try
+			{
+				xmlTextWriter.WriteStartElement("config".ToLower());
+				xmlTextWriter.WriteStartElement("select".ToLower());
+				xmlTextWriter.WriteAttributeString("coin".ToLower(), CoinModel);
+				xmlTextWriter.WriteAttributeString("coin_p".ToLower(), CoinModel_P);
+				xmlTextWriter.WriteAttributeString("bnv".ToLower(), BillModel);
+				xmlTextWriter.WriteAttributeString("bnv_p".ToLower(), BillModel_P);
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteStartElement("devices".ToLower());
+				xmlTextWriter.WriteStartElement("ssp");
+				xmlTextWriter.WriteAttributeString("com", SSP_Com);
+				for (int i = 0; i < Canales; i++)
+				{
+					xmlTextWriter.WriteStartElement("channel_" + (i + 1));
+					if (SSP_Enabled[i] == 1)
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), SSP_Value[i].ToString());
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), SSP_Enabled[i].ToString());
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), SSP_Inhibit[i].ToString());
+					}
+					else
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), "1");
+					}
+					xmlTextWriter.WriteEndElement();
+				}
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteStartElement("ssp3");
+				xmlTextWriter.WriteAttributeString("com", SSP3_Com);
+				for (int i = 0; i < Canales; i++)
+				{
+					xmlTextWriter.WriteStartElement("channel_" + (i + 1));
+					if (SSP3_Enabled[i] == 1)
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), SSP3_Value[i].ToString());
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), SSP3_Enabled[i].ToString());
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), SSP3_Inhibit[i].ToString());
+					}
+					else
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), "1");
+					}
+					xmlTextWriter.WriteEndElement();
+				}
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteStartElement("sio");
+				xmlTextWriter.WriteAttributeString("com", SIO_Com);
+				for (int i = 0; i < Canales; i++)
+				{
+					xmlTextWriter.WriteStartElement("channel_" + (i + 1));
+					if (SIO_Enabled[i] == 1)
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), SIO_Value[i].ToString());
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), SIO_Enabled[i].ToString());
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), SIO_Inhibit[i].ToString());
+					}
+					else
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), "1");
+					}
+					xmlTextWriter.WriteEndElement();
+				}
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteStartElement("rm5");
+				xmlTextWriter.WriteAttributeString("com", RM5_Com);
+				for (int i = 0; i < Canales; i++)
+				{
+					xmlTextWriter.WriteStartElement("channel_" + (i + 1));
+					if (RM5_Enabled[i] == 1)
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), RM5_Value[i].ToString());
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), RM5_Enabled[i].ToString());
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), RM5_Inhibit[i].ToString());
+					}
+					else
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), "1");
+					}
+					xmlTextWriter.WriteEndElement();
+				}
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteStartElement("f40");
+				xmlTextWriter.WriteAttributeString("com", F40_Com);
+				for (int i = 0; i < Canales; i++)
+				{
+					xmlTextWriter.WriteStartElement("channel_" + (i + 1));
+					if (F40_Enabled[i] == 1)
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), F40_Value[i].ToString());
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), F40_Enabled[i].ToString());
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), F40_Inhibit[i].ToString());
+					}
+					else
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), "1");
+					}
+					xmlTextWriter.WriteEndElement();
+				}
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteStartElement("tri");
+				xmlTextWriter.WriteAttributeString("com", Tri_Com);
+				for (int i = 0; i < Canales; i++)
+				{
+					xmlTextWriter.WriteStartElement("channel_" + (i + 1));
+					if (Tri_Enabled[i] == 1)
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), Tri_Value[i].ToString());
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), Tri_Enabled[i].ToString());
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), Tri_Inhibit[i].ToString());
+					}
+					else
+					{
+						xmlTextWriter.WriteAttributeString("value" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("enabled" + (i + 1), "0");
+						xmlTextWriter.WriteAttributeString("inhibit" + (i + 1), "1");
+					}
+					xmlTextWriter.WriteEndElement();
+				}
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteEndElement();
+				xmlTextWriter.WriteEndElement();
+			}
+			catch (Exception ex)
+			{
+				error = ex.Message;
+				xmlTextWriter.Flush();
+				xmlTextWriter.Close();
+				File.Delete(text2);
+				return;
+			}
+			xmlTextWriter.Flush();
+			xmlTextWriter.Close();
+			if (File.Exists(text))
+			{
+				File.Delete(text);
+			}
+			File.Copy(text2, text);
+			File.Delete(text2);
+		}
+
+		public bool Load_Cfg(string _cfg)
+		{
+			string url = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData) + "\\" + _cfg;
+			try
+			{
+				XmlTextReader xmlTextReader = new XmlTextReader(url);
+				xmlTextReader.Read();
+				xmlTextReader.Close();
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+			try
+			{
+				XmlTextReader xmlTextReader = new XmlTextReader(url);
+				while (xmlTextReader.Read())
+				{
+					if (xmlTextReader.NodeType == XmlNodeType.Element)
+					{
+						if (xmlTextReader.Name.ToLower() == "select".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "coin".ToLower())
+								{
+									CoinModel = xmlTextReader.Value;
+								}
+								else if (xmlTextReader.Name.ToLower() == "coin_p".ToLower())
+								{
+									CoinModel_P = xmlTextReader.Value;
+								}
+								else if (xmlTextReader.Name.ToLower() == "bnv".ToLower())
+								{
+									BillModel = xmlTextReader.Value;
+								}
+								else if (xmlTextReader.Name.ToLower() == "bnv_p".ToLower())
+								{
+									BillModel_P = xmlTextReader.Value;
+								}
+							}
+						}
+						if (xmlTextReader.Name.ToLower() == "ssp".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "com".ToLower())
+								{
+									SSP_Com = xmlTextReader.Value;
+								}
+								else
+								{
+									for (int j = 0; j < Canales; j++)
+									{
+										string text = "channel" + (j + 1);
+										if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											SSP_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+										else if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											SSP_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+									}
+								}
+							}
+						}
+						if (xmlTextReader.Name.ToLower() == "ssp3".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "com".ToLower())
+								{
+									SSP3_Com = xmlTextReader.Value;
+								}
+								else
+								{
+									for (int j = 0; j < Canales; j++)
+									{
+										string text = "channel" + (j + 1);
+										if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											SSP3_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+										else if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											SSP3_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+									}
+								}
+							}
+						}
+						if (xmlTextReader.Name.ToLower() == "sio".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "com".ToLower())
+								{
+									SIO_Com = xmlTextReader.Value;
+								}
+								else
+								{
+									for (int j = 0; j < Canales; j++)
+									{
+										string text = "channel" + (j + 1);
+										if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											SIO_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+										else if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											SIO_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+									}
+								}
+							}
+						}
+						if (xmlTextReader.Name.ToLower() == "rm5".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "com".ToLower())
+								{
+									RM5_Com = xmlTextReader.Value;
+								}
+								else
+								{
+									for (int j = 0; j < Canales; j++)
+									{
+										string text = "channel" + (j + 1);
+										if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											RM5_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+										else if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											RM5_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+									}
+								}
+							}
+						}
+						if (xmlTextReader.Name.ToLower() == "tri".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "com".ToLower())
+								{
+									Tri_Com = xmlTextReader.Value;
+								}
+								else
+								{
+									for (int j = 0; j < Canales; j++)
+									{
+										string text = "channel" + (j + 1);
+										if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											Tri_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+										else if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											Tri_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+									}
+								}
+							}
+						}
+						if (xmlTextReader.Name.ToLower() == "f40".ToLower() && xmlTextReader.HasAttributes)
+						{
+							for (int i = 0; i < xmlTextReader.AttributeCount; i++)
+							{
+								xmlTextReader.MoveToAttribute(i);
+								if (xmlTextReader.Name.ToLower() == "com".ToLower())
+								{
+									F40_Com = xmlTextReader.Value;
+								}
+								else
+								{
+									for (int j = 0; j < Canales; j++)
+									{
+										string text = "channel" + (j + 1);
+										if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											F40_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+										else if (xmlTextReader.Name.ToLower() == text.ToLower())
+										{
+											F40_Value[j] = Convert.ToInt32(xmlTextReader.Value);
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				xmlTextReader.Close();
+			}
+			catch (Exception ex2)
+			{
+				error = ex2.Message;
+				return false;
+			}
+			return true;
+		}
+
+		private void bOK_Click(object sender, EventArgs e)
+		{
+			Save("devices.cfg");
+			if (opciones != null)
+			{
+				opciones.Dev_BNV = BillModel;
+				opciones.Dev_BNV_P = BillModel_P;
+				opciones.Dev_Coin = CoinModel;
+				opciones.Dev_Coin_P = CoinModel_P;
+			}
+			OK = true;
+			Close();
+		}
+
+		private void lCom_SelectionChangeCommitted(object sender, EventArgs e)
+		{
+			switch (Fase)
+			{
+			case Wizard.SSPConfig:
+				SSP_Com = lCom.Text;
+				break;
+			case Wizard.SSP3Config:
+				SSP3_Com = lCom.Text;
+				break;
+			case Wizard.SIOConfig:
+				SIO_Com = lCom.Text;
+				break;
+			case Wizard.TriConfig:
+				Tri_Com = lCom.Text;
+				break;
+			case Wizard.RM5Config:
+				RM5_Com = lCom.Text;
+				break;
+			case Wizard.F40Config:
+				F40_Com = lCom.Text;
+				break;
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Kiosk.Devices_Wizard));
+			pBotons = new System.Windows.Forms.Panel();
+			bCancel = new System.Windows.Forms.Button();
+			bSig = new System.Windows.Forms.Button();
+			bAnt = new System.Windows.Forms.Button();
+			bOK = new System.Windows.Forms.Button();
+			tabs = new System.Windows.Forms.TabControl();
+			tInfo = new System.Windows.Forms.TabPage();
+			hInfo = new GLib.Forms.GradientPanel();
+			infoWizard = new System.Windows.Forms.TextBox();
+			tCoin_Mode = new System.Windows.Forms.TabPage();
+			rCoin_M3 = new System.Windows.Forms.RadioButton();
+			rCoin_M1 = new System.Windows.Forms.RadioButton();
+			rCoin_M2 = new System.Windows.Forms.RadioButton();
+			hCoin_Mode = new GLib.Forms.GradientPanel();
+			tCoin_Detect = new System.Windows.Forms.TabPage();
+			dCCT2 = new System.Windows.Forms.CheckBox();
+			pCoin = new System.Windows.Forms.ProgressBar();
+			dRM5 = new System.Windows.Forms.CheckBox();
+			hCoin_Detect = new GLib.Forms.GradientPanel();
+			tBill_Mode = new System.Windows.Forms.TabPage();
+			rBill_M3 = new System.Windows.Forms.RadioButton();
+			rBill_M1 = new System.Windows.Forms.RadioButton();
+			rBill_M2 = new System.Windows.Forms.RadioButton();
+			pBillMode = new GLib.Forms.GradientPanel();
+			tBill_Detect = new System.Windows.Forms.TabPage();
+			dNV_SIO = new System.Windows.Forms.CheckBox();
+			pBill = new System.Windows.Forms.ProgressBar();
+			dTrilogy = new System.Windows.Forms.CheckBox();
+			dF40 = new System.Windows.Forms.CheckBox();
+			dNV9_SSP = new System.Windows.Forms.CheckBox();
+			dNV9_SSP3 = new System.Windows.Forms.CheckBox();
+			pBillDetect = new GLib.Forms.GradientPanel();
+			tBill_Config = new System.Windows.Forms.TabPage();
+			eCANAL_16 = new System.Windows.Forms.CheckBox();
+			eCANAL_15 = new System.Windows.Forms.CheckBox();
+			eCANAL_14 = new System.Windows.Forms.CheckBox();
+			eCANAL_13 = new System.Windows.Forms.CheckBox();
+			eCANAL_12 = new System.Windows.Forms.CheckBox();
+			eCANAL_11 = new System.Windows.Forms.CheckBox();
+			eCANAL_10 = new System.Windows.Forms.CheckBox();
+			eCANAL_9 = new System.Windows.Forms.CheckBox();
+			eCANAL_8 = new System.Windows.Forms.CheckBox();
+			eCANAL_7 = new System.Windows.Forms.CheckBox();
+			eCANAL_6 = new System.Windows.Forms.CheckBox();
+			eCANAL_5 = new System.Windows.Forms.CheckBox();
+			eCANAL_4 = new System.Windows.Forms.CheckBox();
+			eCANAL_3 = new System.Windows.Forms.CheckBox();
+			eCANAL_2 = new System.Windows.Forms.CheckBox();
+			eCANAL_1 = new System.Windows.Forms.CheckBox();
+			iCom = new System.Windows.Forms.Label();
+			lCom = new System.Windows.Forms.ComboBox();
+			pTitle = new GLib.Forms.GradientPanel();
+			tResum = new System.Windows.Forms.TabPage();
+			bgControl = new System.ComponentModel.BackgroundWorker();
+			pBotons.SuspendLayout();
+			tabs.SuspendLayout();
+			tInfo.SuspendLayout();
+			tCoin_Mode.SuspendLayout();
+			tCoin_Detect.SuspendLayout();
+			tBill_Mode.SuspendLayout();
+			tBill_Detect.SuspendLayout();
+			tBill_Config.SuspendLayout();
+			SuspendLayout();
+			pBotons.Controls.Add(bCancel);
+			pBotons.Controls.Add(bSig);
+			pBotons.Controls.Add(bAnt);
+			pBotons.Controls.Add(bOK);
+			pBotons.Dock = System.Windows.Forms.DockStyle.Bottom;
+			pBotons.Location = new System.Drawing.Point(0, 415);
+			pBotons.Name = "pBotons";
+			pBotons.Size = new System.Drawing.Size(657, 54);
+			pBotons.TabIndex = 0;
+			bCancel.Image = Kiosk.Properties.Resources.ico_del;
+			bCancel.Location = new System.Drawing.Point(12, 7);
+			bCancel.Name = "bCancel";
+			bCancel.Size = new System.Drawing.Size(75, 41);
+			bCancel.TabIndex = 0;
+			bCancel.UseVisualStyleBackColor = true;
+			bCancel.Click += new System.EventHandler(bCancel_Click);
+			bSig.Image = Kiosk.Properties.Resources.ico_right_green;
+			bSig.Location = new System.Drawing.Point(489, 7);
+			bSig.Name = "bSig";
+			bSig.Size = new System.Drawing.Size(75, 41);
+			bSig.TabIndex = 2;
+			bSig.UseVisualStyleBackColor = true;
+			bSig.Click += new System.EventHandler(bSig_Click);
+			bAnt.Image = Kiosk.Properties.Resources.ico_left_blue;
+			bAnt.Location = new System.Drawing.Point(408, 7);
+			bAnt.Name = "bAnt";
+			bAnt.Size = new System.Drawing.Size(75, 41);
+			bAnt.TabIndex = 1;
+			bAnt.UseVisualStyleBackColor = true;
+			bOK.Image = Kiosk.Properties.Resources.ico_ok;
+			bOK.Location = new System.Drawing.Point(570, 7);
+			bOK.Name = "bOK";
+			bOK.Size = new System.Drawing.Size(75, 41);
+			bOK.TabIndex = 3;
+			bOK.UseVisualStyleBackColor = true;
+			bOK.Click += new System.EventHandler(bOK_Click);
+			tabs.Appearance = System.Windows.Forms.TabAppearance.FlatButtons;
+			tabs.Controls.Add(tInfo);
+			tabs.Controls.Add(tCoin_Mode);
+			tabs.Controls.Add(tCoin_Detect);
+			tabs.Controls.Add(tBill_Mode);
+			tabs.Controls.Add(tBill_Detect);
+			tabs.Controls.Add(tBill_Config);
+			tabs.Controls.Add(tResum);
+			tabs.Dock = System.Windows.Forms.DockStyle.Fill;
+			tabs.ItemSize = new System.Drawing.Size(0, 1);
+			tabs.Location = new System.Drawing.Point(0, 0);
+			tabs.Multiline = true;
+			tabs.Name = "tabs";
+			tabs.SelectedIndex = 0;
+			tabs.Size = new System.Drawing.Size(657, 415);
+			tabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+			tabs.TabIndex = 1;
+			tInfo.Controls.Add(hInfo);
+			tInfo.Controls.Add(infoWizard);
+			tInfo.Location = new System.Drawing.Point(4, 5);
+			tInfo.Name = "tInfo";
+			tInfo.Padding = new System.Windows.Forms.Padding(3);
+			tInfo.Size = new System.Drawing.Size(649, 406);
+			tInfo.TabIndex = 0;
+			hInfo.BackgroundImage = (System.Drawing.Image)resources.GetObject("hInfo.BackgroundImage");
+			hInfo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			hInfo.Dock = System.Windows.Forms.DockStyle.Top;
+			hInfo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			hInfo.Location = new System.Drawing.Point(3, 3);
+			hInfo.Name = "hInfo";
+			hInfo.PageEndColor = System.Drawing.Color.Empty;
+			hInfo.PageStartColor = System.Drawing.Color.LightSteelBlue;
+			hInfo.Size = new System.Drawing.Size(643, 60);
+			hInfo.TabIndex = 3;
+			hInfo.Title = "Configuration devices";
+			hInfo.Title_Alignement = GLib.Forms.GradientPanel.Alignement.Left;
+			infoWizard.Location = new System.Drawing.Point(8, 68);
+			infoWizard.Margin = new System.Windows.Forms.Padding(0);
+			infoWizard.Multiline = true;
+			infoWizard.Name = "infoWizard";
+			infoWizard.ReadOnly = true;
+			infoWizard.Size = new System.Drawing.Size(633, 333);
+			infoWizard.TabIndex = 2;
+			infoWizard.Text = "1) Install drivers.\r\n\r\n2) Connect device.\r\n\r\n3) COnfigure device.\r\n";
+			tCoin_Mode.Controls.Add(rCoin_M3);
+			tCoin_Mode.Controls.Add(rCoin_M1);
+			tCoin_Mode.Controls.Add(rCoin_M2);
+			tCoin_Mode.Controls.Add(hCoin_Mode);
+			tCoin_Mode.Location = new System.Drawing.Point(4, 5);
+			tCoin_Mode.Name = "tCoin_Mode";
+			tCoin_Mode.Padding = new System.Windows.Forms.Padding(3);
+			tCoin_Mode.Size = new System.Drawing.Size(649, 406);
+			tCoin_Mode.TabIndex = 1;
+			tCoin_Mode.UseVisualStyleBackColor = true;
+			rCoin_M3.AutoSize = true;
+			rCoin_M3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			rCoin_M3.Location = new System.Drawing.Point(30, 133);
+			rCoin_M3.Name = "rCoin_M3";
+			rCoin_M3.Size = new System.Drawing.Size(120, 35);
+			rCoin_M3.TabIndex = 3;
+			rCoin_M3.Text = "Manual";
+			rCoin_M3.UseVisualStyleBackColor = true;
+			rCoin_M1.AutoSize = true;
+			rCoin_M1.Checked = true;
+			rCoin_M1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			rCoin_M1.Location = new System.Drawing.Point(30, 90);
+			rCoin_M1.Name = "rCoin_M1";
+			rCoin_M1.Size = new System.Drawing.Size(112, 35);
+			rCoin_M1.TabIndex = 2;
+			rCoin_M1.TabStop = true;
+			rCoin_M1.Text = "Detect";
+			rCoin_M1.UseVisualStyleBackColor = true;
+			rCoin_M2.AutoSize = true;
+			rCoin_M2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			rCoin_M2.Location = new System.Drawing.Point(30, 176);
+			rCoin_M2.Name = "rCoin_M2";
+			rCoin_M2.Size = new System.Drawing.Size(97, 35);
+			rCoin_M2.TabIndex = 1;
+			rCoin_M2.Text = "None";
+			rCoin_M2.UseVisualStyleBackColor = true;
+			hCoin_Mode.BackgroundImage = (System.Drawing.Image)resources.GetObject("hCoin_Mode.BackgroundImage");
+			hCoin_Mode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			hCoin_Mode.Dock = System.Windows.Forms.DockStyle.Top;
+			hCoin_Mode.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			hCoin_Mode.Location = new System.Drawing.Point(3, 3);
+			hCoin_Mode.Name = "hCoin_Mode";
+			hCoin_Mode.PageEndColor = System.Drawing.Color.Empty;
+			hCoin_Mode.PageStartColor = System.Drawing.Color.LightSteelBlue;
+			hCoin_Mode.Size = new System.Drawing.Size(643, 60);
+			hCoin_Mode.TabIndex = 0;
+			hCoin_Mode.Title = "Coin acceptor";
+			hCoin_Mode.Title_Alignement = GLib.Forms.GradientPanel.Alignement.Left;
+			tCoin_Detect.Controls.Add(dCCT2);
+			tCoin_Detect.Controls.Add(pCoin);
+			tCoin_Detect.Controls.Add(dRM5);
+			tCoin_Detect.Controls.Add(hCoin_Detect);
+			tCoin_Detect.Location = new System.Drawing.Point(4, 5);
+			tCoin_Detect.Name = "tCoin_Detect";
+			tCoin_Detect.Size = new System.Drawing.Size(649, 406);
+			tCoin_Detect.TabIndex = 3;
+			tCoin_Detect.UseVisualStyleBackColor = true;
+			dCCT2.AutoSize = true;
+			dCCT2.Enabled = false;
+			dCCT2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dCCT2.Location = new System.Drawing.Point(27, 85);
+			dCCT2.Name = "dCCT2";
+			dCCT2.Size = new System.Drawing.Size(435, 35);
+			dCCT2.TabIndex = 4;
+			dCCT2.Text = "CCTalk COIN ACCEPTOR (ID 2)";
+			dCCT2.ThreeState = true;
+			dCCT2.UseVisualStyleBackColor = true;
+			pCoin.Dock = System.Windows.Forms.DockStyle.Bottom;
+			pCoin.Location = new System.Drawing.Point(0, 392);
+			pCoin.Name = "pCoin";
+			pCoin.Size = new System.Drawing.Size(649, 14);
+			pCoin.Step = 100;
+			pCoin.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+			pCoin.TabIndex = 3;
+			pCoin.Value = 100;
+			pCoin.Visible = false;
+			dRM5.AutoSize = true;
+			dRM5.Enabled = false;
+			dRM5.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dRM5.Location = new System.Drawing.Point(27, 126);
+			dRM5.Name = "dRM5";
+			dRM5.Size = new System.Drawing.Size(230, 35);
+			dRM5.TabIndex = 2;
+			dRM5.Text = "Comestero RM5";
+			dRM5.ThreeState = true;
+			dRM5.UseVisualStyleBackColor = true;
+			hCoin_Detect.BackgroundImage = (System.Drawing.Image)resources.GetObject("hCoin_Detect.BackgroundImage");
+			hCoin_Detect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			hCoin_Detect.Dock = System.Windows.Forms.DockStyle.Top;
+			hCoin_Detect.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			hCoin_Detect.Location = new System.Drawing.Point(0, 0);
+			hCoin_Detect.Name = "hCoin_Detect";
+			hCoin_Detect.PageEndColor = System.Drawing.Color.Empty;
+			hCoin_Detect.PageStartColor = System.Drawing.Color.LightSteelBlue;
+			hCoin_Detect.Size = new System.Drawing.Size(649, 60);
+			hCoin_Detect.TabIndex = 1;
+			hCoin_Detect.Title = "Find coin acceptor";
+			hCoin_Detect.Title_Alignement = GLib.Forms.GradientPanel.Alignement.Left;
+			tBill_Mode.Controls.Add(rBill_M3);
+			tBill_Mode.Controls.Add(rBill_M1);
+			tBill_Mode.Controls.Add(rBill_M2);
+			tBill_Mode.Controls.Add(pBillMode);
+			tBill_Mode.Location = new System.Drawing.Point(4, 5);
+			tBill_Mode.Name = "tBill_Mode";
+			tBill_Mode.Size = new System.Drawing.Size(649, 406);
+			tBill_Mode.TabIndex = 2;
+			tBill_Mode.UseVisualStyleBackColor = true;
+			rBill_M3.AutoSize = true;
+			rBill_M3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			rBill_M3.Location = new System.Drawing.Point(30, 133);
+			rBill_M3.Name = "rBill_M3";
+			rBill_M3.Size = new System.Drawing.Size(120, 35);
+			rBill_M3.TabIndex = 7;
+			rBill_M3.Text = "Manual";
+			rBill_M3.UseVisualStyleBackColor = true;
+			rBill_M1.AutoSize = true;
+			rBill_M1.Checked = true;
+			rBill_M1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			rBill_M1.Location = new System.Drawing.Point(30, 90);
+			rBill_M1.Name = "rBill_M1";
+			rBill_M1.Size = new System.Drawing.Size(112, 35);
+			rBill_M1.TabIndex = 6;
+			rBill_M1.TabStop = true;
+			rBill_M1.Text = "Detect";
+			rBill_M1.UseVisualStyleBackColor = true;
+			rBill_M2.AutoSize = true;
+			rBill_M2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			rBill_M2.Location = new System.Drawing.Point(30, 174);
+			rBill_M2.Name = "rBill_M2";
+			rBill_M2.Size = new System.Drawing.Size(97, 35);
+			rBill_M2.TabIndex = 5;
+			rBill_M2.Text = "None";
+			rBill_M2.UseVisualStyleBackColor = true;
+			pBillMode.BackgroundImage = (System.Drawing.Image)resources.GetObject("pBillMode.BackgroundImage");
+			pBillMode.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			pBillMode.Dock = System.Windows.Forms.DockStyle.Top;
+			pBillMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			pBillMode.Location = new System.Drawing.Point(0, 0);
+			pBillMode.Name = "pBillMode";
+			pBillMode.PageEndColor = System.Drawing.Color.Empty;
+			pBillMode.PageStartColor = System.Drawing.Color.LightSteelBlue;
+			pBillMode.Size = new System.Drawing.Size(649, 60);
+			pBillMode.TabIndex = 4;
+			pBillMode.Title = "Validator";
+			pBillMode.Title_Alignement = GLib.Forms.GradientPanel.Alignement.Left;
+			tBill_Detect.Controls.Add(dNV_SIO);
+			tBill_Detect.Controls.Add(pBill);
+			tBill_Detect.Controls.Add(dTrilogy);
+			tBill_Detect.Controls.Add(dF40);
+			tBill_Detect.Controls.Add(dNV9_SSP);
+			tBill_Detect.Controls.Add(dNV9_SSP3);
+			tBill_Detect.Controls.Add(pBillDetect);
+			tBill_Detect.Location = new System.Drawing.Point(4, 5);
+			tBill_Detect.Name = "tBill_Detect";
+			tBill_Detect.Size = new System.Drawing.Size(649, 406);
+			tBill_Detect.TabIndex = 6;
+			tBill_Detect.UseVisualStyleBackColor = true;
+			dNV_SIO.AutoSize = true;
+			dNV_SIO.Enabled = false;
+			dNV_SIO.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dNV_SIO.Location = new System.Drawing.Point(30, 166);
+			dNV_SIO.Name = "dNV_SIO";
+			dNV_SIO.Size = new System.Drawing.Size(239, 35);
+			dNV_SIO.TabIndex = 9;
+			dNV_SIO.Text = "NV SIO (300bps)";
+			dNV_SIO.UseVisualStyleBackColor = true;
+			pBill.Dock = System.Windows.Forms.DockStyle.Bottom;
+			pBill.Location = new System.Drawing.Point(0, 392);
+			pBill.Name = "pBill";
+			pBill.Size = new System.Drawing.Size(649, 14);
+			pBill.Step = 100;
+			pBill.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+			pBill.TabIndex = 8;
+			pBill.Value = 100;
+			pBill.Visible = false;
+			dTrilogy.AutoSize = true;
+			dTrilogy.Enabled = false;
+			dTrilogy.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dTrilogy.Location = new System.Drawing.Point(30, 252);
+			dTrilogy.Name = "dTrilogy";
+			dTrilogy.Size = new System.Drawing.Size(115, 35);
+			dTrilogy.TabIndex = 7;
+			dTrilogy.Text = "Trilogy";
+			dTrilogy.UseVisualStyleBackColor = true;
+			dF40.AutoSize = true;
+			dF40.Enabled = false;
+			dF40.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dF40.Location = new System.Drawing.Point(30, 209);
+			dF40.Name = "dF40";
+			dF40.Size = new System.Drawing.Size(203, 35);
+			dF40.TabIndex = 6;
+			dF40.Text = "ccTalk (ID 40)";
+			dF40.UseVisualStyleBackColor = true;
+			dNV9_SSP.AutoSize = true;
+			dNV9_SSP.Enabled = false;
+			dNV9_SSP.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dNV9_SSP.Location = new System.Drawing.Point(30, 80);
+			dNV9_SSP.Name = "dNV9_SSP";
+			dNV9_SSP.Size = new System.Drawing.Size(132, 35);
+			dNV9_SSP.TabIndex = 4;
+			dNV9_SSP.Text = "NV SSP";
+			dNV9_SSP.UseVisualStyleBackColor = true;
+			dNV9_SSP3.AutoSize = true;
+			dNV9_SSP3.Enabled = false;
+			dNV9_SSP3.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			dNV9_SSP3.Location = new System.Drawing.Point(30, 123);
+			dNV9_SSP3.Name = "dNV9_SSP3";
+			dNV9_SSP3.Size = new System.Drawing.Size(168, 35);
+			dNV9_SSP3.TabIndex = 4;
+			dNV9_SSP3.Text = "NV SSP v3";
+			dNV9_SSP3.UseVisualStyleBackColor = true;
+			pBillDetect.BackgroundImage = (System.Drawing.Image)resources.GetObject("pBillDetect.BackgroundImage");
+			pBillDetect.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			pBillDetect.Dock = System.Windows.Forms.DockStyle.Top;
+			pBillDetect.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			pBillDetect.Location = new System.Drawing.Point(0, 0);
+			pBillDetect.Name = "pBillDetect";
+			pBillDetect.PageEndColor = System.Drawing.Color.Empty;
+			pBillDetect.PageStartColor = System.Drawing.Color.LightSteelBlue;
+			pBillDetect.Size = new System.Drawing.Size(649, 60);
+			pBillDetect.TabIndex = 3;
+			pBillDetect.Title = "Find bill validator";
+			pBillDetect.Title_Alignement = GLib.Forms.GradientPanel.Alignement.Left;
+			tBill_Config.Controls.Add(eCANAL_16);
+			tBill_Config.Controls.Add(eCANAL_15);
+			tBill_Config.Controls.Add(eCANAL_14);
+			tBill_Config.Controls.Add(eCANAL_13);
+			tBill_Config.Controls.Add(eCANAL_12);
+			tBill_Config.Controls.Add(eCANAL_11);
+			tBill_Config.Controls.Add(eCANAL_10);
+			tBill_Config.Controls.Add(eCANAL_9);
+			tBill_Config.Controls.Add(eCANAL_8);
+			tBill_Config.Controls.Add(eCANAL_7);
+			tBill_Config.Controls.Add(eCANAL_6);
+			tBill_Config.Controls.Add(eCANAL_5);
+			tBill_Config.Controls.Add(eCANAL_4);
+			tBill_Config.Controls.Add(eCANAL_3);
+			tBill_Config.Controls.Add(eCANAL_2);
+			tBill_Config.Controls.Add(eCANAL_1);
+			tBill_Config.Controls.Add(iCom);
+			tBill_Config.Controls.Add(lCom);
+			tBill_Config.Controls.Add(pTitle);
+			tBill_Config.Location = new System.Drawing.Point(4, 5);
+			tBill_Config.Name = "tBill_Config";
+			tBill_Config.Size = new System.Drawing.Size(649, 406);
+			tBill_Config.TabIndex = 9;
+			tBill_Config.UseVisualStyleBackColor = true;
+			eCANAL_16.AutoSize = true;
+			eCANAL_16.Checked = true;
+			eCANAL_16.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_16.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_16.Location = new System.Drawing.Point(319, 369);
+			eCANAL_16.Name = "eCANAL_16";
+			eCANAL_16.Size = new System.Drawing.Size(33, 24);
+			eCANAL_16.TabIndex = 38;
+			eCANAL_16.Text = "-";
+			eCANAL_16.UseVisualStyleBackColor = true;
+			eCANAL_15.AutoSize = true;
+			eCANAL_15.Checked = true;
+			eCANAL_15.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_15.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_15.Location = new System.Drawing.Point(319, 337);
+			eCANAL_15.Name = "eCANAL_15";
+			eCANAL_15.Size = new System.Drawing.Size(33, 24);
+			eCANAL_15.TabIndex = 37;
+			eCANAL_15.Text = "-";
+			eCANAL_15.UseVisualStyleBackColor = true;
+			eCANAL_14.AutoSize = true;
+			eCANAL_14.Checked = true;
+			eCANAL_14.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_14.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_14.Location = new System.Drawing.Point(319, 305);
+			eCANAL_14.Name = "eCANAL_14";
+			eCANAL_14.Size = new System.Drawing.Size(33, 24);
+			eCANAL_14.TabIndex = 36;
+			eCANAL_14.Text = "-";
+			eCANAL_14.UseVisualStyleBackColor = true;
+			eCANAL_13.AutoSize = true;
+			eCANAL_13.Checked = true;
+			eCANAL_13.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_13.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_13.Location = new System.Drawing.Point(319, 273);
+			eCANAL_13.Name = "eCANAL_13";
+			eCANAL_13.Size = new System.Drawing.Size(33, 24);
+			eCANAL_13.TabIndex = 35;
+			eCANAL_13.Text = "-";
+			eCANAL_13.UseVisualStyleBackColor = true;
+			eCANAL_12.AutoSize = true;
+			eCANAL_12.Checked = true;
+			eCANAL_12.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_12.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_12.Location = new System.Drawing.Point(319, 241);
+			eCANAL_12.Name = "eCANAL_12";
+			eCANAL_12.Size = new System.Drawing.Size(33, 24);
+			eCANAL_12.TabIndex = 34;
+			eCANAL_12.Text = "-";
+			eCANAL_12.UseVisualStyleBackColor = true;
+			eCANAL_11.AutoSize = true;
+			eCANAL_11.Checked = true;
+			eCANAL_11.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_11.Location = new System.Drawing.Point(319, 209);
+			eCANAL_11.Name = "eCANAL_11";
+			eCANAL_11.Size = new System.Drawing.Size(33, 24);
+			eCANAL_11.TabIndex = 33;
+			eCANAL_11.Text = "-";
+			eCANAL_11.UseVisualStyleBackColor = true;
+			eCANAL_10.AutoSize = true;
+			eCANAL_10.Checked = true;
+			eCANAL_10.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_10.Location = new System.Drawing.Point(319, 177);
+			eCANAL_10.Name = "eCANAL_10";
+			eCANAL_10.Size = new System.Drawing.Size(33, 24);
+			eCANAL_10.TabIndex = 32;
+			eCANAL_10.Text = "-";
+			eCANAL_10.UseVisualStyleBackColor = true;
+			eCANAL_9.AutoSize = true;
+			eCANAL_9.Checked = true;
+			eCANAL_9.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_9.Location = new System.Drawing.Point(319, 145);
+			eCANAL_9.Name = "eCANAL_9";
+			eCANAL_9.Size = new System.Drawing.Size(33, 24);
+			eCANAL_9.TabIndex = 31;
+			eCANAL_9.Text = "-";
+			eCANAL_9.UseVisualStyleBackColor = true;
+			eCANAL_8.AutoSize = true;
+			eCANAL_8.Checked = true;
+			eCANAL_8.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_8.Location = new System.Drawing.Point(22, 369);
+			eCANAL_8.Name = "eCANAL_8";
+			eCANAL_8.Size = new System.Drawing.Size(33, 24);
+			eCANAL_8.TabIndex = 30;
+			eCANAL_8.Text = "-";
+			eCANAL_8.UseVisualStyleBackColor = true;
+			eCANAL_7.AutoSize = true;
+			eCANAL_7.Checked = true;
+			eCANAL_7.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_7.Location = new System.Drawing.Point(22, 337);
+			eCANAL_7.Name = "eCANAL_7";
+			eCANAL_7.Size = new System.Drawing.Size(33, 24);
+			eCANAL_7.TabIndex = 29;
+			eCANAL_7.Text = "-";
+			eCANAL_7.UseVisualStyleBackColor = true;
+			eCANAL_6.AutoSize = true;
+			eCANAL_6.Checked = true;
+			eCANAL_6.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_6.Location = new System.Drawing.Point(22, 305);
+			eCANAL_6.Name = "eCANAL_6";
+			eCANAL_6.Size = new System.Drawing.Size(33, 24);
+			eCANAL_6.TabIndex = 28;
+			eCANAL_6.Text = "-";
+			eCANAL_6.UseVisualStyleBackColor = true;
+			eCANAL_5.AutoSize = true;
+			eCANAL_5.Checked = true;
+			eCANAL_5.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_5.Location = new System.Drawing.Point(22, 273);
+			eCANAL_5.Name = "eCANAL_5";
+			eCANAL_5.Size = new System.Drawing.Size(33, 24);
+			eCANAL_5.TabIndex = 27;
+			eCANAL_5.Text = "-";
+			eCANAL_5.UseVisualStyleBackColor = true;
+			eCANAL_4.AutoSize = true;
+			eCANAL_4.Checked = true;
+			eCANAL_4.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_4.Location = new System.Drawing.Point(22, 241);
+			eCANAL_4.Name = "eCANAL_4";
+			eCANAL_4.Size = new System.Drawing.Size(33, 24);
+			eCANAL_4.TabIndex = 26;
+			eCANAL_4.Text = "-";
+			eCANAL_4.UseVisualStyleBackColor = true;
+			eCANAL_3.AutoSize = true;
+			eCANAL_3.Checked = true;
+			eCANAL_3.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_3.Location = new System.Drawing.Point(22, 209);
+			eCANAL_3.Name = "eCANAL_3";
+			eCANAL_3.Size = new System.Drawing.Size(33, 24);
+			eCANAL_3.TabIndex = 25;
+			eCANAL_3.Text = "-";
+			eCANAL_3.UseVisualStyleBackColor = true;
+			eCANAL_2.AutoSize = true;
+			eCANAL_2.Checked = true;
+			eCANAL_2.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_2.Location = new System.Drawing.Point(22, 177);
+			eCANAL_2.Name = "eCANAL_2";
+			eCANAL_2.Size = new System.Drawing.Size(33, 24);
+			eCANAL_2.TabIndex = 24;
+			eCANAL_2.Text = "-";
+			eCANAL_2.UseVisualStyleBackColor = true;
+			eCANAL_1.AutoSize = true;
+			eCANAL_1.Checked = true;
+			eCANAL_1.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+			eCANAL_1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			eCANAL_1.Location = new System.Drawing.Point(22, 145);
+			eCANAL_1.Name = "eCANAL_1";
+			eCANAL_1.Size = new System.Drawing.Size(33, 24);
+			eCANAL_1.TabIndex = 23;
+			eCANAL_1.Text = "-";
+			eCANAL_1.UseVisualStyleBackColor = true;
+			iCom.AutoSize = true;
+			iCom.Location = new System.Drawing.Point(19, 95);
+			iCom.Name = "iCom";
+			iCom.Size = new System.Drawing.Size(53, 13);
+			iCom.TabIndex = 8;
+			iCom.Text = "COM Port";
+			lCom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			lCom.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lCom.FormattingEnabled = true;
+			lCom.Location = new System.Drawing.Point(78, 81);
+			lCom.Name = "lCom";
+			lCom.Size = new System.Drawing.Size(167, 39);
+			lCom.TabIndex = 7;
+			lCom.SelectionChangeCommitted += new System.EventHandler(lCom_SelectionChangeCommitted);
+			pTitle.BackgroundImage = (System.Drawing.Image)resources.GetObject("pTitle.BackgroundImage");
+			pTitle.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+			pTitle.Dock = System.Windows.Forms.DockStyle.Top;
+			pTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			pTitle.Location = new System.Drawing.Point(0, 0);
+			pTitle.Name = "pTitle";
+			pTitle.PageEndColor = System.Drawing.Color.Empty;
+			pTitle.PageStartColor = System.Drawing.Color.LightSteelBlue;
+			pTitle.Size = new System.Drawing.Size(649, 60);
+			pTitle.TabIndex = 6;
+			pTitle.Title = "F40 Configuration";
+			pTitle.Title_Alignement = GLib.Forms.GradientPanel.Alignement.Left;
+			tResum.Location = new System.Drawing.Point(4, 5);
+			tResum.Name = "tResum";
+			tResum.Size = new System.Drawing.Size(649, 406);
+			tResum.TabIndex = 10;
+			tResum.UseVisualStyleBackColor = true;
+			bgControl.WorkerReportsProgress = true;
+			bgControl.WorkerSupportsCancellation = true;
+			bgControl.DoWork += new System.ComponentModel.DoWorkEventHandler(bgControl_DoWork);
+			bgControl.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(bgControl_ProgressChanged);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(657, 469);
+			base.ControlBox = false;
+			base.Controls.Add(tabs);
+			base.Controls.Add(pBotons);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.Name = "Devices_Wizard";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			Text = "Devices";
+			base.FormClosing += new System.Windows.Forms.FormClosingEventHandler(Devices_Wizard_FormClosing);
+			base.Load += new System.EventHandler(Devices_Wizard_Load);
+			pBotons.ResumeLayout(false);
+			tabs.ResumeLayout(false);
+			tInfo.ResumeLayout(false);
+			tInfo.PerformLayout();
+			tCoin_Mode.ResumeLayout(false);
+			tCoin_Mode.PerformLayout();
+			tCoin_Detect.ResumeLayout(false);
+			tCoin_Detect.PerformLayout();
+			tBill_Mode.ResumeLayout(false);
+			tBill_Mode.PerformLayout();
+			tBill_Detect.ResumeLayout(false);
+			tBill_Detect.PerformLayout();
+			tBill_Config.ResumeLayout(false);
+			tBill_Config.PerformLayout();
+			ResumeLayout(false);
+		}
+	}
 }

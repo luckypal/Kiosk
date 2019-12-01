@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Login
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using GLib;
 using GLib.Config;
 using Kiosk.Properties;
@@ -16,204 +10,236 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Login : Form
-  {
-    private IContainer components = (IContainer) null;
-    public Configuracion opciones;
-    public int Logeado;
-    public bool OK;
-    public int Qui;
-    private PasswordBox ePassword;
-    private Label lPassword;
-    private Button bOK;
-    private Button bCancel;
-    private Label lCtrl;
-    private Button bUnlock;
-    private Button nKey;
-    private Timer tScan;
+	public class DLG_Login : Form
+	{
+		public Configuracion opciones;
 
-    public DLG_Login(ref Configuracion _opc, int _qui)
-    {
-      this.Qui = _qui;
-      this.OK = false;
-      this.InitializeComponent();
-      this.opciones = _opc;
-      this.Logeado = 0;
-      this.Localize();
-      this.opciones.Log_Debug("Try Login");
-    }
+		public int Logeado;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.Text = this.opciones.Localize.Text("Stop!");
-      this.lPassword.Text = this.opciones.Localize.Text("Password");
-      this.ResumeLayout();
-    }
+		public bool OK;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.Logeado = 0;
-      this.Close();
-    }
+		public int Qui;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-      this.OK = true;
-      string text = this.ePassword.Text;
-      this.Logeado = 0;
-      string str = XmlConfig.X2Y(text);
-      if (this.Qui == 1)
-      {
-        if (str != "0" && str == XmlConfig.X2Y("gowindows"))
-          this.Logeado = 1;
-      }
-      else if (str != "0" && str == this.opciones.PasswordADM && this.opciones.PasswordADM != "")
-        this.Logeado = 1;
-      this.Close();
-    }
+		private IContainer components = null;
 
-    [DllImport("User32.dll")]
-    private static extern int SetFocus(IntPtr hWnd);
+		private PasswordBox ePassword;
 
-    private void DLG_Login_Load(object sender, EventArgs e)
-    {
-      this.Focus();
-      this.opciones.LastMouseMove = DateTime.Now;
-      this.tScan.Enabled = true;
-    }
+		private Label lPassword;
 
-    private void ePassword_KeyDown(object sender, KeyEventArgs e)
-    {
-      if ((e.Modifiers & Keys.Control) == Keys.Control)
-        this.lCtrl.Text = "Control Pressed";
-      else
-        this.lCtrl.Text = "";
-    }
+		private Button bOK;
 
-    private void ePassword_KeyPress(object sender, KeyPressEventArgs e)
-    {
-      if (e.KeyChar != '\r')
-        return;
-      this.bOK_Click(sender, (EventArgs) null);
-    }
+		private Button bCancel;
 
-    private void bUnlock_Click(object sender, EventArgs e)
-    {
-      this.opciones.ForceAllKey = 1;
-    }
+		private Label lCtrl;
 
-    private void nKey_Click(object sender, EventArgs e)
-    {
-      if (Process.GetProcessesByName("KVKeyboard").Length >= 1)
-        new PipeClient().Send("QUIT", "KVKeyboard", 1000);
-      else
-        Process.Start("KVKeyboard.exe", "es");
-    }
+		private Button bUnlock;
 
-    private void DLG_Login_Enter(object sender, EventArgs e)
-    {
-      this.ePassword.Focus();
-    }
+		private Button nKey;
 
-    private void tScan_Tick(object sender, EventArgs e)
-    {
-      if ((int) (DateTime.Now - this.opciones.LastMouseMove).TotalSeconds <= 60)
-        return;
-      this.Logeado = 0;
-      this.Close();
-    }
+		private Timer tScan;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public DLG_Login(ref Configuracion _opc, int _qui)
+		{
+			Qui = _qui;
+			OK = false;
+			InitializeComponent();
+			opciones = _opc;
+			Logeado = 0;
+			Localize();
+			opciones.Log_Debug("Try Login");
+		}
 
-    private void InitializeComponent()
-    {
-      this.components = (IContainer) new Container();
-      this.lPassword = new Label();
-      this.bOK = new Button();
-      this.bCancel = new Button();
-      this.lCtrl = new Label();
-      this.bUnlock = new Button();
-      this.ePassword = new PasswordBox();
-      this.nKey = new Button();
-      this.tScan = new Timer(this.components);
-      this.SuspendLayout();
-      this.lPassword.AutoSize = true;
-      this.lPassword.Location = new Point(13, 14);
-      this.lPassword.Name = "lPassword";
-      this.lPassword.Size = new Size(10, 13);
-      this.lPassword.TabIndex = 3;
-      this.lPassword.Text = "-";
-      this.bOK.Image = (Image) Resources.ico_ok;
-      this.bOK.Location = new Point(232, 70);
-      this.bOK.Name = "bOK";
-      this.bOK.Size = new Size(48, 48);
-      this.bOK.TabIndex = 2;
-      this.bOK.UseVisualStyleBackColor = true;
-      this.bOK.Click += new EventHandler(this.bOK_Click);
-      this.bCancel.Image = (Image) Resources.ico_del;
-      this.bCancel.Location = new Point(178, 70);
-      this.bCancel.Name = "bCancel";
-      this.bCancel.Size = new Size(48, 48);
-      this.bCancel.TabIndex = 1;
-      this.bCancel.UseVisualStyleBackColor = true;
-      this.bCancel.Click += new EventHandler(this.bCancel_Click);
-      this.lCtrl.AutoSize = true;
-      this.lCtrl.ForeColor = Color.Red;
-      this.lCtrl.Location = new Point(13, 60);
-      this.lCtrl.Name = "lCtrl";
-      this.lCtrl.Size = new Size(0, 13);
-      this.lCtrl.TabIndex = 4;
-      this.bUnlock.Image = (Image) Resources.ico_barcodeX;
-      this.bUnlock.Location = new Point(12, 70);
-      this.bUnlock.Name = "bUnlock";
-      this.bUnlock.Size = new Size(48, 48);
-      this.bUnlock.TabIndex = 3;
-      this.bUnlock.UseVisualStyleBackColor = true;
-      this.bUnlock.Click += new EventHandler(this.bUnlock_Click);
-      this.ePassword.Location = new Point(12, 35);
-      this.ePassword.Name = "ePassword";
-      this.ePassword.Size = new Size(268, 20);
-      this.ePassword.TabIndex = 0;
-      this.ePassword.KeyDown += new KeyEventHandler(this.ePassword_KeyDown);
-      this.ePassword.KeyPress += new KeyPressEventHandler(this.ePassword_KeyPress);
-      this.nKey.Image = (Image) Resources.ico_keyboard;
-      this.nKey.Location = new Point(66, 70);
-      this.nKey.Name = "nKey";
-      this.nKey.Size = new Size(48, 48);
-      this.nKey.TabIndex = 5;
-      this.nKey.UseVisualStyleBackColor = true;
-      this.nKey.Click += new EventHandler(this.nKey_Click);
-      this.tScan.Interval = 500;
-      this.tScan.Tick += new EventHandler(this.tScan_Tick);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(292, 130);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.nKey);
-      this.Controls.Add((Control) this.bUnlock);
-      this.Controls.Add((Control) this.lCtrl);
-      this.Controls.Add((Control) this.bCancel);
-      this.Controls.Add((Control) this.bOK);
-      this.Controls.Add((Control) this.lPassword);
-      this.Controls.Add((Control) this.ePassword);
-      this.DoubleBuffered = true;
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.MaximizeBox = false;
-      this.Name = nameof (DLG_Login);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.Text = "Stop!";
-      this.TopMost = true;
-      this.Load += new EventHandler(this.DLG_Login_Load);
-      this.Enter += new EventHandler(this.DLG_Login_Enter);
-      this.ResumeLayout(false);
-      this.PerformLayout();
-    }
-  }
+		private void Localize()
+		{
+			SuspendLayout();
+			Text = opciones.Localize.Text("Stop!");
+			lPassword.Text = opciones.Localize.Text("Password");
+			ResumeLayout();
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			Logeado = 0;
+			Close();
+		}
+
+		private void bOK_Click(object sender, EventArgs e)
+		{
+			OK = true;
+			string text = ePassword.Text;
+			Logeado = 0;
+			string a = XmlConfig.X2Y(text);
+			int qui = Qui;
+			if (qui == 1)
+			{
+				if (a != "0" && a == XmlConfig.X2Y("gowindows"))
+				{
+					Logeado = 1;
+				}
+			}
+			else if (a != "0" && a == opciones.PasswordADM && opciones.PasswordADM != "")
+			{
+				Logeado = 1;
+			}
+			Close();
+		}
+
+		[DllImport("User32.dll")]
+		private static extern int SetFocus(IntPtr hWnd);
+
+		private void DLG_Login_Load(object sender, EventArgs e)
+		{
+			Focus();
+			opciones.LastMouseMove = DateTime.Now;
+			tScan.Enabled = true;
+		}
+
+		private void ePassword_KeyDown(object sender, KeyEventArgs e)
+		{
+			if ((e.Modifiers & Keys.Control) == Keys.Control)
+			{
+				lCtrl.Text = "Control Pressed";
+			}
+			else
+			{
+				lCtrl.Text = "";
+			}
+		}
+
+		private void ePassword_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == '\r')
+			{
+				bOK_Click(sender, null);
+			}
+		}
+
+		private void bUnlock_Click(object sender, EventArgs e)
+		{
+			opciones.ForceAllKey = 1;
+		}
+
+		private void nKey_Click(object sender, EventArgs e)
+		{
+			Process[] processesByName = Process.GetProcessesByName("KVKeyboard");
+			if (processesByName.Length >= 1)
+			{
+				PipeClient pipeClient = new PipeClient();
+				pipeClient.Send("QUIT", "KVKeyboard");
+			}
+			else
+			{
+				Process.Start("KVKeyboard.exe", "es");
+			}
+		}
+
+		private void DLG_Login_Enter(object sender, EventArgs e)
+		{
+			ePassword.Focus();
+		}
+
+		private void tScan_Tick(object sender, EventArgs e)
+		{
+			int num = (int)(DateTime.Now - opciones.LastMouseMove).TotalSeconds;
+			if (num > 60)
+			{
+				Logeado = 0;
+				Close();
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			lPassword = new System.Windows.Forms.Label();
+			bOK = new System.Windows.Forms.Button();
+			bCancel = new System.Windows.Forms.Button();
+			lCtrl = new System.Windows.Forms.Label();
+			bUnlock = new System.Windows.Forms.Button();
+			ePassword = new GLib.PasswordBox();
+			nKey = new System.Windows.Forms.Button();
+			tScan = new System.Windows.Forms.Timer(components);
+			SuspendLayout();
+			lPassword.AutoSize = true;
+			lPassword.Location = new System.Drawing.Point(13, 14);
+			lPassword.Name = "lPassword";
+			lPassword.Size = new System.Drawing.Size(10, 13);
+			lPassword.TabIndex = 3;
+			lPassword.Text = "-";
+			bOK.Image = Kiosk.Properties.Resources.ico_ok;
+			bOK.Location = new System.Drawing.Point(232, 70);
+			bOK.Name = "bOK";
+			bOK.Size = new System.Drawing.Size(48, 48);
+			bOK.TabIndex = 2;
+			bOK.UseVisualStyleBackColor = true;
+			bOK.Click += new System.EventHandler(bOK_Click);
+			bCancel.Image = Kiosk.Properties.Resources.ico_del;
+			bCancel.Location = new System.Drawing.Point(178, 70);
+			bCancel.Name = "bCancel";
+			bCancel.Size = new System.Drawing.Size(48, 48);
+			bCancel.TabIndex = 1;
+			bCancel.UseVisualStyleBackColor = true;
+			bCancel.Click += new System.EventHandler(bCancel_Click);
+			lCtrl.AutoSize = true;
+			lCtrl.ForeColor = System.Drawing.Color.Red;
+			lCtrl.Location = new System.Drawing.Point(13, 60);
+			lCtrl.Name = "lCtrl";
+			lCtrl.Size = new System.Drawing.Size(0, 13);
+			lCtrl.TabIndex = 4;
+			bUnlock.Image = Kiosk.Properties.Resources.ico_barcodeX;
+			bUnlock.Location = new System.Drawing.Point(12, 70);
+			bUnlock.Name = "bUnlock";
+			bUnlock.Size = new System.Drawing.Size(48, 48);
+			bUnlock.TabIndex = 3;
+			bUnlock.UseVisualStyleBackColor = true;
+			bUnlock.Click += new System.EventHandler(bUnlock_Click);
+			ePassword.Location = new System.Drawing.Point(12, 35);
+			ePassword.Name = "ePassword";
+			ePassword.Size = new System.Drawing.Size(268, 20);
+			ePassword.TabIndex = 0;
+			ePassword.KeyDown += new System.Windows.Forms.KeyEventHandler(ePassword_KeyDown);
+			ePassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(ePassword_KeyPress);
+			nKey.Image = Kiosk.Properties.Resources.ico_keyboard;
+			nKey.Location = new System.Drawing.Point(66, 70);
+			nKey.Name = "nKey";
+			nKey.Size = new System.Drawing.Size(48, 48);
+			nKey.TabIndex = 5;
+			nKey.UseVisualStyleBackColor = true;
+			nKey.Click += new System.EventHandler(nKey_Click);
+			tScan.Interval = 500;
+			tScan.Tick += new System.EventHandler(tScan_Tick);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(292, 130);
+			base.ControlBox = false;
+			base.Controls.Add(nKey);
+			base.Controls.Add(bUnlock);
+			base.Controls.Add(lCtrl);
+			base.Controls.Add(bCancel);
+			base.Controls.Add(bOK);
+			base.Controls.Add(lPassword);
+			base.Controls.Add(ePassword);
+			DoubleBuffered = true;
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.MaximizeBox = false;
+			base.Name = "DLG_Login";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = "Stop!";
+			base.TopMost = true;
+			base.Load += new System.EventHandler(DLG_Login_Load);
+			base.Enter += new System.EventHandler(DLG_Login_Enter);
+			ResumeLayout(false);
+			PerformLayout();
+		}
+	}
 }

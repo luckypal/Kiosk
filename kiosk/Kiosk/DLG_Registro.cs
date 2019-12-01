@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Registro
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using GLib;
 using Kiosk.Properties;
 using System;
@@ -13,282 +7,312 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Registro : Form
-  {
-    private IContainer components = (IContainer) null;
-    public Configuracion opciones;
-    public int Logeado;
-    public bool OK;
-    public int Login;
-    private Label label1;
-    private Label label2;
-    private PasswordBox tPassword;
-    private TextBox tUser;
-    private Button bCancel;
-    private Button bOK;
-    private Panel panel1;
-    private PasswordBox tcnPassword;
-    private Label label6;
-    private TextBox tnUser;
-    private PasswordBox tnPassword;
-    private Label label4;
-    private Label label5;
-    private TextBox tCPF;
-    private Label label8;
-    private TextBox tName;
-    private Label label7;
-    private Button bNew;
+	public class DLG_Registro : Form
+	{
+		public Configuracion opciones;
 
-    public DLG_Registro(ref Configuracion _opc)
-    {
-      this.OK = false;
-      this.Login = -1;
-      this.InitializeComponent();
-      this.opciones = _opc;
-      this.Localize();
-    }
+		public int Logeado;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.ResumeLayout();
-    }
+		public bool OK;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-      if (this.opciones.Login_User(this.tUser.Text, this.tPassword.Text))
-      {
-        this.OK = true;
-        this.Login = 1;
-        this.Close();
-      }
-      else
-      {
-        int num = (int) MessageBox.Show("Error en el login");
-      }
-    }
+		public int Login;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.Login = 0;
-      this.Close();
-    }
+		private IContainer components = null;
 
-    private void bNew_Click(object sender, EventArgs e)
-    {
-      int num1 = 0;
-      if (this.tnPassword.Text != this.tcnPassword.Text)
-      {
-        this.tnPassword.BackColor = Color.Red;
-        this.tcnPassword.BackColor = Color.Red;
-        ++num1;
-      }
-      else
-      {
-        this.tnPassword.BackColor = Color.White;
-        this.tcnPassword.BackColor = Color.White;
-      }
-      if (!Gestion.IsCpf(this.tCPF.Text))
-      {
-        this.tCPF.BackColor = Color.Red;
-        ++num1;
-      }
-      else
-        this.tCPF.BackColor = Color.White;
-      if (string.IsNullOrEmpty(this.tName.Text))
-      {
-        this.tName.BackColor = Color.Red;
-        ++num1;
-      }
-      else
-        this.tName.BackColor = Color.White;
-      if (string.IsNullOrEmpty(this.tnUser.Text))
-      {
-        this.tnUser.BackColor = Color.Red;
-        ++num1;
-      }
-      else
-        this.tnUser.BackColor = Color.White;
-      if (num1 > 0)
-      {
-        int num2 = (int) MessageBox.Show("Faltan datos o los introducidos son incorrectos");
-      }
-      else if (!this.opciones.Insert_User(this.tnUser.Text, this.tName.Text, this.tCPF.Text, this.tnPassword.Text, this.tcnPassword.Text))
-      {
-        int num3 = (int) MessageBox.Show("El usuario ya existe o no son correctos los datos");
-      }
-      else if (this.opciones.Login_User(this.tnUser.Text, this.tnPassword.Text))
-      {
-        this.OK = true;
-        this.Login = 1;
-        this.Close();
-      }
-      else
-      {
-        int num4 = (int) MessageBox.Show("Error en el login");
-      }
-    }
+		private Label label1;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		private Label label2;
 
-    private void InitializeComponent()
-    {
-      this.label1 = new Label();
-      this.label2 = new Label();
-      this.tPassword = new PasswordBox();
-      this.tUser = new TextBox();
-      this.bCancel = new Button();
-      this.bOK = new Button();
-      this.panel1 = new Panel();
-      this.bNew = new Button();
-      this.tCPF = new TextBox();
-      this.label8 = new Label();
-      this.tName = new TextBox();
-      this.label7 = new Label();
-      this.tcnPassword = new PasswordBox();
-      this.label6 = new Label();
-      this.tnUser = new TextBox();
-      this.tnPassword = new PasswordBox();
-      this.label4 = new Label();
-      this.label5 = new Label();
-      this.panel1.SuspendLayout();
-      this.SuspendLayout();
-      this.label1.AutoSize = true;
-      this.label1.Location = new Point(13, 13);
-      this.label1.Name = "label1";
-      this.label1.Size = new Size(29, 13);
-      this.label1.TabIndex = 0;
-      this.label1.Text = "User";
-      this.label2.AutoSize = true;
-      this.label2.Location = new Point(13, 39);
-      this.label2.Name = "label2";
-      this.label2.Size = new Size(53, 13);
-      this.label2.TabIndex = 1;
-      this.label2.Text = "Password";
-      this.tPassword.Location = new Point(68, 39);
-      this.tPassword.Name = "tPassword";
-      this.tPassword.Size = new Size(121, 20);
-      this.tPassword.TabIndex = 1;
-      this.tUser.Location = new Point(68, 13);
-      this.tUser.Name = "tUser";
-      this.tUser.Size = new Size(121, 20);
-      this.tUser.TabIndex = 0;
-      this.bCancel.Image = (Image) Resources.ico_del;
-      this.bCancel.Location = new Point(211, 13);
-      this.bCancel.Name = "bCancel";
-      this.bCancel.Size = new Size(48, 48);
-      this.bCancel.TabIndex = 3;
-      this.bCancel.UseVisualStyleBackColor = true;
-      this.bCancel.Click += new EventHandler(this.bCancel_Click);
-      this.bOK.Image = (Image) Resources.ico_ok;
-      this.bOK.Location = new Point(265, 13);
-      this.bOK.Name = "bOK";
-      this.bOK.Size = new Size(48, 48);
-      this.bOK.TabIndex = 2;
-      this.bOK.UseVisualStyleBackColor = true;
-      this.bOK.Click += new EventHandler(this.bOK_Click);
-      this.panel1.BorderStyle = BorderStyle.FixedSingle;
-      this.panel1.Controls.Add((Control) this.bNew);
-      this.panel1.Controls.Add((Control) this.tCPF);
-      this.panel1.Controls.Add((Control) this.label8);
-      this.panel1.Controls.Add((Control) this.tName);
-      this.panel1.Controls.Add((Control) this.label7);
-      this.panel1.Controls.Add((Control) this.tcnPassword);
-      this.panel1.Controls.Add((Control) this.label6);
-      this.panel1.Controls.Add((Control) this.tnUser);
-      this.panel1.Controls.Add((Control) this.tnPassword);
-      this.panel1.Controls.Add((Control) this.label4);
-      this.panel1.Controls.Add((Control) this.label5);
-      this.panel1.Dock = DockStyle.Bottom;
-      this.panel1.Location = new Point(0, 67);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new Size(325, 143);
-      this.panel1.TabIndex = 6;
-      this.bNew.Image = (Image) Resources.ico_add;
-      this.bNew.Location = new Point(264, 21);
-      this.bNew.Name = "bNew";
-      this.bNew.Size = new Size(48, 48);
-      this.bNew.TabIndex = 5;
-      this.bNew.UseVisualStyleBackColor = true;
-      this.bNew.Click += new EventHandler(this.bNew_Click);
-      this.tCPF.Location = new Point(67, 114);
-      this.tCPF.Name = "tCPF";
-      this.tCPF.Size = new Size(121, 20);
-      this.tCPF.TabIndex = 4;
-      this.label8.AutoSize = true;
-      this.label8.Location = new Point(12, 114);
-      this.label8.Name = "label8";
-      this.label8.Size = new Size(27, 13);
-      this.label8.TabIndex = 14;
-      this.label8.Text = "CPF";
-      this.tName.Location = new Point(67, 88);
-      this.tName.Name = "tName";
-      this.tName.Size = new Size(245, 20);
-      this.tName.TabIndex = 3;
-      this.label7.AutoSize = true;
-      this.label7.Location = new Point(12, 88);
-      this.label7.Name = "label7";
-      this.label7.Size = new Size(35, 13);
-      this.label7.TabIndex = 12;
-      this.label7.Text = "Name";
-      this.tcnPassword.Location = new Point(129, 62);
-      this.tcnPassword.Name = "tcnPassword";
-      this.tcnPassword.Size = new Size(121, 20);
-      this.tcnPassword.TabIndex = 2;
-      this.label6.AutoSize = true;
-      this.label6.Location = new Point(12, 66);
-      this.label6.Name = "label6";
-      this.label6.Size = new Size(100, 13);
-      this.label6.TabIndex = 10;
-      this.label6.Text = "Confirme Password ";
-      this.tnUser.Location = new Point(129, 10);
-      this.tnUser.Name = "tnUser";
-      this.tnUser.Size = new Size(121, 20);
-      this.tnUser.TabIndex = 0;
-      this.tnPassword.Location = new Point(129, 36);
-      this.tnPassword.Name = "tnPassword";
-      this.tnPassword.Size = new Size(121, 20);
-      this.tnPassword.TabIndex = 1;
-      this.label4.AutoSize = true;
-      this.label4.Location = new Point(12, 39);
-      this.label4.Name = "label4";
-      this.label4.Size = new Size(53, 13);
-      this.label4.TabIndex = 7;
-      this.label4.Text = "Password";
-      this.label5.AutoSize = true;
-      this.label5.Location = new Point(12, 13);
-      this.label5.Name = "label5";
-      this.label5.Size = new Size(52, 13);
-      this.label5.TabIndex = 6;
-      this.label5.Text = "New user";
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(325, 210);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.panel1);
-      this.Controls.Add((Control) this.bCancel);
-      this.Controls.Add((Control) this.bOK);
-      this.Controls.Add((Control) this.tUser);
-      this.Controls.Add((Control) this.tPassword);
-      this.Controls.Add((Control) this.label2);
-      this.Controls.Add((Control) this.label1);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.MaximizeBox = false;
-      this.MinimizeBox = false;
-      this.Name = nameof (DLG_Registro);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.Text = "Register / Login";
-      this.TopMost = true;
-      this.panel1.ResumeLayout(false);
-      this.panel1.PerformLayout();
-      this.ResumeLayout(false);
-      this.PerformLayout();
-    }
-  }
+		private PasswordBox tPassword;
+
+		private TextBox tUser;
+
+		private Button bCancel;
+
+		private Button bOK;
+
+		private Panel panel1;
+
+		private PasswordBox tcnPassword;
+
+		private Label label6;
+
+		private TextBox tnUser;
+
+		private PasswordBox tnPassword;
+
+		private Label label4;
+
+		private Label label5;
+
+		private TextBox tCPF;
+
+		private Label label8;
+
+		private TextBox tName;
+
+		private Label label7;
+
+		private Button bNew;
+
+		public DLG_Registro(ref Configuracion _opc)
+		{
+			OK = false;
+			Login = -1;
+			InitializeComponent();
+			opciones = _opc;
+			Localize();
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			ResumeLayout();
+		}
+
+		private void bOK_Click(object sender, EventArgs e)
+		{
+			if (opciones.Login_User(tUser.Text, tPassword.Text))
+			{
+				OK = true;
+				Login = 1;
+				Close();
+			}
+			else
+			{
+				MessageBox.Show("Error en el login");
+			}
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			Login = 0;
+			Close();
+		}
+
+		private void bNew_Click(object sender, EventArgs e)
+		{
+			int num = 0;
+			if (tnPassword.Text != tcnPassword.Text)
+			{
+				tnPassword.BackColor = Color.Red;
+				tcnPassword.BackColor = Color.Red;
+				num++;
+			}
+			else
+			{
+				tnPassword.BackColor = Color.White;
+				tcnPassword.BackColor = Color.White;
+			}
+			if (!Gestion.IsCpf(tCPF.Text))
+			{
+				tCPF.BackColor = Color.Red;
+				num++;
+			}
+			else
+			{
+				tCPF.BackColor = Color.White;
+			}
+			if (string.IsNullOrEmpty(tName.Text))
+			{
+				tName.BackColor = Color.Red;
+				num++;
+			}
+			else
+			{
+				tName.BackColor = Color.White;
+			}
+			if (string.IsNullOrEmpty(tnUser.Text))
+			{
+				tnUser.BackColor = Color.Red;
+				num++;
+			}
+			else
+			{
+				tnUser.BackColor = Color.White;
+			}
+			if (num > 0)
+			{
+				MessageBox.Show("Faltan datos o los introducidos son incorrectos");
+			}
+			else if (!opciones.Insert_User(tnUser.Text, tName.Text, tCPF.Text, tnPassword.Text, tcnPassword.Text))
+			{
+				MessageBox.Show("El usuario ya existe o no son correctos los datos");
+			}
+			else if (opciones.Login_User(tnUser.Text, tnPassword.Text))
+			{
+				OK = true;
+				Login = 1;
+				Close();
+			}
+			else
+			{
+				MessageBox.Show("Error en el login");
+			}
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			label1 = new System.Windows.Forms.Label();
+			label2 = new System.Windows.Forms.Label();
+			tPassword = new GLib.PasswordBox();
+			tUser = new System.Windows.Forms.TextBox();
+			bCancel = new System.Windows.Forms.Button();
+			bOK = new System.Windows.Forms.Button();
+			panel1 = new System.Windows.Forms.Panel();
+			bNew = new System.Windows.Forms.Button();
+			tCPF = new System.Windows.Forms.TextBox();
+			label8 = new System.Windows.Forms.Label();
+			tName = new System.Windows.Forms.TextBox();
+			label7 = new System.Windows.Forms.Label();
+			tcnPassword = new GLib.PasswordBox();
+			label6 = new System.Windows.Forms.Label();
+			tnUser = new System.Windows.Forms.TextBox();
+			tnPassword = new GLib.PasswordBox();
+			label4 = new System.Windows.Forms.Label();
+			label5 = new System.Windows.Forms.Label();
+			panel1.SuspendLayout();
+			SuspendLayout();
+			label1.AutoSize = true;
+			label1.Location = new System.Drawing.Point(13, 13);
+			label1.Name = "label1";
+			label1.Size = new System.Drawing.Size(29, 13);
+			label1.TabIndex = 0;
+			label1.Text = "User";
+			label2.AutoSize = true;
+			label2.Location = new System.Drawing.Point(13, 39);
+			label2.Name = "label2";
+			label2.Size = new System.Drawing.Size(53, 13);
+			label2.TabIndex = 1;
+			label2.Text = "Password";
+			tPassword.Location = new System.Drawing.Point(68, 39);
+			tPassword.Name = "tPassword";
+			tPassword.Size = new System.Drawing.Size(121, 20);
+			tPassword.TabIndex = 1;
+			tUser.Location = new System.Drawing.Point(68, 13);
+			tUser.Name = "tUser";
+			tUser.Size = new System.Drawing.Size(121, 20);
+			tUser.TabIndex = 0;
+			bCancel.Image = Kiosk.Properties.Resources.ico_del;
+			bCancel.Location = new System.Drawing.Point(211, 13);
+			bCancel.Name = "bCancel";
+			bCancel.Size = new System.Drawing.Size(48, 48);
+			bCancel.TabIndex = 3;
+			bCancel.UseVisualStyleBackColor = true;
+			bCancel.Click += new System.EventHandler(bCancel_Click);
+			bOK.Image = Kiosk.Properties.Resources.ico_ok;
+			bOK.Location = new System.Drawing.Point(265, 13);
+			bOK.Name = "bOK";
+			bOK.Size = new System.Drawing.Size(48, 48);
+			bOK.TabIndex = 2;
+			bOK.UseVisualStyleBackColor = true;
+			bOK.Click += new System.EventHandler(bOK_Click);
+			panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			panel1.Controls.Add(bNew);
+			panel1.Controls.Add(tCPF);
+			panel1.Controls.Add(label8);
+			panel1.Controls.Add(tName);
+			panel1.Controls.Add(label7);
+			panel1.Controls.Add(tcnPassword);
+			panel1.Controls.Add(label6);
+			panel1.Controls.Add(tnUser);
+			panel1.Controls.Add(tnPassword);
+			panel1.Controls.Add(label4);
+			panel1.Controls.Add(label5);
+			panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			panel1.Location = new System.Drawing.Point(0, 67);
+			panel1.Name = "panel1";
+			panel1.Size = new System.Drawing.Size(325, 143);
+			panel1.TabIndex = 6;
+			bNew.Image = Kiosk.Properties.Resources.ico_add;
+			bNew.Location = new System.Drawing.Point(264, 21);
+			bNew.Name = "bNew";
+			bNew.Size = new System.Drawing.Size(48, 48);
+			bNew.TabIndex = 5;
+			bNew.UseVisualStyleBackColor = true;
+			bNew.Click += new System.EventHandler(bNew_Click);
+			tCPF.Location = new System.Drawing.Point(67, 114);
+			tCPF.Name = "tCPF";
+			tCPF.Size = new System.Drawing.Size(121, 20);
+			tCPF.TabIndex = 4;
+			label8.AutoSize = true;
+			label8.Location = new System.Drawing.Point(12, 114);
+			label8.Name = "label8";
+			label8.Size = new System.Drawing.Size(27, 13);
+			label8.TabIndex = 14;
+			label8.Text = "CPF";
+			tName.Location = new System.Drawing.Point(67, 88);
+			tName.Name = "tName";
+			tName.Size = new System.Drawing.Size(245, 20);
+			tName.TabIndex = 3;
+			label7.AutoSize = true;
+			label7.Location = new System.Drawing.Point(12, 88);
+			label7.Name = "label7";
+			label7.Size = new System.Drawing.Size(35, 13);
+			label7.TabIndex = 12;
+			label7.Text = "Name";
+			tcnPassword.Location = new System.Drawing.Point(129, 62);
+			tcnPassword.Name = "tcnPassword";
+			tcnPassword.Size = new System.Drawing.Size(121, 20);
+			tcnPassword.TabIndex = 2;
+			label6.AutoSize = true;
+			label6.Location = new System.Drawing.Point(12, 66);
+			label6.Name = "label6";
+			label6.Size = new System.Drawing.Size(100, 13);
+			label6.TabIndex = 10;
+			label6.Text = "Confirme Password ";
+			tnUser.Location = new System.Drawing.Point(129, 10);
+			tnUser.Name = "tnUser";
+			tnUser.Size = new System.Drawing.Size(121, 20);
+			tnUser.TabIndex = 0;
+			tnPassword.Location = new System.Drawing.Point(129, 36);
+			tnPassword.Name = "tnPassword";
+			tnPassword.Size = new System.Drawing.Size(121, 20);
+			tnPassword.TabIndex = 1;
+			label4.AutoSize = true;
+			label4.Location = new System.Drawing.Point(12, 39);
+			label4.Name = "label4";
+			label4.Size = new System.Drawing.Size(53, 13);
+			label4.TabIndex = 7;
+			label4.Text = "Password";
+			label5.AutoSize = true;
+			label5.Location = new System.Drawing.Point(12, 13);
+			label5.Name = "label5";
+			label5.Size = new System.Drawing.Size(52, 13);
+			label5.TabIndex = 6;
+			label5.Text = "New user";
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(325, 210);
+			base.ControlBox = false;
+			base.Controls.Add(panel1);
+			base.Controls.Add(bCancel);
+			base.Controls.Add(bOK);
+			base.Controls.Add(tUser);
+			base.Controls.Add(tPassword);
+			base.Controls.Add(label2);
+			base.Controls.Add(label1);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.MaximizeBox = false;
+			base.MinimizeBox = false;
+			base.Name = "DLG_Registro";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = "Register / Login";
+			base.TopMost = true;
+			panel1.ResumeLayout(false);
+			panel1.PerformLayout();
+			ResumeLayout(false);
+			PerformLayout();
+		}
+	}
 }

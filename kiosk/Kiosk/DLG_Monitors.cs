@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Monitors
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using Kiosk.Properties;
 using System;
 using System.ComponentModel;
@@ -14,330 +8,359 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Monitors : Form
-  {
-    private IContainer components = (IContainer) null;
-    public bool OK;
-    public Configuracion opciones;
-    public MainWindow MWin;
-    private SplashMonitor Mon1;
-    private SplashMonitor Mon2;
-    private Button bCancel;
-    private Button bOk;
-    private Label lPubli;
-    private TextBox ePubli;
-    private Button bCheck;
-    private Button bClone;
-    private Button bMon12;
-    private Button bMon21;
-    private CheckBox cMon;
-    private Label lMon1;
-    private Label lMon2;
+	public class DLG_Monitors : Form
+	{
+		public bool OK;
 
-    public DLG_Monitors(ref Configuracion _opc)
-    {
-      this.OK = false;
-      this.opciones = _opc;
-      this.MWin = (MainWindow) null;
-      this.InitializeComponent();
-      this.cMon.Checked = this.opciones.Monitors > 1;
-      this.ePubli.Text = this.opciones.Publi;
-      this.Localize();
-    }
+		public Configuracion opciones;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.ResumeLayout();
-    }
+		public MainWindow MWin;
 
-    public void Update_Info()
-    {
-      Screen[] allScreens = Screen.AllScreens;
-      this.lMon1.Text = "Monitor 1: " + Screen.PrimaryScreen.Bounds.ToString();
-      if (allScreens.Length > 1)
-      {
-        if (allScreens[1].Bounds.X == Screen.PrimaryScreen.Bounds.X)
-          this.lMon2.Text = "Monitor 2: " + allScreens[0].Bounds.ToString();
-        else
-          this.lMon2.Text = "Monitor 2: " + allScreens[1].Bounds.ToString();
-      }
-      else
-        this.lMon2.Text = "Monitor 2: -";
-    }
+		private SplashMonitor Mon1;
 
-    public void ID_Monitors_Clear()
-    {
-      if (this.Mon1 != null)
-      {
-        this.Mon1.Hide();
-        this.Mon1 = (SplashMonitor) null;
-      }
-      if (this.Mon2 == null)
-        return;
-      this.Mon2.Hide();
-      this.Mon2 = (SplashMonitor) null;
-    }
+		private SplashMonitor Mon2;
 
-    public void ID_Monitors()
-    {
-      this.ID_Monitors_Clear();
-      Application.DoEvents();
-      Thread.Sleep(500);
-      Screen[] allScreens1 = Screen.AllScreens;
-      Rectangle bounds1 = allScreens1[0].Bounds;
-      this.Mon1 = new SplashMonitor(bounds1.X > 0 ? "2" : "1");
-      this.Mon1.SetBounds(bounds1.X + bounds1.Width, bounds1.Height, 200, 200);
-      this.Mon1.Show();
-      if (allScreens1.Length > 1)
-      {
-        Rectangle bounds2 = allScreens1[1].Bounds;
-        this.Mon2 = new SplashMonitor(bounds2.X > 0 ? "2" : "1");
-        this.Mon2.SetBounds(bounds2.X + bounds2.Width, bounds2.Height, 200, 200);
-        this.Mon2.Show();
-        Screen[] allScreens2 = Screen.AllScreens;
-        bounds1 = Screen.PrimaryScreen.Bounds;
-        bounds2 = allScreens2[1].Bounds;
-        if (bounds2.X <= 0)
-          bounds2 = allScreens2[0].Bounds;
-        this.MWin.SetBounds(bounds1.X, bounds1.Y, bounds1.Width, bounds1.Height);
-        this.MWin.Update();
-        if (this.opciones.Monitors > 1 && this.MWin.publi != null)
-        {
-          this.MWin.publi.SetBounds(bounds2.X, bounds2.Y, bounds2.Width, bounds2.Height);
-          this.MWin.publi.Update();
-        }
-      }
-      else
-      {
-        bounds1 = Screen.PrimaryScreen.Bounds;
-        this.Mon1 = new SplashMonitor(bounds1.X > 0 ? "2" : "1");
-        this.Mon1.SetBounds(bounds1.X + bounds1.Width, bounds1.Height, 200, 200);
-        this.Mon1.Show();
-        if (this.MWin.publi != null)
-          this.MWin.publi.Hide();
-      }
-      this.Update_Info();
-    }
+		private IContainer components = null;
 
-    private void bCheck_Click(object sender, EventArgs e)
-    {
-      this.ID_Monitors();
-    }
+		private Button bCancel;
 
-    private void bClone_Click(object sender, EventArgs e)
-    {
-      this.ID_Monitors_Clear();
-      Process process = new Process();
-      try
-      {
-        process.StartInfo.WorkingDirectory = "c:\\windows\\system32";
-        process.StartInfo.FileName = "DisplaySwitch.exe";
-        process.StartInfo.Arguments = "/clone";
-        process.StartInfo.CreateNoWindow = true;
-        process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-        process.Start();
-      }
-      catch
-      {
-      }
-      Application.DoEvents();
-      Thread.Sleep(1000);
-      this.ID_Monitors();
-    }
+		private Button bOk;
 
-    private void bMon21_Click(object sender, EventArgs e)
-    {
-      this.ID_Monitors_Clear();
-      Process process = new Process();
-      try
-      {
-        process.StartInfo.WorkingDirectory = "c:\\windows\\system32";
-        process.StartInfo.FileName = "DisplaySwitch.exe";
-        process.StartInfo.Arguments = "/extend";
-        process.StartInfo.CreateNoWindow = true;
-        process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-        process.Start();
-      }
-      catch
-      {
-      }
-      Application.DoEvents();
-      Thread.Sleep(500);
-      ControlDisplay.SwapMonitor(1, 0);
-      Application.DoEvents();
-      Thread.Sleep(1000);
-      this.ID_Monitors();
-    }
+		private Label lPubli;
 
-    private void bMon12_Click(object sender, EventArgs e)
-    {
-      this.ID_Monitors_Clear();
-      Process process = new Process();
-      try
-      {
-        process.StartInfo.WorkingDirectory = "c:\\windows\\system32";
-        process.StartInfo.FileName = "DisplaySwitch.exe";
-        process.StartInfo.Arguments = "/extend";
-        process.StartInfo.CreateNoWindow = true;
-        process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-        process.Start();
-      }
-      catch
-      {
-      }
-      Application.DoEvents();
-      Thread.Sleep(500);
-      ControlDisplay.SwapMonitor(0, 1);
-      ControlDisplay.SwapMonitor(0, 1);
-      Application.DoEvents();
-      Thread.Sleep(1000);
-      this.ID_Monitors();
-    }
+		private TextBox ePubli;
 
-    private void bOk_Click(object sender, EventArgs e)
-    {
-      this.ID_Monitors_Clear();
-      this.opciones.Publi = this.ePubli.Text;
-      this.opciones.Monitors = this.cMon.Checked ? 2 : 1;
-      this.Close();
-    }
+		private Button bCheck;
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.ID_Monitors_Clear();
-      this.Close();
-    }
+		private Button bClone;
 
-    private void DLG_Monitors_Load(object sender, EventArgs e)
-    {
-      this.ID_Monitors();
-    }
+		private Button bMon12;
 
-    private void DLG_Monitors_FormClosed(object sender, FormClosedEventArgs e)
-    {
-      this.ID_Monitors_Clear();
-    }
+		private Button bMon21;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		private CheckBox cMon;
 
-    private void InitializeComponent()
-    {
-      this.lPubli = new Label();
-      this.ePubli = new TextBox();
-      this.bCheck = new Button();
-      this.bClone = new Button();
-      this.bMon12 = new Button();
-      this.bMon21 = new Button();
-      this.bCancel = new Button();
-      this.bOk = new Button();
-      this.cMon = new CheckBox();
-      this.lMon1 = new Label();
-      this.lMon2 = new Label();
-      this.SuspendLayout();
-      this.lPubli.AutoSize = true;
-      this.lPubli.Font = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lPubli.Location = new Point(12, 44);
-      this.lPubli.Name = "lPubli";
-      this.lPubli.Size = new Size(124, 13);
-      this.lPubli.TabIndex = 39;
-      this.lPubli.Text = "Slide show alternative url";
-      this.ePubli.Location = new Point(12, 60);
-      this.ePubli.Name = "ePubli";
-      this.ePubli.Size = new Size(460, 20);
-      this.ePubli.TabIndex = 40;
-      this.bCheck.Location = new Point(12, 196);
-      this.bCheck.Name = "bCheck";
-      this.bCheck.Size = new Size(145, 40);
-      this.bCheck.TabIndex = 43;
-      this.bCheck.Text = "Check";
-      this.bCheck.UseVisualStyleBackColor = true;
-      this.bCheck.Click += new EventHandler(this.bCheck_Click);
-      this.bClone.Location = new Point(12, 150);
-      this.bClone.Name = "bClone";
-      this.bClone.Size = new Size(145, 40);
-      this.bClone.TabIndex = 44;
-      this.bClone.Text = "Set Clone monitor";
-      this.bClone.UseVisualStyleBackColor = true;
-      this.bClone.Click += new EventHandler(this.bClone_Click);
-      this.bMon12.Location = new Point(171, 150);
-      this.bMon12.Name = "bMon12";
-      this.bMon12.Size = new Size(145, 40);
-      this.bMon12.TabIndex = 45;
-      this.bMon12.Text = "Set Monitor 1/2";
-      this.bMon12.UseVisualStyleBackColor = true;
-      this.bMon12.Click += new EventHandler(this.bMon12_Click);
-      this.bMon21.Location = new Point(330, 150);
-      this.bMon21.Name = "bMon21";
-      this.bMon21.Size = new Size(145, 40);
-      this.bMon21.TabIndex = 46;
-      this.bMon21.Text = "Set Monitor 2/1";
-      this.bMon21.UseVisualStyleBackColor = true;
-      this.bMon21.Click += new EventHandler(this.bMon21_Click);
-      this.bCancel.BackgroundImage = (Image) Resources.ico_del;
-      this.bCancel.BackgroundImageLayout = ImageLayout.Center;
-      this.bCancel.Location = new Point(341, 233);
-      this.bCancel.Name = "bCancel";
-      this.bCancel.Size = new Size(64, 48);
-      this.bCancel.TabIndex = 15;
-      this.bCancel.UseVisualStyleBackColor = true;
-      this.bCancel.Click += new EventHandler(this.bCancel_Click);
-      this.bOk.BackgroundImage = (Image) Resources.ico_ok;
-      this.bOk.BackgroundImageLayout = ImageLayout.Center;
-      this.bOk.Location = new Point(411, 233);
-      this.bOk.Name = "bOk";
-      this.bOk.Size = new Size(64, 48);
-      this.bOk.TabIndex = 14;
-      this.bOk.UseVisualStyleBackColor = true;
-      this.bOk.Click += new EventHandler(this.bOk_Click);
-      this.cMon.AutoSize = true;
-      this.cMon.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.cMon.Location = new Point(12, 6);
-      this.cMon.Name = "cMon";
-      this.cMon.Size = new Size(168, 35);
-      this.cMon.TabIndex = 47;
-      this.cMon.Text = "Slide Show";
-      this.cMon.UseVisualStyleBackColor = true;
-      this.lMon1.AutoSize = true;
-      this.lMon1.Font = new Font("Microsoft Sans Serif", 10f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lMon1.Location = new Point(15, 87);
-      this.lMon1.Name = "lMon1";
-      this.lMon1.Size = new Size(71, 17);
-      this.lMon1.TabIndex = 48;
-      this.lMon1.Text = "Monitor 1:";
-      this.lMon2.AutoSize = true;
-      this.lMon2.Font = new Font("Microsoft Sans Serif", 10f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.lMon2.Location = new Point(15, 112);
-      this.lMon2.Name = "lMon2";
-      this.lMon2.Size = new Size(71, 17);
-      this.lMon2.TabIndex = 49;
-      this.lMon2.Text = "Monitor 2:";
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(484, 293);
-      this.Controls.Add((Control) this.lMon2);
-      this.Controls.Add((Control) this.lMon1);
-      this.Controls.Add((Control) this.cMon);
-      this.Controls.Add((Control) this.bMon21);
-      this.Controls.Add((Control) this.bMon12);
-      this.Controls.Add((Control) this.bClone);
-      this.Controls.Add((Control) this.bCheck);
-      this.Controls.Add((Control) this.ePubli);
-      this.Controls.Add((Control) this.lPubli);
-      this.Controls.Add((Control) this.bCancel);
-      this.Controls.Add((Control) this.bOk);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.Name = nameof (DLG_Monitors);
-      this.StartPosition = FormStartPosition.CenterParent;
-      this.Text = "Monitor Slide Show";
-      this.FormClosed += new FormClosedEventHandler(this.DLG_Monitors_FormClosed);
-      this.Load += new EventHandler(this.DLG_Monitors_Load);
-      this.ResumeLayout(false);
-      this.PerformLayout();
-    }
-  }
+		private Label lMon1;
+
+		private Label lMon2;
+
+		public DLG_Monitors(ref Configuracion _opc)
+		{
+			OK = false;
+			opciones = _opc;
+			MWin = null;
+			InitializeComponent();
+			cMon.Checked = ((opciones.Monitors > 1) ? true : false);
+			ePubli.Text = opciones.Publi;
+			Localize();
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			ResumeLayout();
+		}
+
+		public void Update_Info()
+		{
+			Screen[] allScreens = Screen.AllScreens;
+			lMon1.Text = "Monitor 1: " + Screen.PrimaryScreen.Bounds.ToString();
+			if (allScreens.Length > 1)
+			{
+				if (allScreens[1].Bounds.X == Screen.PrimaryScreen.Bounds.X)
+				{
+					lMon2.Text = "Monitor 2: " + allScreens[0].Bounds.ToString();
+				}
+				else
+				{
+					lMon2.Text = "Monitor 2: " + allScreens[1].Bounds.ToString();
+				}
+			}
+			else
+			{
+				lMon2.Text = "Monitor 2: -";
+			}
+		}
+
+		public void ID_Monitors_Clear()
+		{
+			if (Mon1 != null)
+			{
+				Mon1.Hide();
+				Mon1 = null;
+			}
+			if (Mon2 != null)
+			{
+				Mon2.Hide();
+				Mon2 = null;
+			}
+		}
+
+		public void ID_Monitors()
+		{
+			ID_Monitors_Clear();
+			Application.DoEvents();
+			Thread.Sleep(500);
+			Screen[] allScreens = Screen.AllScreens;
+			Rectangle bounds = allScreens[0].Bounds;
+			Mon1 = new SplashMonitor((bounds.X > 0) ? "2" : "1");
+			Mon1.SetBounds(bounds.X + bounds.Width, bounds.Height, 200, 200);
+			Mon1.Show();
+			if (allScreens.Length > 1)
+			{
+				Rectangle bounds2 = allScreens[1].Bounds;
+				Mon2 = new SplashMonitor((bounds2.X > 0) ? "2" : "1");
+				Mon2.SetBounds(bounds2.X + bounds2.Width, bounds2.Height, 200, 200);
+				Mon2.Show();
+				allScreens = Screen.AllScreens;
+				bounds = Screen.PrimaryScreen.Bounds;
+				bounds2 = allScreens[1].Bounds;
+				if (bounds2.X <= 0)
+				{
+					bounds2 = allScreens[0].Bounds;
+				}
+				MWin.SetBounds(bounds.X, bounds.Y, bounds.Width, bounds.Height);
+				MWin.Update();
+				if (opciones.Monitors > 1 && MWin.publi != null)
+				{
+					MWin.publi.SetBounds(bounds2.X, bounds2.Y, bounds2.Width, bounds2.Height);
+					MWin.publi.Update();
+				}
+			}
+			else
+			{
+				bounds = Screen.PrimaryScreen.Bounds;
+				Mon1 = new SplashMonitor((bounds.X > 0) ? "2" : "1");
+				Mon1.SetBounds(bounds.X + bounds.Width, bounds.Height, 200, 200);
+				Mon1.Show();
+				if (MWin.publi != null)
+				{
+					MWin.publi.Hide();
+				}
+			}
+			Update_Info();
+		}
+
+		private void bCheck_Click(object sender, EventArgs e)
+		{
+			ID_Monitors();
+		}
+
+		private void bClone_Click(object sender, EventArgs e)
+		{
+			ID_Monitors_Clear();
+			Process process = new Process();
+			try
+			{
+				process.StartInfo.WorkingDirectory = "c:\\windows\\system32";
+				process.StartInfo.FileName = "DisplaySwitch.exe";
+				process.StartInfo.Arguments = "/clone";
+				process.StartInfo.CreateNoWindow = true;
+				process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+				process.Start();
+			}
+			catch
+			{
+			}
+			Application.DoEvents();
+			Thread.Sleep(1000);
+			ID_Monitors();
+		}
+
+		private void bMon21_Click(object sender, EventArgs e)
+		{
+			ID_Monitors_Clear();
+			Process process = new Process();
+			try
+			{
+				process.StartInfo.WorkingDirectory = "c:\\windows\\system32";
+				process.StartInfo.FileName = "DisplaySwitch.exe";
+				process.StartInfo.Arguments = "/extend";
+				process.StartInfo.CreateNoWindow = true;
+				process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+				process.Start();
+			}
+			catch
+			{
+			}
+			Application.DoEvents();
+			Thread.Sleep(500);
+			ControlDisplay.SwapMonitor(1, 0);
+			Application.DoEvents();
+			Thread.Sleep(1000);
+			ID_Monitors();
+		}
+
+		private void bMon12_Click(object sender, EventArgs e)
+		{
+			ID_Monitors_Clear();
+			Process process = new Process();
+			try
+			{
+				process.StartInfo.WorkingDirectory = "c:\\windows\\system32";
+				process.StartInfo.FileName = "DisplaySwitch.exe";
+				process.StartInfo.Arguments = "/extend";
+				process.StartInfo.CreateNoWindow = true;
+				process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+				process.Start();
+			}
+			catch
+			{
+			}
+			Application.DoEvents();
+			Thread.Sleep(500);
+			ControlDisplay.SwapMonitor(0, 1);
+			ControlDisplay.SwapMonitor(0, 1);
+			Application.DoEvents();
+			Thread.Sleep(1000);
+			ID_Monitors();
+		}
+
+		private void bOk_Click(object sender, EventArgs e)
+		{
+			ID_Monitors_Clear();
+			opciones.Publi = ePubli.Text;
+			opciones.Monitors = ((!cMon.Checked) ? 1 : 2);
+			Close();
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			ID_Monitors_Clear();
+			Close();
+		}
+
+		private void DLG_Monitors_Load(object sender, EventArgs e)
+		{
+			ID_Monitors();
+		}
+
+		private void DLG_Monitors_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			ID_Monitors_Clear();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			lPubli = new System.Windows.Forms.Label();
+			ePubli = new System.Windows.Forms.TextBox();
+			bCheck = new System.Windows.Forms.Button();
+			bClone = new System.Windows.Forms.Button();
+			bMon12 = new System.Windows.Forms.Button();
+			bMon21 = new System.Windows.Forms.Button();
+			bCancel = new System.Windows.Forms.Button();
+			bOk = new System.Windows.Forms.Button();
+			cMon = new System.Windows.Forms.CheckBox();
+			lMon1 = new System.Windows.Forms.Label();
+			lMon2 = new System.Windows.Forms.Label();
+			SuspendLayout();
+			lPubli.AutoSize = true;
+			lPubli.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lPubli.Location = new System.Drawing.Point(12, 44);
+			lPubli.Name = "lPubli";
+			lPubli.Size = new System.Drawing.Size(124, 13);
+			lPubli.TabIndex = 39;
+			lPubli.Text = "Slide show alternative url";
+			ePubli.Location = new System.Drawing.Point(12, 60);
+			ePubli.Name = "ePubli";
+			ePubli.Size = new System.Drawing.Size(460, 20);
+			ePubli.TabIndex = 40;
+			bCheck.Location = new System.Drawing.Point(12, 196);
+			bCheck.Name = "bCheck";
+			bCheck.Size = new System.Drawing.Size(145, 40);
+			bCheck.TabIndex = 43;
+			bCheck.Text = "Check";
+			bCheck.UseVisualStyleBackColor = true;
+			bCheck.Click += new System.EventHandler(bCheck_Click);
+			bClone.Location = new System.Drawing.Point(12, 150);
+			bClone.Name = "bClone";
+			bClone.Size = new System.Drawing.Size(145, 40);
+			bClone.TabIndex = 44;
+			bClone.Text = "Set Clone monitor";
+			bClone.UseVisualStyleBackColor = true;
+			bClone.Click += new System.EventHandler(bClone_Click);
+			bMon12.Location = new System.Drawing.Point(171, 150);
+			bMon12.Name = "bMon12";
+			bMon12.Size = new System.Drawing.Size(145, 40);
+			bMon12.TabIndex = 45;
+			bMon12.Text = "Set Monitor 1/2";
+			bMon12.UseVisualStyleBackColor = true;
+			bMon12.Click += new System.EventHandler(bMon12_Click);
+			bMon21.Location = new System.Drawing.Point(330, 150);
+			bMon21.Name = "bMon21";
+			bMon21.Size = new System.Drawing.Size(145, 40);
+			bMon21.TabIndex = 46;
+			bMon21.Text = "Set Monitor 2/1";
+			bMon21.UseVisualStyleBackColor = true;
+			bMon21.Click += new System.EventHandler(bMon21_Click);
+			bCancel.BackgroundImage = Kiosk.Properties.Resources.ico_del;
+			bCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			bCancel.Location = new System.Drawing.Point(341, 233);
+			bCancel.Name = "bCancel";
+			bCancel.Size = new System.Drawing.Size(64, 48);
+			bCancel.TabIndex = 15;
+			bCancel.UseVisualStyleBackColor = true;
+			bCancel.Click += new System.EventHandler(bCancel_Click);
+			bOk.BackgroundImage = Kiosk.Properties.Resources.ico_ok;
+			bOk.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			bOk.Location = new System.Drawing.Point(411, 233);
+			bOk.Name = "bOk";
+			bOk.Size = new System.Drawing.Size(64, 48);
+			bOk.TabIndex = 14;
+			bOk.UseVisualStyleBackColor = true;
+			bOk.Click += new System.EventHandler(bOk_Click);
+			cMon.AutoSize = true;
+			cMon.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			cMon.Location = new System.Drawing.Point(12, 6);
+			cMon.Name = "cMon";
+			cMon.Size = new System.Drawing.Size(168, 35);
+			cMon.TabIndex = 47;
+			cMon.Text = "Slide Show";
+			cMon.UseVisualStyleBackColor = true;
+			lMon1.AutoSize = true;
+			lMon1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lMon1.Location = new System.Drawing.Point(15, 87);
+			lMon1.Name = "lMon1";
+			lMon1.Size = new System.Drawing.Size(71, 17);
+			lMon1.TabIndex = 48;
+			lMon1.Text = "Monitor 1:";
+			lMon2.AutoSize = true;
+			lMon2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			lMon2.Location = new System.Drawing.Point(15, 112);
+			lMon2.Name = "lMon2";
+			lMon2.Size = new System.Drawing.Size(71, 17);
+			lMon2.TabIndex = 49;
+			lMon2.Text = "Monitor 2:";
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(484, 293);
+			base.Controls.Add(lMon2);
+			base.Controls.Add(lMon1);
+			base.Controls.Add(cMon);
+			base.Controls.Add(bMon21);
+			base.Controls.Add(bMon12);
+			base.Controls.Add(bClone);
+			base.Controls.Add(bCheck);
+			base.Controls.Add(ePubli);
+			base.Controls.Add(lPubli);
+			base.Controls.Add(bCancel);
+			base.Controls.Add(bOk);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.Name = "DLG_Monitors";
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+			Text = "Monitor Slide Show";
+			base.FormClosed += new System.Windows.Forms.FormClosedEventHandler(DLG_Monitors_FormClosed);
+			base.Load += new System.EventHandler(DLG_Monitors_Load);
+			ResumeLayout(false);
+			PerformLayout();
+		}
+	}
 }

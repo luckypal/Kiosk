@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Dispenser_Out
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -11,126 +5,156 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Dispenser_Out : Form
-  {
-    public bool IsClosed = false;
-    private int oldT = -1;
-    private int oldC = -1;
-    private IContainer components = (IContainer) null;
-    public Configuracion opciones;
-    public int TimeOutMsg;
-    private DateTime Pausa;
-    private Timer ctrl;
-    private Label lINFO;
+	public class DLG_Dispenser_Out : Form
+	{
+		public Configuracion opciones;
 
-    public DLG_Dispenser_Out(ref Configuracion _opc)
-    {
-      this.IsClosed = false;
-      this.TimeOutMsg = 0;
-      this.opciones = _opc;
-      this.InitializeComponent();
-      this.Localize();
-      this.Opacity = 0.7;
-    }
+		public int TimeOutMsg;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.ResumeLayout();
-    }
+		private DateTime Pausa;
 
-    private void Update_Info()
-    {
-      this.lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nPoints à livrer: " + (object) this.opciones.Disp_Pay_Ticket_Credits + "\r\n\r\nChèques cadeaux pour livrer: " + (object) this.opciones.Disp_Pay_Ticket + "\r\n\r\nChèques cadeaux livrés: " + (object) this.opciones.Disp_Pay_Ticket_Out;
-      this.oldT = this.opciones.Disp_Pay_Ticket;
-      this.oldC = this.opciones.Disp_Pay_Ticket_Credits;
-      this.Invalidate();
-    }
+		public bool IsClosed = false;
 
-    private void ctrl_Tick(object sender, EventArgs e)
-    {
-      if (this.opciones.Disp_Pay_Ticket_Fail == 0 && (this.oldT != this.opciones.Disp_Pay_Ticket || this.oldC != this.opciones.Disp_Pay_Ticket_Credits))
-        this.Update_Info();
-      if (this.opciones.Disp_Pay_Ticket_Fail == 1)
-      {
-        if (this.opciones.Disp_Pay_Ticket_Credits <= 0)
-          this.lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nChèques cadeaux livrés: " + (object) this.opciones.Disp_Pay_Ticket_Out;
-        else
-          this.lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nPas de chèques cadeaux disponibles sur le borne\r\n\r\nUtilisez le bon pour obtenir les chèques cadeaux\r\n\r\nPour " + (object) this.opciones.Disp_Pay_Ticket_Credits + " crédits\r\n\r\nChèques cadeaux livrés: " + (object) this.opciones.Disp_Pay_Ticket_Out;
-        this.BackColor = Color.OrangeRed;
-        this.Invalidate();
-        this.opciones.Disp_Pay_Ticket_Fail = 2;
-        this.Pausa = DateTime.Now;
-      }
-      if (this.opciones.Disp_Pay_Ticket_Fail == 2)
-        this.TimeOutMsg = 1;
-      if (this.opciones.Disp_Pay_Ticket_Fail == 3)
-      {
-        this.BackColor = Color.DarkGreen;
-        if (this.opciones.Disp_Pay_Ticket_Out <= 0)
-          this.BackColor = Color.OrangeRed;
-        if (this.opciones.Disp_Pay_Ticket_Credits <= 0)
-          this.lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nChèques cadeaux livrés: " + (object) this.opciones.Disp_Pay_Ticket_Out;
-        else
-          this.lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nPas de chèques cadeaux disponibles sur le borne\r\n\r\nUtilisez le bon pour obtenir les chèques cadeaux\r\n\r\nPour " + (object) this.opciones.Disp_Pay_Ticket_Credits + " crédits\r\n\r\nChèques cadeaux livrés: " + (object) this.opciones.Disp_Pay_Ticket_Out;
-        this.Invalidate();
-        this.Pausa = DateTime.Now;
-        this.TimeOutMsg = 1;
-        this.opciones.Disp_Pay_Ticket_Fail = 2;
-      }
-      if (this.TimeOutMsg != 1 || (int) (DateTime.Now - this.Pausa).TotalSeconds <= 5)
-        return;
-      this.IsClosed = true;
-      this.Close();
-    }
+		private int oldT = -1;
 
-    private void DLG_Dispenser_Out_Load(object sender, EventArgs e)
-    {
-      this.Update_Info();
-      this.ctrl.Enabled = true;
-    }
+		private int oldC = -1;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		private IContainer components = null;
 
-    private void InitializeComponent()
-    {
-      this.components = (IContainer) new Container();
-      this.ctrl = new Timer(this.components);
-      this.lINFO = new Label();
-      this.SuspendLayout();
-      this.ctrl.Tick += new EventHandler(this.ctrl_Tick);
-      this.lINFO.BackColor = Color.Transparent;
-      this.lINFO.Dock = DockStyle.Fill;
-      this.lINFO.Font = new Font("Microsoft Sans Serif", 20f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.lINFO.Location = new Point(0, 0);
-      this.lINFO.Name = "lINFO";
-      this.lINFO.Size = new Size(929, 546);
-      this.lINFO.TabIndex = 2;
-      this.lINFO.Text = "Dispensing tickets";
-      this.lINFO.TextAlign = ContentAlignment.MiddleCenter;
-      this.AutoScaleDimensions = new SizeF(6f, 13f);
-      this.AutoScaleMode = AutoScaleMode.Font;
-      this.BackColor = Color.Blue;
-      this.ClientSize = new Size(929, 546);
-      this.Controls.Add((Control) this.lINFO);
-      this.DoubleBuffered = true;
-      this.ForeColor = Color.White;
-      this.FormBorderStyle = FormBorderStyle.None;
-      this.Margin = new Padding(2);
-      this.Name = nameof (DLG_Dispenser_Out);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.Text = nameof (DLG_Dispenser_Out);
-      this.TopMost = true;
-      this.WindowState = FormWindowState.Maximized;
-      this.Load += new EventHandler(this.DLG_Dispenser_Out_Load);
-      this.ResumeLayout(false);
-    }
-  }
+		private Timer ctrl;
+
+		private Label lINFO;
+
+		public DLG_Dispenser_Out(ref Configuracion _opc)
+		{
+			IsClosed = false;
+			TimeOutMsg = 0;
+			opciones = _opc;
+			InitializeComponent();
+			Localize();
+			base.Opacity = 0.7;
+			bool flag = true;
+		}
+
+		private void Localize()
+		{
+			SuspendLayout();
+			ResumeLayout();
+		}
+
+		private void Update_Info()
+		{
+			lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nPoints à livrer: " + opciones.Disp_Pay_Ticket_Credits + "\r\n\r\nChèques cadeaux pour livrer: " + opciones.Disp_Pay_Ticket + "\r\n\r\nChèques cadeaux livrés: " + opciones.Disp_Pay_Ticket_Out;
+			oldT = opciones.Disp_Pay_Ticket;
+			oldC = opciones.Disp_Pay_Ticket_Credits;
+			Invalidate();
+		}
+
+		private void ctrl_Tick(object sender, EventArgs e)
+		{
+			if (opciones.Disp_Pay_Ticket_Fail == 0 && (oldT != opciones.Disp_Pay_Ticket || oldC != opciones.Disp_Pay_Ticket_Credits))
+			{
+				Update_Info();
+			}
+			if (opciones.Disp_Pay_Ticket_Fail == 1)
+			{
+				if (opciones.Disp_Pay_Ticket_Credits <= 0)
+				{
+					lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nChèques cadeaux livrés: " + opciones.Disp_Pay_Ticket_Out;
+				}
+				else
+				{
+					lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nPas de chèques cadeaux disponibles sur le borne\r\n\r\nUtilisez le bon pour obtenir les chèques cadeaux\r\n\r\nPour " + opciones.Disp_Pay_Ticket_Credits + " crédits\r\n\r\nChèques cadeaux livrés: " + opciones.Disp_Pay_Ticket_Out;
+				}
+				BackColor = Color.OrangeRed;
+				Invalidate();
+				opciones.Disp_Pay_Ticket_Fail = 2;
+				Pausa = DateTime.Now;
+			}
+			if (opciones.Disp_Pay_Ticket_Fail == 2)
+			{
+				TimeOutMsg = 1;
+			}
+			if (opciones.Disp_Pay_Ticket_Fail == 3)
+			{
+				BackColor = Color.DarkGreen;
+				if (opciones.Disp_Pay_Ticket_Out <= 0)
+				{
+					BackColor = Color.OrangeRed;
+				}
+				if (opciones.Disp_Pay_Ticket_Credits <= 0)
+				{
+					lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nChèques cadeaux livrés: " + opciones.Disp_Pay_Ticket_Out;
+				}
+				else
+				{
+					lINFO.Text = "••• LIVRAISON DES CHÉQUES CADEAUX •••\r\n\r\nPas de chèques cadeaux disponibles sur le borne\r\n\r\nUtilisez le bon pour obtenir les chèques cadeaux\r\n\r\nPour " + opciones.Disp_Pay_Ticket_Credits + " crédits\r\n\r\nChèques cadeaux livrés: " + opciones.Disp_Pay_Ticket_Out;
+				}
+				Invalidate();
+				Pausa = DateTime.Now;
+				TimeOutMsg = 1;
+				opciones.Disp_Pay_Ticket_Fail = 2;
+			}
+			if (TimeOutMsg == 1)
+			{
+				int num = (int)(DateTime.Now - Pausa).TotalSeconds;
+				if (num > 5)
+				{
+					IsClosed = true;
+					Close();
+				}
+			}
+		}
+
+		private void DLG_Dispenser_Out_Load(object sender, EventArgs e)
+		{
+			Update_Info();
+			ctrl.Enabled = true;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			ctrl = new System.Windows.Forms.Timer(components);
+			lINFO = new System.Windows.Forms.Label();
+			SuspendLayout();
+			ctrl.Tick += new System.EventHandler(ctrl_Tick);
+			lINFO.BackColor = System.Drawing.Color.Transparent;
+			lINFO.Dock = System.Windows.Forms.DockStyle.Fill;
+			lINFO.Font = new System.Drawing.Font("Microsoft Sans Serif", 20f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			lINFO.Location = new System.Drawing.Point(0, 0);
+			lINFO.Name = "lINFO";
+			lINFO.Size = new System.Drawing.Size(929, 546);
+			lINFO.TabIndex = 2;
+			lINFO.Text = "Dispensing tickets";
+			lINFO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			base.AutoScaleDimensions = new System.Drawing.SizeF(6f, 13f);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			BackColor = System.Drawing.Color.Blue;
+			base.ClientSize = new System.Drawing.Size(929, 546);
+			base.Controls.Add(lINFO);
+			DoubleBuffered = true;
+			ForeColor = System.Drawing.Color.White;
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			base.Margin = new System.Windows.Forms.Padding(2);
+			base.Name = "DLG_Dispenser_Out";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = "DLG_Dispenser_Out";
+			base.TopMost = true;
+			base.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			base.Load += new System.EventHandler(DLG_Dispenser_Out_Load);
+			ResumeLayout(false);
+		}
+	}
 }

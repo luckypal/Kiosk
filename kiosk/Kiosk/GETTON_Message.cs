@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.GETTON_Message
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using Kiosk.Properties;
 using System;
 using System.ComponentModel;
@@ -12,74 +6,79 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class GETTON_Message : Form
-  {
-    private IContainer components = (IContainer) null;
-    public Configuracion opciones;
-    private Label lBuy;
-    private Button bOK;
+	public class GETTON_Message : Form
+	{
+		public Configuracion opciones;
 
-    public GETTON_Message(string _msg, ref Configuracion _opc)
-    {
-      this.opciones = _opc;
-      this.InitializeComponent();
-      this.Top = 0;
-      this.Left = 300;
-      this.lBuy.Text = _msg;
-    }
+		private IContainer components = null;
 
-    private void bOK_Click(object sender, EventArgs e)
-    {
-      this.opciones.Add_Getton = 1;
-    }
+		private Label lBuy;
 
-    private void DLG_Message_Load(object sender, EventArgs e)
-    {
-      this.opciones.LastMouseMove = DateTime.Now;
-    }
+		private Button bOK;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public GETTON_Message(string _msg, ref Configuracion _opc)
+		{
+			opciones = _opc;
+			InitializeComponent();
+			base.Top = 0;
+			base.Left = 300;
+			lBuy.Text = _msg;
+		}
 
-    private void InitializeComponent()
-    {
-      this.lBuy = new Label();
-      this.bOK = new Button();
-      this.SuspendLayout();
-      this.lBuy.Dock = DockStyle.Fill;
-      this.lBuy.Font = new Font("Microsoft Sans Serif", 16f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.lBuy.Location = new Point(0, 0);
-      this.lBuy.Name = "lBuy";
-      this.lBuy.Size = new Size(424, 48);
-      this.lBuy.TabIndex = 12;
-      this.lBuy.Text = "-";
-      this.lBuy.TextAlign = ContentAlignment.MiddleCenter;
-      this.bOK.BackgroundImageLayout = ImageLayout.Center;
-      this.bOK.Dock = DockStyle.Right;
-      this.bOK.Image = (Image) Resources.ico_ok;
-      this.bOK.Location = new Point(424, 0);
-      this.bOK.Name = "bOK";
-      this.bOK.Size = new Size(74, 48);
-      this.bOK.TabIndex = 0;
-      this.bOK.UseVisualStyleBackColor = true;
-      this.bOK.Click += new EventHandler(this.bOK_Click);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(498, 48);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.lBuy);
-      this.Controls.Add((Control) this.bOK);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.Name = nameof (GETTON_Message);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.Manual;
-      this.TopMost = true;
-      this.Load += new EventHandler(this.DLG_Message_Load);
-      this.ResumeLayout(false);
-    }
-  }
+		private void bOK_Click(object sender, EventArgs e)
+		{
+			opciones.Add_Getton = 1;
+		}
+
+		private void DLG_Message_Load(object sender, EventArgs e)
+		{
+			opciones.LastMouseMove = DateTime.Now;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			lBuy = new System.Windows.Forms.Label();
+			bOK = new System.Windows.Forms.Button();
+			SuspendLayout();
+			lBuy.Dock = System.Windows.Forms.DockStyle.Fill;
+			lBuy.Font = new System.Drawing.Font("Microsoft Sans Serif", 16f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			lBuy.Location = new System.Drawing.Point(0, 0);
+			lBuy.Name = "lBuy";
+			lBuy.Size = new System.Drawing.Size(424, 48);
+			lBuy.TabIndex = 12;
+			lBuy.Text = "-";
+			lBuy.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			bOK.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+			bOK.Dock = System.Windows.Forms.DockStyle.Right;
+			bOK.Image = Kiosk.Properties.Resources.ico_ok;
+			bOK.Location = new System.Drawing.Point(424, 0);
+			bOK.Name = "bOK";
+			bOK.Size = new System.Drawing.Size(74, 48);
+			bOK.TabIndex = 0;
+			bOK.UseVisualStyleBackColor = true;
+			bOK.Click += new System.EventHandler(bOK_Click);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(498, 48);
+			base.ControlBox = false;
+			base.Controls.Add(lBuy);
+			base.Controls.Add(bOK);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.Name = "GETTON_Message";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			base.TopMost = true;
+			base.Load += new System.EventHandler(DLG_Message_Load);
+			ResumeLayout(false);
+		}
+	}
 }

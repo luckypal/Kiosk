@@ -1,57 +1,54 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.SplashMonitor
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class SplashMonitor : Form
-  {
-    private IContainer components = (IContainer) null;
-    private Label lNum;
+	public class SplashMonitor : Form
+	{
+		private IContainer components = null;
 
-    public SplashMonitor(string _text)
-    {
-      this.InitializeComponent();
-      this.lNum.Text = _text;
-    }
+		private Label lNum;
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public SplashMonitor(string _text)
+		{
+			InitializeComponent();
+			lNum.Text = _text;
+		}
 
-    private void InitializeComponent()
-    {
-      this.lNum = new Label();
-      this.SuspendLayout();
-      this.lNum.Dock = DockStyle.Fill;
-      this.lNum.Font = new Font("Microsoft Sans Serif", 120f, FontStyle.Bold, GraphicsUnit.Point, (byte) 0);
-      this.lNum.ForeColor = Color.Red;
-      this.lNum.Location = new Point(0, 0);
-      this.lNum.Name = "lNum";
-      this.lNum.Size = new Size(204, 194);
-      this.lNum.TabIndex = 0;
-      this.lNum.Text = "1";
-      this.lNum.TextAlign = ContentAlignment.MiddleCenter;
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.BackColor = Color.Black;
-      this.ClientSize = new Size(204, 194);
-      this.Controls.Add((Control) this.lNum);
-      this.FormBorderStyle = FormBorderStyle.None;
-      this.Name = nameof (SplashMonitor);
-      this.StartPosition = FormStartPosition.Manual;
-      this.Text = nameof (SplashMonitor);
-      this.TopMost = true;
-      this.TransparencyKey = Color.Black;
-      this.ResumeLayout(false);
-    }
-  }
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			lNum = new System.Windows.Forms.Label();
+			SuspendLayout();
+			lNum.Dock = System.Windows.Forms.DockStyle.Fill;
+			lNum.Font = new System.Drawing.Font("Microsoft Sans Serif", 120f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+			lNum.ForeColor = System.Drawing.Color.Red;
+			lNum.Location = new System.Drawing.Point(0, 0);
+			lNum.Name = "lNum";
+			lNum.Size = new System.Drawing.Size(204, 194);
+			lNum.TabIndex = 0;
+			lNum.Text = "1";
+			lNum.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			BackColor = System.Drawing.Color.Black;
+			base.ClientSize = new System.Drawing.Size(204, 194);
+			base.Controls.Add(lNum);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			base.Name = "SplashMonitor";
+			base.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			Text = "SplashMonitor";
+			base.TopMost = true;
+			base.TransparencyKey = System.Drawing.Color.Black;
+			ResumeLayout(false);
+		}
+	}
 }

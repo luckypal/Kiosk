@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: GLib.LogFile
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using System;
 using System.IO;
 using System.Reflection;
@@ -11,137 +5,125 @@ using System.Text;
 
 namespace GLib
 {
-  public class LogFile
-  {
-    private string Filename;
-    private LogFile.LogType Type;
-    private LogFile.LogLevel Level;
-    private LogFile.LogLevel DefaultLevel;
+	public class LogFile
+	{
+		public enum LogType
+		{
+			TXT,
+			XHTML_Plain
+		}
 
-    public LogFile(string filename)
-      : this(filename, false, LogFile.LogType.TXT, LogFile.LogLevel.All, "")
-    {
-    }
+		[Flags]
+		public enum LogLevel
+		{
+			Debug = 0x1,
+			Info = 0x2,
+			Warn = 0x4,
+			Error = 0x8,
+			Credits = 0x10,
+			Server = 0x20,
+			Users = 0x40,
+			All = 0xFF
+		}
 
-    public LogFile(string filename, bool append)
-      : this(filename, append, LogFile.LogType.TXT, LogFile.LogLevel.All, "")
-    {
-    }
+		private string Filename;
 
-    public LogFile(string filename, bool append, LogFile.LogType type)
-      : this(filename, append, type, LogFile.LogLevel.All, "")
-    {
-    }
+		private LogType Type;
 
-    public LogFile(string filename, bool append, LogFile.LogType type, LogFile.LogLevel level)
-      : this(filename, append, type, level, "")
-    {
-    }
+		private LogLevel Level;
 
-    public LogFile(
-      string filename,
-      bool append,
-      LogFile.LogType type,
-      LogFile.LogLevel level,
-      string title)
-    {
-    }
+		private LogLevel DefaultLevel;
 
-    public void WriteFooter()
-    {
-    }
+		public LogType CurrentLogType => Type;
 
-    public void LogRaw(string text)
-    {
-    }
+		public LogLevel CurrentLogLevel
+		{
+			get
+			{
+				return Level;
+			}
+			set
+			{
+				Level = value;
+			}
+		}
 
-    public void Log(string text)
-    {
-    }
+		public LogLevel DefaultLogLevel
+		{
+			get
+			{
+				return DefaultLevel;
+			}
+			set
+			{
+				DefaultLevel = value;
+			}
+		}
 
-    public void Log(string text, LogFile.LogLevel level)
-    {
-    }
+		public Version Version => Assembly.GetExecutingAssembly().GetName().Version;
 
-    public LogFile.LogType CurrentLogType
-    {
-      get
-      {
-        return this.Type;
-      }
-    }
+		public LogFile(string filename)
+			: this(filename, append: false, LogType.TXT, LogLevel.All, "")
+		{
+		}
 
-    public LogFile.LogLevel CurrentLogLevel
-    {
-      get
-      {
-        return this.Level;
-      }
-      set
-      {
-        this.Level = value;
-      }
-    }
+		public LogFile(string filename, bool append)
+			: this(filename, append, LogType.TXT, LogLevel.All, "")
+		{
+		}
 
-    public LogFile.LogLevel DefaultLogLevel
-    {
-      get
-      {
-        return this.DefaultLevel;
-      }
-      set
-      {
-        this.DefaultLevel = value;
-      }
-    }
+		public LogFile(string filename, bool append, LogType type)
+			: this(filename, append, type, LogLevel.All, "")
+		{
+		}
 
-    public Version Version
-    {
-      get
-      {
-        return Assembly.GetExecutingAssembly().GetName().Version;
-      }
-    }
+		public LogFile(string filename, bool append, LogType type, LogLevel level)
+			: this(filename, append, type, level, "")
+		{
+		}
 
-    public static string LogFile_Timestamp(string _file)
-    {
-      DateTime now = DateTime.Now;
-      return _file + string.Format("_{0}_{1}_{2}_{3}_{4}_{5}", (object) now.Year.ToString().PadLeft(4, '0'), (object) now.Month.ToString().PadLeft(2, '0'), (object) now.Day.ToString().PadLeft(2, '0'), (object) now.Hour.ToString().PadLeft(2, '0'), (object) now.Minute.ToString().PadLeft(2, '0'), (object) now.Second.ToString().PadLeft(2, '0'));
-    }
+		public LogFile(string filename, bool append, LogType type, LogLevel level, string title)
+		{
+		}
 
-    private void WriteLine(string text, bool append)
-    {
-      try
-      {
-        StreamWriter streamWriter = new StreamWriter(this.Filename, append, Encoding.UTF8);
-        if (text != "")
-          streamWriter.WriteLine(text);
-        streamWriter.Flush();
-        streamWriter.Close();
-      }
-      catch
-      {
-        throw;
-      }
-    }
+		public void WriteFooter()
+		{
+		}
 
-    public enum LogType
-    {
-      TXT,
-      XHTML_Plain,
-    }
+		public void LogRaw(string text)
+		{
+		}
 
-    [Flags]
-    public enum LogLevel
-    {
-      Debug = 1,
-      Info = 2,
-      Warn = 4,
-      Error = 8,
-      Credits = 16, // 0x00000010
-      Server = 32, // 0x00000020
-      Users = 64, // 0x00000040
-      All = 255, // 0x000000FF
-    }
-  }
+		public void Log(string text)
+		{
+		}
+
+		public void Log(string text, LogLevel level)
+		{
+		}
+
+		public static string LogFile_Timestamp(string _file)
+		{
+			DateTime now = DateTime.Now;
+			return _file + $"_{now.Year.ToString().PadLeft(4, '0')}_{now.Month.ToString().PadLeft(2, '0')}_{now.Day.ToString().PadLeft(2, '0')}_{now.Hour.ToString().PadLeft(2, '0')}_{now.Minute.ToString().PadLeft(2, '0')}_{now.Second.ToString().PadLeft(2, '0')}";
+		}
+
+		private void WriteLine(string text, bool append)
+		{
+			try
+			{
+				StreamWriter streamWriter = new StreamWriter(Filename, append, Encoding.UTF8);
+				if (text != "")
+				{
+					streamWriter.WriteLine(text);
+				}
+				streamWriter.Flush();
+				streamWriter.Close();
+			}
+			catch
+			{
+				throw;
+			}
+		}
+	}
 }

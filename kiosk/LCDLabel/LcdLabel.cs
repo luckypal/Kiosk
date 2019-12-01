@@ -1,594 +1,667 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: LCDLabel.LcdLabel
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace LCDLabel
 {
-  public class LcdLabel : Control
-  {
-    private PixelShape FPixelShape = PixelShape.Square;
-    private DotMatrix FDotMatrix = DotMatrix.mat5x7;
-    private Color FBackGround = Color.Silver;
-    private Color FPixOnColor = Color.Black;
-    private Color FPixOffColor = Color.Gray;
-    private Color FBorderColor = Color.Black;
-    private PixelSize FPixelSize;
-    private int FPixelSpacing;
-    private int FCharSpacing;
-    private int FLineSpacing;
-    private int FBorderSpace;
-    private int FTextLines;
-    private int FNoOfChars;
-    private Color FPixHalfColor;
-    private int FPixWidth;
-    private int FPixHeight;
-    private int FWidth;
-    private int FHeight;
-    private int charw;
-    private int charh;
-    private int psx;
-    private int psy;
-    private int pix_x;
-    private int pix_y;
-    private int first_c;
-    private int last_c;
+	public class LcdLabel : Control
+	{
+		private PixelSize FPixelSize;
 
-    public LcdLabel()
-    {
-      this.DoubleBuffered = true;
-      this.FWidth = 0;
-      this.FHeight = 0;
-      this.FCharSpacing = 2;
-      this.FLineSpacing = 2;
-      this.FPixelSpacing = 1;
-      this.FBorderSpace = 3;
-      this.FTextLines = 1;
-      this.FNoOfChars = 10;
-      this.FBorderColor = Color.Black;
-      this.FBackGround = Color.Silver;
-      this.FPixOnColor = Color.Black;
-      this.FPixOffColor = Color.FromArgb(11184810);
-      this.FPixelSize = PixelSize.pix2x2;
-      this.CalcHalfColor();
-      this.CalcSize();
-    }
+		private PixelShape FPixelShape = PixelShape.Square;
 
-    public PixelSize PixelSize
-    {
-      get
-      {
-        return this.FPixelSize;
-      }
-      set
-      {
-        if (value == this.FPixelSize)
-          return;
-        this.FPixelSize = value;
-        this.Invalidate();
-      }
-    }
+		private DotMatrix FDotMatrix = DotMatrix.mat5x7;
 
-    public PixelShape PixelShape
-    {
-      get
-      {
-        return this.FPixelShape;
-      }
-      set
-      {
-        if (value == this.FPixelShape)
-          return;
-        this.FPixelShape = value;
-        this.Invalidate();
-      }
-    }
+		private int FPixelSpacing;
 
-    public DotMatrix DotMatrix
-    {
-      get
-      {
-        return this.FDotMatrix;
-      }
-      set
-      {
-        this.FDotMatrix = value;
-        this.Invalidate();
-      }
-    }
+		private int FCharSpacing;
 
-    public int PixelSpacing
-    {
-      get
-      {
-        return this.FPixelSpacing;
-      }
-      set
-      {
-        if (value < 0)
-          throw new ArgumentException("Pixel spacing can't be less than zero");
-        if (value == this.FPixelSpacing)
-          return;
-        this.FPixelSpacing = value;
-        this.Invalidate();
-      }
-    }
+		private int FLineSpacing;
 
-    public int CharSpacing
-    {
-      get
-      {
-        return this.FCharSpacing;
-      }
-      set
-      {
-        if (value < 0)
-          throw new ArgumentException("Character spacing can't be less than zero");
-        if (value == this.FCharSpacing)
-          return;
-        this.FCharSpacing = value;
-        this.Invalidate();
-      }
-    }
+		private int FBorderSpace;
 
-    public int LineSpacing
-    {
-      get
-      {
-        return this.FLineSpacing;
-      }
-      set
-      {
-        if (value < 0)
-          throw new ArgumentException("Line spacing can't be less than zero");
-        if (value == this.FLineSpacing)
-          return;
-        this.FLineSpacing = value;
-        this.Invalidate();
-      }
-    }
+		private int FTextLines;
 
-    public int BorderSpace
-    {
-      get
-      {
-        return this.FBorderSpace;
-      }
-      set
-      {
-        if (value < 0)
-          throw new ArgumentException("Border spacing can't be less than zero");
-        if (value == this.FBorderSpace)
-          return;
-        this.FBorderSpace = value;
-        this.Invalidate();
-      }
-    }
+		private int FNoOfChars;
 
-    public int TextLines
-    {
-      get
-      {
-        return this.FTextLines;
-      }
-      set
-      {
-        if (value < 1)
-          throw new ArgumentException("Display needs at least one line");
-        if (value == this.FTextLines)
-          return;
-        this.FTextLines = value;
-        this.Invalidate();
-      }
-    }
+		private Color FBackGround = Color.Silver;
 
-    public int NumberOfCharacters
-    {
-      get
-      {
-        return this.FNoOfChars;
-      }
-      set
-      {
-        if (value < 1)
-          throw new ArgumentException("Display needs at least one character");
-        if (value == this.FNoOfChars)
-          return;
-        this.FNoOfChars = value;
-        this.Invalidate();
-      }
-    }
+		private Color FPixOnColor = Color.Black;
 
-    public Color BackGround
-    {
-      get
-      {
-        return this.FBackGround;
-      }
-      set
-      {
-        if (!(value != this.FBackGround))
-          return;
-        this.FBackGround = value;
-        this.Invalidate();
-      }
-    }
+		private Color FPixOffColor = Color.Gray;
 
-    public Color PixelOn
-    {
-      get
-      {
-        return this.FPixOnColor;
-      }
-      set
-      {
-        if (!(value != this.FPixOnColor))
-          return;
-        this.FPixOnColor = value;
-        this.CalcHalfColor();
-        this.Invalidate();
-      }
-    }
+		private Color FPixHalfColor;
 
-    public Color PixelOff
-    {
-      get
-      {
-        return this.FPixOffColor;
-      }
-      set
-      {
-        if (!(value != this.FPixOffColor))
-          return;
-        this.FPixOffColor = value;
-        this.Invalidate();
-      }
-    }
+		private int FPixWidth;
 
-    public int PixelWidth
-    {
-      get
-      {
-        return this.FPixWidth;
-      }
-      set
-      {
-        if (this.FPixelSize != PixelSize.pixCustom || value == this.FPixWidth)
-          return;
-        if (value < 1)
-          throw new ArgumentException("Display pixel width must be 1 or greater");
-        this.FPixWidth = value;
-        this.Invalidate();
-      }
-    }
+		private int FPixHeight;
 
-    public int PixelHeight
-    {
-      get
-      {
-        return this.FPixHeight;
-      }
-      set
-      {
-        if (this.FPixelSize != PixelSize.pixCustom || value == this.FPixHeight)
-          return;
-        if (value < 1)
-          throw new ArgumentException("Display pixel height must be 1 or greater");
-        this.FPixHeight = value;
-        this.Invalidate();
-      }
-    }
+		private Color FBorderColor = Color.Black;
 
-    public Color BorderColor
-    {
-      get
-      {
-        return this.FBorderColor;
-      }
-      set
-      {
-        if (!(value != this.FBorderColor))
-          return;
-        this.FBorderColor = value;
-        this.Invalidate();
-      }
-    }
+		private int FWidth;
 
-    public override string Text
-    {
-      get
-      {
-        return base.Text;
-      }
-      set
-      {
-        if (!(this.Text != value))
-          return;
-        base.Text = value;
-        this.Invalidate();
-      }
-    }
+		private int FHeight;
 
-    private void DrawMatrix(Graphics graphics, int xpos, int ypos, int charindex)
-    {
-      int x = xpos;
-      int y = ypos;
-      charindex -= this.first_c;
-      using (SolidBrush solidBrush = new SolidBrush(Color.Black))
-      {
-        for (int index1 = 0; index1 < this.pix_y; ++index1)
-        {
-          for (int index2 = 0; index2 < this.pix_x; ++index2)
-          {
-            Color color = this.FPixOffColor;
-            switch (this.FDotMatrix)
-            {
-              case DotMatrix.mat5x7:
-                color = Matrix.Char5x7[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor;
-                break;
-              case DotMatrix.mat5x8:
-                color = Matrix.Char5x8[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor;
-                break;
-              case DotMatrix.mat7x9:
-                color = Matrix.Char7x9[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor;
-                break;
-              case DotMatrix.mat9x12:
-                color = Matrix.Char9x12[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor;
-                break;
-              case DotMatrix.Hitachi:
-                color = Matrix.CharHitachi[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor;
-                break;
-              case DotMatrix.Hitachi2:
-                color = charindex > 193 ? (Matrix.CharHitachiExt[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor) : (index1 >= 7 ? this.FPixOffColor : (Matrix.CharHitachi[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor));
-                break;
-              case DotMatrix.dos5x7:
-                color = Matrix.CharDOS5x7[charindex, index1, index2] != (byte) 1 ? this.FPixOffColor : this.FPixOnColor;
-                break;
-            }
-            solidBrush.Color = color;
-            switch (this.FPixelShape)
-            {
-              case PixelShape.Square:
-                graphics.FillRectangle((Brush) solidBrush, x, y, this.psx, this.psy);
-                break;
-              case PixelShape.Round:
-                graphics.FillEllipse((Brush) solidBrush, x, y, this.psx, this.psy);
-                break;
-              case PixelShape.Shaped:
-                if (color == this.FPixOnColor)
-                {
-                  solidBrush.Color = this.FPixHalfColor;
-                  graphics.FillRectangle((Brush) solidBrush, x, y, this.psx, this.psy);
-                  solidBrush.Color = color;
-                  graphics.FillEllipse((Brush) solidBrush, x, y, this.psx, this.psy);
-                  break;
-                }
-                solidBrush.Color = color;
-                graphics.FillRectangle((Brush) solidBrush, x, y, this.psx, this.psy);
-                break;
-            }
-            x = x + this.psx + this.FPixelSpacing;
-          }
-          x = xpos;
-          y = y + this.psy + this.FPixelSpacing;
-        }
-      }
-    }
+		private int charw;
 
-    private void DrawCharacters(Graphics graphics)
-    {
-      if (this.Text == null)
-        return;
-      int xpos = this.FBorderSpace + 1;
-      int ypos = this.FBorderSpace + 1;
-      int num = 1;
-      bool flag = false;
-      for (int index1 = 1; index1 <= this.FTextLines; ++index1)
-      {
-        for (int index2 = 1; index2 <= this.FNoOfChars; ++index2)
-        {
-          if (!flag && num > this.Text.Length)
-            flag = true;
-          int charindex = !flag ? Convert.ToInt32(this.Text[num - 1]) : 0;
-          if (charindex < this.first_c)
-            charindex = this.first_c;
-          if (charindex > this.last_c)
-            charindex = this.last_c;
-          this.DrawMatrix(graphics, xpos, ypos, charindex);
-          xpos = xpos + this.charw + this.FCharSpacing;
-          ++num;
-        }
-        ypos = ypos + this.charh + this.FLineSpacing;
-        xpos = this.FBorderSpace + 1;
-      }
-    }
+		private int charh;
 
-    private void CalcHalfColor()
-    {
-      this.FPixHalfColor = Color.FromArgb((int) (byte) ((uint) this.FPixOnColor.B / 2U) + (int) (byte) ((uint) this.FPixOnColor.G / 2U) * 256 + (int) (byte) ((uint) this.FPixOnColor.R / 2U) * 65536 + (int) this.FPixOnColor.A * 16777216);
-    }
+		private int psx;
 
-    private void CalcSize()
-    {
-      if (PixelSize.pixCustom == this.FPixelSize)
-      {
-        this.psx = this.FPixWidth;
-        this.psy = this.FPixHeight;
-      }
-      else
-      {
-        this.psx = (int) (this.FPixelSize + 1);
-        this.psy = this.psx;
-        this.FPixWidth = this.psx;
-        this.FPixHeight = this.psy;
-      }
-      switch (this.FDotMatrix)
-      {
-        case DotMatrix.mat5x7:
-        case DotMatrix.Hitachi:
-          this.pix_x = 5;
-          this.pix_y = 7;
-          break;
-        case DotMatrix.mat5x8:
-          this.pix_x = 5;
-          this.pix_y = 8;
-          break;
-        case DotMatrix.mat7x9:
-          this.pix_x = 7;
-          this.pix_y = 9;
-          break;
-        case DotMatrix.mat9x12:
-          this.pix_x = 9;
-          this.pix_y = 12;
-          break;
-        case DotMatrix.Hitachi2:
-          this.pix_x = 5;
-          this.pix_y = 10;
-          break;
-        case DotMatrix.dos5x7:
-          this.pix_x = 5;
-          this.pix_y = 7;
-          break;
-      }
-      this.charw = this.pix_x * this.psx + (this.pix_x - 1) * this.FPixelSpacing;
-      this.charh = this.pix_y * this.psy + (this.pix_y - 1) * this.FPixelSpacing;
-      this.Width = this.FBorderSpace * 2 + this.FCharSpacing * (this.FNoOfChars - 1) + this.charw * this.FNoOfChars + 2;
-      this.Height = this.FBorderSpace * 2 + this.FLineSpacing * (this.FTextLines - 1) + this.charh * this.FTextLines + 2;
-      this.FWidth = this.Width;
-      this.FHeight = this.Height;
-    }
+		private int psy;
 
-    private void GetAsciiInterval()
-    {
-      switch (this.FDotMatrix)
-      {
-        case DotMatrix.mat5x7:
-        case DotMatrix.Hitachi:
-          this.first_c = 32;
-          this.last_c = 223;
-          break;
-        case DotMatrix.mat5x8:
-          this.first_c = 32;
-          this.last_c = 126;
-          break;
-        case DotMatrix.mat7x9:
-          this.first_c = 32;
-          this.last_c = 126;
-          break;
-        case DotMatrix.mat9x12:
-          this.first_c = 32;
-          this.last_c = 126;
-          break;
-        case DotMatrix.Hitachi2:
-          this.first_c = 32;
-          this.last_c = 223;
-          break;
-        case DotMatrix.dos5x7:
-          this.first_c = 0;
-          this.last_c = (int) byte.MaxValue;
-          break;
-      }
-    }
+		private int pix_x;
 
-    private void CalcCharSize()
-    {
-      if (PixelSize.pixCustom == this.FPixelSize)
-      {
-        this.psx = this.FPixWidth;
-        this.psy = this.FPixHeight;
-      }
-      else
-      {
-        this.psx = (int) (this.FPixelSize + 1);
-        this.psy = this.psx;
-        this.FPixWidth = this.psx;
-        this.FPixHeight = this.psy;
-      }
-      switch (this.FDotMatrix)
-      {
-        case DotMatrix.mat5x7:
-        case DotMatrix.Hitachi:
-          this.pix_x = 5;
-          this.pix_y = 7;
-          break;
-        case DotMatrix.mat5x8:
-          this.pix_x = 5;
-          this.pix_y = 8;
-          break;
-        case DotMatrix.mat7x9:
-          this.pix_x = 7;
-          this.pix_y = 9;
-          break;
-        case DotMatrix.mat9x12:
-          this.pix_x = 9;
-          this.pix_y = 12;
-          break;
-        case DotMatrix.Hitachi2:
-          this.pix_x = 5;
-          this.pix_y = 10;
-          break;
-        case DotMatrix.dos5x7:
-          this.pix_x = 5;
-          this.pix_y = 7;
-          break;
-      }
-      this.charw = this.pix_x * this.psx + (this.pix_x - 1) * this.FPixelSpacing;
-      this.charh = this.pix_y * this.psy + (this.pix_y - 1) * this.FPixelSpacing;
-      this.FNoOfChars = (this.Width - 2 * this.FBorderSpace + this.FCharSpacing) / (this.charw + this.FCharSpacing);
-      this.FTextLines = (this.Height - 2 * this.FBorderSpace + this.FLineSpacing) / (this.charh + this.FLineSpacing);
-      if (this.FNoOfChars < 1)
-        this.FNoOfChars = 1;
-      if (this.FTextLines < 1)
-        this.FTextLines = 1;
-      this.Width = this.FBorderSpace * 2 + this.FCharSpacing * (this.FNoOfChars - 1) + this.charw * this.FNoOfChars + 2;
-      this.Height = this.FBorderSpace * 2 + this.FLineSpacing * (this.FTextLines - 1) + this.charh * this.FTextLines + 2;
-      this.FWidth = this.Width;
-      this.FHeight = this.Height;
-    }
+		private int pix_y;
 
-    protected override void OnPaint(PaintEventArgs e)
-    {
-      base.OnPaint(e);
-      bool flag = false;
-      if (this.Width != this.FWidth)
-      {
-        flag = true;
-        this.FWidth = this.Width;
-      }
-      if (this.Height != this.FHeight)
-      {
-        flag = true;
-        this.FHeight = this.Height;
-      }
-      this.GetAsciiInterval();
-      if (flag)
-        this.CalcCharSize();
-      else
-        this.CalcSize();
-      using (SolidBrush solidBrush = new SolidBrush(this.FBackGround))
-      {
-        using (new Pen((Brush) solidBrush))
-        {
-          Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
-          if (this.Visible)
-          {
-            e.Graphics.FillRectangle((Brush) solidBrush, rect);
-            if (!this.Enabled)
-              return;
-            this.DrawCharacters(e.Graphics);
-          }
-          else
-          {
-            solidBrush.Color = SystemColors.ButtonFace;
-            e.Graphics.FillRectangle((Brush) solidBrush, rect);
-          }
-        }
-      }
-    }
-  }
+		private int first_c;
+
+		private int last_c;
+
+		public PixelSize PixelSize
+		{
+			get
+			{
+				return FPixelSize;
+			}
+			set
+			{
+				if (value != FPixelSize)
+				{
+					FPixelSize = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public PixelShape PixelShape
+		{
+			get
+			{
+				return FPixelShape;
+			}
+			set
+			{
+				if (value != FPixelShape)
+				{
+					FPixelShape = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public DotMatrix DotMatrix
+		{
+			get
+			{
+				return FDotMatrix;
+			}
+			set
+			{
+				FDotMatrix = value;
+				Invalidate();
+			}
+		}
+
+		public int PixelSpacing
+		{
+			get
+			{
+				return FPixelSpacing;
+			}
+			set
+			{
+				if (value < 0)
+				{
+					throw new ArgumentException("Pixel spacing can't be less than zero");
+				}
+				if (value != FPixelSpacing)
+				{
+					FPixelSpacing = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int CharSpacing
+		{
+			get
+			{
+				return FCharSpacing;
+			}
+			set
+			{
+				if (value < 0)
+				{
+					throw new ArgumentException("Character spacing can't be less than zero");
+				}
+				if (value != FCharSpacing)
+				{
+					FCharSpacing = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int LineSpacing
+		{
+			get
+			{
+				return FLineSpacing;
+			}
+			set
+			{
+				if (value < 0)
+				{
+					throw new ArgumentException("Line spacing can't be less than zero");
+				}
+				if (value != FLineSpacing)
+				{
+					FLineSpacing = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int BorderSpace
+		{
+			get
+			{
+				return FBorderSpace;
+			}
+			set
+			{
+				if (value < 0)
+				{
+					throw new ArgumentException("Border spacing can't be less than zero");
+				}
+				if (value != FBorderSpace)
+				{
+					FBorderSpace = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int TextLines
+		{
+			get
+			{
+				return FTextLines;
+			}
+			set
+			{
+				if (value < 1)
+				{
+					throw new ArgumentException("Display needs at least one line");
+				}
+				if (value != FTextLines)
+				{
+					FTextLines = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int NumberOfCharacters
+		{
+			get
+			{
+				return FNoOfChars;
+			}
+			set
+			{
+				if (value < 1)
+				{
+					throw new ArgumentException("Display needs at least one character");
+				}
+				if (value != FNoOfChars)
+				{
+					FNoOfChars = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public Color BackGround
+		{
+			get
+			{
+				return FBackGround;
+			}
+			set
+			{
+				if (value != FBackGround)
+				{
+					FBackGround = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public Color PixelOn
+		{
+			get
+			{
+				return FPixOnColor;
+			}
+			set
+			{
+				if (value != FPixOnColor)
+				{
+					FPixOnColor = value;
+					CalcHalfColor();
+					Invalidate();
+				}
+			}
+		}
+
+		public Color PixelOff
+		{
+			get
+			{
+				return FPixOffColor;
+			}
+			set
+			{
+				if (value != FPixOffColor)
+				{
+					FPixOffColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int PixelWidth
+		{
+			get
+			{
+				return FPixWidth;
+			}
+			set
+			{
+				if (FPixelSize == PixelSize.pixCustom && value != FPixWidth)
+				{
+					if (value < 1)
+					{
+						throw new ArgumentException("Display pixel width must be 1 or greater");
+					}
+					FPixWidth = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public int PixelHeight
+		{
+			get
+			{
+				return FPixHeight;
+			}
+			set
+			{
+				if (FPixelSize == PixelSize.pixCustom && value != FPixHeight)
+				{
+					if (value < 1)
+					{
+						throw new ArgumentException("Display pixel height must be 1 or greater");
+					}
+					FPixHeight = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public Color BorderColor
+		{
+			get
+			{
+				return FBorderColor;
+			}
+			set
+			{
+				if (value != FBorderColor)
+				{
+					FBorderColor = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public override string Text
+		{
+			get
+			{
+				return base.Text;
+			}
+			set
+			{
+				if (Text != value)
+				{
+					base.Text = value;
+					Invalidate();
+				}
+			}
+		}
+
+		public LcdLabel()
+		{
+			DoubleBuffered = true;
+			FWidth = 0;
+			FHeight = 0;
+			FCharSpacing = 2;
+			FLineSpacing = 2;
+			FPixelSpacing = 1;
+			FBorderSpace = 3;
+			FTextLines = 1;
+			FNoOfChars = 10;
+			FBorderColor = Color.Black;
+			FBackGround = Color.Silver;
+			FPixOnColor = Color.Black;
+			FPixOffColor = Color.FromArgb(11184810);
+			FPixelSize = PixelSize.pix2x2;
+			CalcHalfColor();
+			CalcSize();
+		}
+
+		private void DrawMatrix(Graphics graphics, int xpos, int ypos, int charindex)
+		{
+			int num = xpos;
+			int num2 = ypos;
+			charindex -= first_c;
+			using (SolidBrush solidBrush = new SolidBrush(Color.Black))
+			{
+				for (int i = 0; i < pix_y; i++)
+				{
+					for (int j = 0; j < pix_x; j++)
+					{
+						Color color = FPixOffColor;
+						switch (FDotMatrix)
+						{
+						case DotMatrix.mat5x7:
+							color = ((Matrix.Char5x7[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor);
+							break;
+						case DotMatrix.mat5x8:
+							color = ((Matrix.Char5x8[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor);
+							break;
+						case DotMatrix.Hitachi:
+							color = ((Matrix.CharHitachi[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor);
+							break;
+						case DotMatrix.Hitachi2:
+							color = ((charindex > 193) ? ((Matrix.CharHitachiExt[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor) : ((i >= 7) ? FPixOffColor : ((Matrix.CharHitachi[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor)));
+							break;
+						case DotMatrix.mat7x9:
+							color = ((Matrix.Char7x9[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor);
+							break;
+						case DotMatrix.mat9x12:
+							color = ((Matrix.Char9x12[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor);
+							break;
+						case DotMatrix.dos5x7:
+							color = ((Matrix.CharDOS5x7[charindex, i, j] != 1) ? FPixOffColor : FPixOnColor);
+							break;
+						}
+						solidBrush.Color = color;
+						switch (FPixelShape)
+						{
+						case PixelShape.Square:
+							graphics.FillRectangle(solidBrush, num, num2, psx, psy);
+							break;
+						case PixelShape.Round:
+							graphics.FillEllipse(solidBrush, num, num2, psx, psy);
+							break;
+						case PixelShape.Shaped:
+							if (color == FPixOnColor)
+							{
+								solidBrush.Color = FPixHalfColor;
+								graphics.FillRectangle(solidBrush, num, num2, psx, psy);
+								solidBrush.Color = color;
+								graphics.FillEllipse(solidBrush, num, num2, psx, psy);
+							}
+							else
+							{
+								solidBrush.Color = color;
+								graphics.FillRectangle(solidBrush, num, num2, psx, psy);
+							}
+							break;
+						}
+						num = num + psx + FPixelSpacing;
+					}
+					num = xpos;
+					num2 = num2 + psy + FPixelSpacing;
+				}
+			}
+		}
+
+		private void DrawCharacters(Graphics graphics)
+		{
+			if (Text == null)
+			{
+				return;
+			}
+			int num = FBorderSpace + 1;
+			int num2 = FBorderSpace + 1;
+			int num3 = 1;
+			bool flag = false;
+			for (int i = 1; i <= FTextLines; i++)
+			{
+				for (int j = 1; j <= FNoOfChars; j++)
+				{
+					if (!flag && num3 > Text.Length)
+					{
+						flag = true;
+					}
+					int num4 = (!flag) ? Convert.ToInt32(Text[num3 - 1]) : 0;
+					if (num4 < first_c)
+					{
+						num4 = first_c;
+					}
+					if (num4 > last_c)
+					{
+						num4 = last_c;
+					}
+					DrawMatrix(graphics, num, num2, num4);
+					num = num + charw + FCharSpacing;
+					num3++;
+				}
+				num2 = num2 + charh + FLineSpacing;
+				num = FBorderSpace + 1;
+			}
+		}
+
+		private void CalcHalfColor()
+		{
+			byte b = (byte)((int)FPixOnColor.B / 2);
+			byte b2 = (byte)((int)FPixOnColor.G / 2);
+			byte b3 = (byte)((int)FPixOnColor.R / 2);
+			byte a = FPixOnColor.A;
+			FPixHalfColor = Color.FromArgb(b + b2 * 256 + b3 * 65536 + a * 16777216);
+		}
+
+		private void CalcSize()
+		{
+			if (PixelSize.pixCustom == FPixelSize)
+			{
+				psx = FPixWidth;
+				psy = FPixHeight;
+			}
+			else
+			{
+				psx = (int)(FPixelSize + 1);
+				psy = psx;
+				FPixWidth = psx;
+				FPixHeight = psy;
+			}
+			switch (FDotMatrix)
+			{
+			case DotMatrix.mat5x7:
+			case DotMatrix.Hitachi:
+				pix_x = 5;
+				pix_y = 7;
+				break;
+			case DotMatrix.Hitachi2:
+				pix_x = 5;
+				pix_y = 10;
+				break;
+			case DotMatrix.mat5x8:
+				pix_x = 5;
+				pix_y = 8;
+				break;
+			case DotMatrix.mat7x9:
+				pix_x = 7;
+				pix_y = 9;
+				break;
+			case DotMatrix.mat9x12:
+				pix_x = 9;
+				pix_y = 12;
+				break;
+			case DotMatrix.dos5x7:
+				pix_x = 5;
+				pix_y = 7;
+				break;
+			}
+			charw = pix_x * psx + (pix_x - 1) * FPixelSpacing;
+			charh = pix_y * psy + (pix_y - 1) * FPixelSpacing;
+			base.Width = FBorderSpace * 2 + FCharSpacing * (FNoOfChars - 1) + charw * FNoOfChars + 2;
+			base.Height = FBorderSpace * 2 + FLineSpacing * (FTextLines - 1) + charh * FTextLines + 2;
+			FWidth = base.Width;
+			FHeight = base.Height;
+		}
+
+		private void GetAsciiInterval()
+		{
+			switch (FDotMatrix)
+			{
+			case DotMatrix.mat5x7:
+			case DotMatrix.Hitachi:
+				first_c = 32;
+				last_c = 223;
+				break;
+			case DotMatrix.Hitachi2:
+				first_c = 32;
+				last_c = 223;
+				break;
+			case DotMatrix.mat5x8:
+				first_c = 32;
+				last_c = 126;
+				break;
+			case DotMatrix.mat7x9:
+				first_c = 32;
+				last_c = 126;
+				break;
+			case DotMatrix.mat9x12:
+				first_c = 32;
+				last_c = 126;
+				break;
+			case DotMatrix.dos5x7:
+				first_c = 0;
+				last_c = 255;
+				break;
+			}
+		}
+
+		private void CalcCharSize()
+		{
+			if (PixelSize.pixCustom == FPixelSize)
+			{
+				psx = FPixWidth;
+				psy = FPixHeight;
+			}
+			else
+			{
+				psx = (int)(FPixelSize + 1);
+				psy = psx;
+				FPixWidth = psx;
+				FPixHeight = psy;
+			}
+			switch (FDotMatrix)
+			{
+			case DotMatrix.mat5x7:
+			case DotMatrix.Hitachi:
+				pix_x = 5;
+				pix_y = 7;
+				break;
+			case DotMatrix.Hitachi2:
+				pix_x = 5;
+				pix_y = 10;
+				break;
+			case DotMatrix.mat5x8:
+				pix_x = 5;
+				pix_y = 8;
+				break;
+			case DotMatrix.mat7x9:
+				pix_x = 7;
+				pix_y = 9;
+				break;
+			case DotMatrix.mat9x12:
+				pix_x = 9;
+				pix_y = 12;
+				break;
+			case DotMatrix.dos5x7:
+				pix_x = 5;
+				pix_y = 7;
+				break;
+			}
+			charw = pix_x * psx + (pix_x - 1) * FPixelSpacing;
+			charh = pix_y * psy + (pix_y - 1) * FPixelSpacing;
+			FNoOfChars = (base.Width - 2 * FBorderSpace + FCharSpacing) / (charw + FCharSpacing);
+			FTextLines = (base.Height - 2 * FBorderSpace + FLineSpacing) / (charh + FLineSpacing);
+			if (FNoOfChars < 1)
+			{
+				FNoOfChars = 1;
+			}
+			if (FTextLines < 1)
+			{
+				FTextLines = 1;
+			}
+			base.Width = FBorderSpace * 2 + FCharSpacing * (FNoOfChars - 1) + charw * FNoOfChars + 2;
+			base.Height = FBorderSpace * 2 + FLineSpacing * (FTextLines - 1) + charh * FTextLines + 2;
+			FWidth = base.Width;
+			FHeight = base.Height;
+		}
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			base.OnPaint(e);
+			bool flag = false;
+			if (base.Width != FWidth)
+			{
+				flag = true;
+				FWidth = base.Width;
+			}
+			if (base.Height != FHeight)
+			{
+				flag = true;
+				FHeight = base.Height;
+			}
+			GetAsciiInterval();
+			if (flag)
+			{
+				CalcCharSize();
+			}
+			else
+			{
+				CalcSize();
+			}
+			using (SolidBrush solidBrush = new SolidBrush(FBackGround))
+			{
+				using (new Pen(solidBrush))
+				{
+					Rectangle rect = new Rectangle(0, 0, base.Width, base.Height);
+					if (base.Visible)
+					{
+						e.Graphics.FillRectangle(solidBrush, rect);
+						if (base.Enabled)
+						{
+							DrawCharacters(e.Graphics);
+						}
+					}
+					else
+					{
+						solidBrush.Color = SystemColors.ButtonFace;
+						e.Graphics.FillRectangle(solidBrush, rect);
+					}
+				}
+			}
+		}
+	}
 }

@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Kiosk.DLG_Wifi
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
 using Kiosk.Properties;
 using SimpleWifi;
 using SimpleWifi.Win32.Interop;
@@ -18,521 +12,568 @@ using System.Windows.Forms;
 
 namespace Kiosk
 {
-  public class DLG_Wifi : Form
-  {
-    private int lastindex = -1;
-    private IContainer components = (IContainer) null;
-    private bool RefreshNet;
-    public bool OK;
-    public bool IsClosed;
-    public Configuracion opciones;
-    private Wifi wifi;
-    private Panel pBOTTOM;
-    private Button bCancel;
-    private Button bOk;
-    private Button bFind;
-    private ListBox listWifi;
-    private Button bDisconnect;
-    private Button bConnect;
-    private Timer timerNet;
+	public class DLG_Wifi : Form
+	{
+		private bool RefreshNet;
 
-    public DLG_Wifi(ref Configuracion _opc)
-    {
-      this.IsClosed = false;
-      this.OK = false;
-      this.opciones = _opc;
-      this.InitializeComponent();
-      this.Localize();
-      this.wifi = new Wifi();
-      this.wifi.ConnectionStatusChanged += new EventHandler<WifiStatusEventArgs>(this.wifi_ConnectionStatusChanged);
-      NetworkChange.NetworkAddressChanged += new NetworkAddressChangedEventHandler(this.AddressChangedCallback);
-      this.RefreshNet = true;
-    }
+		public bool OK;
 
-    public void AddressChangedCallback(object sender, EventArgs e)
-    {
-      this.RefreshNet = true;
-    }
+		public bool IsClosed;
 
-    private void Localize()
-    {
-      this.SuspendLayout();
-      this.ResumeLayout();
-    }
+		public Configuracion opciones;
 
-    private void wifi_ConnectionStatusChanged(object sender, WifiStatusEventArgs e)
-    {
-      this.RefreshNet = true;
-    }
+		private Wifi wifi;
 
-    private void Disconnect()
-    {
-      this.wifi.Disconnect();
-    }
+		private int lastindex = -1;
 
-    private bool Status()
-    {
-      return this.wifi.ConnectionStatus == WifiStatus.Connected;
-    }
+		private IContainer components = null;
 
-    private bool Connect_Forced(string _info)
-    {
-      return false;
-    }
+		private Panel pBOTTOM;
 
-    private bool Connect(string _info, bool _auto = true)
-    {
-      return this.Connect(_info.Split(',')[0], false, (string) null, (string) null, (string) null, (string) null, (string) null, _auto);
-    }
+		private Button bCancel;
 
-    private bool Connect(string _info, string _sec = null, bool _auto = true)
-    {
-      return this.Connect(_info.Split(',')[0], false, (string) null, (string) null, (string) null, (string) null, _sec, _auto);
-    }
+		private Button bOk;
 
-    private bool Connect(string _info, bool _over, string _sec = null, bool _auto = true)
-    {
-      return this.Connect(_info.Split(',')[0], _over, (string) null, (string) null, (string) null, (string) null, _sec, _auto);
-    }
+		private Button bFind;
 
-    private bool Connect(string _info, string _password, string _sec = null, bool _auto = true)
-    {
-      return this.Connect(_info.Split(',')[0], true, (string) null, _password, (string) null, (string) null, _sec, _auto);
-    }
+		private ListBox listWifi;
 
-    private bool Connect(string _info, string _password, string _rename, string _sec, bool _auto = true)
-    {
-      return this.Connect(_info.Split(',')[0], true, (string) null, _password, (string) null, _rename, _sec, _auto);
-    }
+		private Button bDisconnect;
 
-    private bool Connect(
-      string _name,
-      bool _over,
-      string _username,
-      string _password,
-      string _domain,
-      string _rename,
-      string _sec = null,
-      bool _auto = true)
-    {
-      IEnumerable<AccessPoint> source = this.List();
-      AccessPoint ap = (AccessPoint) null;
-      int num = 1;
-      for (int index = 0; index < source.ToArray<AccessPoint>().Length; ++index)
-      {
-        string str = "";
-        if (!string.IsNullOrEmpty(source.ToList<AccessPoint>()[index].Name))
-          str = source.ToList<AccessPoint>()[index].Name;
-        else if (source.ToList<AccessPoint>()[index]._network.dot11BssType == Dot11BssType.Infrastructure && source.ToList<AccessPoint>()[index]._network.networkConnectable)
-        {
-          switch (source.ToList<AccessPoint>()[index]._network.dot11DefaultAuthAlgorithm)
-          {
-            case Dot11AuthAlgorithm.IEEE80211_Open:
-              str = "<HIDEN OPEN> " + (object) num;
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.IEEE80211_SharedKey:
-              str = "<HIDEN WEP> " + (object) num;
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.WPA:
-              str = "<HIDEN WPA> " + (object) num;
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.WPA_PSK:
-              str = "<HIDEN WPA PSK> " + (object) num;
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.RSNA:
-              str = "<HIDEN RSNA> " + (object) num;
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.RSNA_PSK:
-              str = "<HIDEN RSNA PSK> " + (object) num;
-              ++num;
-              break;
-          }
-        }
-        if (str.ToLower() == _name.ToLower())
-        {
-          ap = source.ToList<AccessPoint>()[index];
-          break;
-        }
-      }
-      if (ap == null)
-        return false;
-      if (!string.IsNullOrEmpty(_rename))
-      {
-        ap._network.dot11Ssid.SSIDLength = (uint) _rename.Length;
-        byte[] numArray = new byte[32];
-        for (int index = 0; index < 32; ++index)
-          numArray[index] = (byte) 0;
-        byte[] bytes = Encoding.ASCII.GetBytes(_rename);
-        for (int index = 0; index < bytes.Length; ++index)
-          numArray[index] = bytes[index];
-        ap._network.dot11Ssid.SSID = numArray;
-        ap._network.profileName = _rename;
-      }
-      switch (_sec)
-      {
-        case "IEEE80211_Open":
-          ap._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.IEEE80211_Open;
-          break;
-        case "IEEE80211_SharedKey":
-          ap._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.IEEE80211_SharedKey;
-          break;
-        case "WPA":
-          ap._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.WPA;
-          break;
-        case "WPA_PSK":
-          ap._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.WPA_PSK;
-          break;
-        case "RSNA":
-          ap._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.RSNA;
-          break;
-        case "RSNA_PSK":
-          ap._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.RSNA_PSK;
-          break;
-      }
-      AuthRequest request = new AuthRequest(ap);
-      bool overwriteProfile = _over;
-      if (request.IsPasswordRequired && overwriteProfile)
-      {
-        if (request.IsUsernameRequired && !string.IsNullOrEmpty(_username))
-          request.Username = _username;
-        request.Password = _password;
-        if (request.IsDomainSupported && !string.IsNullOrEmpty(_domain))
-          request.Domain = _domain;
-      }
-      request.AutoConnect = _auto;
-      ap.ConnectAsync(request, overwriteProfile, new Action<bool>(this.OnConnectedComplete));
-      return true;
-    }
+		private Button bConnect;
 
-    private void OnConnectedComplete(bool success)
-    {
-      this.RefreshNet = true;
-    }
+		private Timer timerNet;
 
-    public IEnumerable<AccessPoint> List()
-    {
-      IEnumerable<AccessPoint> accessPoints = (IEnumerable<AccessPoint>) this.wifi.GetAccessPoints().OrderByDescending<AccessPoint, uint>((Func<AccessPoint, uint>) (ap => ap.SignalStrength));
-      int num = 1;
-      foreach (AccessPoint accessPoint in accessPoints)
-      {
-        if (!string.IsNullOrEmpty(accessPoint.Name))
-          this.listWifi.Items.Add((object) (accessPoint.Name + "," + (object) accessPoint.SignalStrength + "," + (object) accessPoint.IsConnected + "," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-        else if (accessPoint._network.dot11BssType == Dot11BssType.Infrastructure && accessPoint._network.networkConnectable)
-        {
-          switch (accessPoint._network.dot11DefaultAuthAlgorithm)
-          {
-            case Dot11AuthAlgorithm.IEEE80211_Open:
-              this.listWifi.Items.Add((object) ("<HIDEN OPEN> " + (object) num + "," + (object) accessPoint.SignalStrength + ",False," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.IEEE80211_SharedKey:
-              this.listWifi.Items.Add((object) ("<HIDEN WEP> " + (object) num + "," + (object) accessPoint.SignalStrength + ",False," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.WPA:
-              this.listWifi.Items.Add((object) ("<HIDEN WPA> " + (object) num + "," + (object) accessPoint.SignalStrength + ",False," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.WPA_PSK:
-              this.listWifi.Items.Add((object) ("<HIDEN WPA PSK> " + (object) num + "," + (object) accessPoint.SignalStrength + ",False," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.RSNA:
-              this.listWifi.Items.Add((object) ("<HIDEN RSNA> " + (object) num + "," + (object) accessPoint.SignalStrength + ",False," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-              ++num;
-              break;
-            case Dot11AuthAlgorithm.RSNA_PSK:
-              this.listWifi.Items.Add((object) ("<HIDEN RSNA PSK> " + (object) num + "," + (object) accessPoint.SignalStrength + ",False," + accessPoint._network.dot11DefaultAuthAlgorithm.ToString()));
-              ++num;
-              break;
-          }
-        }
-      }
-      this.listWifi.Invalidate();
-      return accessPoints;
-    }
+		public DLG_Wifi(ref Configuracion _opc)
+		{
+			IsClosed = false;
+			OK = false;
+			opciones = _opc;
+			InitializeComponent();
+			Localize();
+			wifi = new Wifi();
+			wifi.ConnectionStatusChanged += wifi_ConnectionStatusChanged;
+			NetworkChange.NetworkAddressChanged += AddressChangedCallback;
+			RefreshNet = true;
+		}
 
-    private bool DeleteProfile(string _name)
-    {
-      IEnumerable<AccessPoint> source = this.List();
-      for (int index = 0; index < source.ToArray<AccessPoint>().Length; ++index)
-      {
-        if (source.ToList<AccessPoint>()[index].Name.ToLower() == _name.ToLower())
-        {
-          source.ToList<AccessPoint>()[index].DeleteProfile();
-          return true;
-        }
-      }
-      return false;
-    }
+		public void AddressChangedCallback(object sender, EventArgs e)
+		{
+			RefreshNet = true;
+		}
 
-    private AccessPoint Info(string _name)
-    {
-      IEnumerable<AccessPoint> source = this.List();
-      for (int index = 0; index < source.ToArray<AccessPoint>().Length; ++index)
-      {
-        if (source.ToList<AccessPoint>()[index].Name.ToLower() == _name.ToLower())
-          return source.ToList<AccessPoint>()[index];
-      }
-      return (AccessPoint) null;
-    }
+		private void Localize()
+		{
+			SuspendLayout();
+			ResumeLayout();
+		}
 
-    private void bFind_Click(object sender, EventArgs e)
-    {
-      this.RefreshNet = true;
-    }
+		private void wifi_ConnectionStatusChanged(object sender, WifiStatusEventArgs e)
+		{
+			RefreshNet = true;
+		}
 
-    private void bOk_Click(object sender, EventArgs e)
-    {
-      this.OK = true;
-      this.Close();
-    }
+		private void Disconnect()
+		{
+			wifi.Disconnect();
+		}
 
-    private void bCancel_Click(object sender, EventArgs e)
-    {
-      this.OK = false;
-      this.Close();
-    }
+		private bool Status()
+		{
+			if (wifi.ConnectionStatus == WifiStatus.Connected)
+			{
+				return true;
+			}
+			return false;
+		}
 
-    private void DLG_Wifi_FormClosed(object sender, FormClosedEventArgs e)
-    {
-      this.IsClosed = true;
-    }
+		private bool Connect_Forced(string _info)
+		{
+			return false;
+		}
 
-    private void listWifi_DrawItem(object sender, DrawItemEventArgs e)
-    {
-      e.Graphics.FillRectangle(Brushes.Black, e.Bounds);
-      Rectangle bounds = e.Bounds;
-      ++bounds.X;
-      ++bounds.Y;
-      bounds.Width -= 2;
-      bounds.Height -= 2;
-      Brush brush1 = Brushes.White;
-      string[] strArray;
-      if (e.Index >= 0)
-        strArray = this.listWifi.Items[e.Index].ToString().Split(',');
-      else
-        strArray = new string[3]{ "NO WIFI", "0", "false" };
-      if (strArray[2].ToLower() == "true".ToLower())
-        brush1 = Brushes.Green;
-      e.Graphics.FillRectangle(brush1, bounds);
-      if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
-        e.Graphics.FillRectangle(Brushes.Blue, bounds);
-      Rectangle rect1 = bounds;
-      rect1.Y = bounds.Y + bounds.Height - 24;
-      rect1.Height = 24;
-      e.Graphics.FillRectangle(Brushes.Red, rect1);
-      int num1 = 0;
-      try
-      {
-        num1 = int.Parse(strArray[1]);
-      }
-      catch
-      {
-      }
-      Rectangle rect2 = bounds;
-      rect2.Y = bounds.Y + bounds.Height - 24;
-      rect2.Height = 24;
-      int num2 = rect2.Width * num1 / 100;
-      rect2.Width = num2;
-      Brush brush2 = Brushes.OrangeRed;
-      if (num1 > 50)
-        brush2 = Brushes.Yellow;
-      if (num1 > 75)
-        brush2 = Brushes.YellowGreen;
-      e.Graphics.FillRectangle(brush2, rect2);
-      e.Graphics.MeasureString(strArray[1] + "%", e.Font);
-      rect2.Width = bounds.Width;
-      rect2.X += 32;
-      e.Graphics.DrawString(strArray[1] + "%", e.Font, Brushes.Black, (RectangleF) rect2, StringFormat.GenericDefault);
-      rect2 = bounds;
-      rect2.Y += 8;
-      rect2.X += 32;
-      string s = strArray[0];
-      if (strArray[2].ToLower() == "true".ToLower())
-        s += " -> CONNECT";
-      e.Graphics.DrawString(s, e.Font, Brushes.Black, (RectangleF) rect2, StringFormat.GenericDefault);
-    }
+		private bool Connect(string _info, bool _auto = true)
+		{
+			string[] array = _info.Split(',');
+			return Connect(array[0], _over: false, null, null, null, null, null, _auto);
+		}
 
-    private void DLG_Wifi_Load(object sender, EventArgs e)
-    {
-      this.timerNet.Enabled = true;
-      this.RefreshNet = true;
-    }
+		private bool Connect(string _info, string _sec = null, bool _auto = true)
+		{
+			string[] array = _info.Split(',');
+			return Connect(array[0], _over: false, null, null, null, null, _sec, _auto);
+		}
 
-    private void bConnect_Click(object sender, EventArgs e)
-    {
-      if (this.listWifi.SelectedIndex == -1)
-      {
-        MSG_Ok msgOk = new MSG_Ok(ref this.opciones, "Select any Wifi");
-        int num = (int) msgOk.ShowDialog();
-        msgOk.Dispose();
-        this.RefreshNet = true;
-      }
-      else
-      {
-        string[] strArray = this.listWifi.Items[this.listWifi.SelectedIndex].ToString().Split(',');
-        if (strArray.Length < 1)
-        {
-          this.RefreshNet = true;
-        }
-        else
-        {
-          DLG_Wifi_Connect dlgWifiConnect = new DLG_Wifi_Connect(ref this.opciones, strArray[0], "?", strArray[3]);
-          int num = (int) dlgWifiConnect.ShowDialog();
-          bool newProfile = dlgWifiConnect.NewProfile;
-          bool alwaysConnect = dlgWifiConnect.AlwaysConnect;
-          if (!dlgWifiConnect.OK)
-          {
-            this.RefreshNet = true;
-          }
-          else
-          {
-            this.Disconnect();
-            if (string.IsNullOrEmpty(dlgWifiConnect.Password) || dlgWifiConnect.Password == "?")
-              this.Connect(dlgWifiConnect.SID, alwaysConnect);
-            else if (dlgWifiConnect.SID != strArray[0])
-              this.Connect(strArray[0] + ",100,False", dlgWifiConnect.Password, dlgWifiConnect.SID, dlgWifiConnect.SEC, alwaysConnect);
-            else
-              this.Connect(strArray[0] + ",100,False", dlgWifiConnect.Password, alwaysConnect);
-            this.RefreshNet = true;
-          }
-        }
-      }
-    }
+		private bool Connect(string _info, bool _over, string _sec = null, bool _auto = true)
+		{
+			string[] array = _info.Split(',');
+			return Connect(array[0], _over, null, null, null, null, _sec, _auto);
+		}
 
-    private void listWifi_DoubleClick(object sender, EventArgs e)
-    {
-      this.Disconnect();
-      this.Connect(this.listWifi.Items[this.listWifi.SelectedIndex].ToString(), true);
-      this.RefreshNet = true;
-    }
+		private bool Connect(string _info, string _password, string _sec = null, bool _auto = true)
+		{
+			string[] array = _info.Split(',');
+			return Connect(array[0], _over: true, null, _password, null, null, _sec, _auto);
+		}
 
-    private void bDisconnect_Click(object sender, EventArgs e)
-    {
-      this.Disconnect();
-      this.RefreshNet = true;
-    }
+		private bool Connect(string _info, string _password, string _rename, string _sec, bool _auto = true)
+		{
+			string[] array = _info.Split(',');
+			return Connect(array[0], _over: true, null, _password, null, _rename, _sec, _auto);
+		}
 
-    private void timerNet_Tick(object sender, EventArgs e)
-    {
-      if (!this.RefreshNet)
-        return;
-      this.listWifi.Items.Clear();
-      this.List();
-      this.RefreshNet = false;
-    }
+		private bool Connect(string _name, bool _over, string _username, string _password, string _domain, string _rename, string _sec = null, bool _auto = true)
+		{
+			IEnumerable<AccessPoint> source = List();
+			AccessPoint accessPoint = null;
+			int num = 1;
+			for (int i = 0; i < source.ToArray().Length; i++)
+			{
+				string text = "";
+				if (!string.IsNullOrEmpty(source.ToList()[i].Name))
+				{
+					text = source.ToList()[i].Name;
+				}
+				else if (source.ToList()[i]._network.dot11BssType == Dot11BssType.Infrastructure && source.ToList()[i]._network.networkConnectable)
+				{
+					switch (source.ToList()[i]._network.dot11DefaultAuthAlgorithm)
+					{
+					case Dot11AuthAlgorithm.IEEE80211_SharedKey:
+						text = "<HIDEN WEP> " + num;
+						num++;
+						break;
+					case Dot11AuthAlgorithm.IEEE80211_Open:
+						text = "<HIDEN OPEN> " + num;
+						num++;
+						break;
+					case Dot11AuthAlgorithm.RSNA_PSK:
+						text = "<HIDEN RSNA PSK> " + num;
+						num++;
+						break;
+					case Dot11AuthAlgorithm.RSNA:
+						text = "<HIDEN RSNA> " + num;
+						num++;
+						break;
+					case Dot11AuthAlgorithm.WPA:
+						text = "<HIDEN WPA> " + num;
+						num++;
+						break;
+					case Dot11AuthAlgorithm.WPA_PSK:
+						text = "<HIDEN WPA PSK> " + num;
+						num++;
+						break;
+					}
+				}
+				if (text.ToLower() == _name.ToLower())
+				{
+					accessPoint = source.ToList()[i];
+					break;
+				}
+			}
+			if (accessPoint == null)
+			{
+				return false;
+			}
+			if (!string.IsNullOrEmpty(_rename))
+			{
+				accessPoint._network.dot11Ssid.SSIDLength = (uint)_rename.Length;
+				byte[] array = new byte[32];
+				for (int i = 0; i < 32; i++)
+				{
+					array[i] = 0;
+				}
+				byte[] bytes = Encoding.ASCII.GetBytes(_rename);
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					array[i] = bytes[i];
+				}
+				accessPoint._network.dot11Ssid.SSID = array;
+				accessPoint._network.profileName = _rename;
+			}
+			switch (_sec)
+			{
+			case "IEEE80211_Open":
+				accessPoint._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.IEEE80211_Open;
+				break;
+			case "IEEE80211_SharedKey":
+				accessPoint._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.IEEE80211_SharedKey;
+				break;
+			case "WPA":
+				accessPoint._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.WPA;
+				break;
+			case "WPA_PSK":
+				accessPoint._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.WPA_PSK;
+				break;
+			case "RSNA":
+				accessPoint._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.RSNA;
+				break;
+			case "RSNA_PSK":
+				accessPoint._network.dot11DefaultAuthAlgorithm = Dot11AuthAlgorithm.RSNA_PSK;
+				break;
+			}
+			AuthRequest authRequest = new AuthRequest(accessPoint);
+			bool flag = _over;
+			if (authRequest.IsPasswordRequired && flag)
+			{
+				if (authRequest.IsUsernameRequired && !string.IsNullOrEmpty(_username))
+				{
+					authRequest.Username = _username;
+				}
+				authRequest.Password = _password;
+				if (authRequest.IsDomainSupported && !string.IsNullOrEmpty(_domain))
+				{
+					authRequest.Domain = _domain;
+				}
+			}
+			authRequest.AutoConnect = _auto;
+			accessPoint.ConnectAsync(authRequest, flag, OnConnectedComplete);
+			return true;
+		}
 
-    private void DLG_Wifi_FormClosing(object sender, FormClosingEventArgs e)
-    {
-      this.RefreshNet = false;
-      this.timerNet.Enabled = false;
-    }
+		private void OnConnectedComplete(bool success)
+		{
+			RefreshNet = true;
+		}
 
-    protected override void Dispose(bool disposing)
-    {
-      if (disposing && this.components != null)
-        this.components.Dispose();
-      base.Dispose(disposing);
-    }
+		public IEnumerable<AccessPoint> List()
+		{
+			IEnumerable<AccessPoint> enumerable = from ap in wifi.GetAccessPoints()
+				orderby ap.SignalStrength descending
+				select ap;
+			int num = 1;
+			foreach (AccessPoint item in enumerable)
+			{
+				if (!string.IsNullOrEmpty(item.Name))
+				{
+					listWifi.Items.Add(item.Name + "," + item.SignalStrength + "," + item.IsConnected + "," + item._network.dot11DefaultAuthAlgorithm.ToString());
+				}
+				else if (item._network.dot11BssType == Dot11BssType.Infrastructure && item._network.networkConnectable)
+				{
+					switch (item._network.dot11DefaultAuthAlgorithm)
+					{
+					case Dot11AuthAlgorithm.IEEE80211_Open:
+						listWifi.Items.Add("<HIDEN OPEN> " + num + "," + item.SignalStrength + ",False," + item._network.dot11DefaultAuthAlgorithm.ToString());
+						num++;
+						break;
+					case Dot11AuthAlgorithm.IEEE80211_SharedKey:
+						listWifi.Items.Add("<HIDEN WEP> " + num + "," + item.SignalStrength + ",False," + item._network.dot11DefaultAuthAlgorithm.ToString());
+						num++;
+						break;
+					case Dot11AuthAlgorithm.RSNA_PSK:
+						listWifi.Items.Add("<HIDEN RSNA PSK> " + num + "," + item.SignalStrength + ",False," + item._network.dot11DefaultAuthAlgorithm.ToString());
+						num++;
+						break;
+					case Dot11AuthAlgorithm.RSNA:
+						listWifi.Items.Add("<HIDEN RSNA> " + num + "," + item.SignalStrength + ",False," + item._network.dot11DefaultAuthAlgorithm.ToString());
+						num++;
+						break;
+					case Dot11AuthAlgorithm.WPA:
+						listWifi.Items.Add("<HIDEN WPA> " + num + "," + item.SignalStrength + ",False," + item._network.dot11DefaultAuthAlgorithm.ToString());
+						num++;
+						break;
+					case Dot11AuthAlgorithm.WPA_PSK:
+						listWifi.Items.Add("<HIDEN WPA PSK> " + num + "," + item.SignalStrength + ",False," + item._network.dot11DefaultAuthAlgorithm.ToString());
+						num++;
+						break;
+					}
+				}
+			}
+			listWifi.Invalidate();
+			return enumerable;
+		}
 
-    private void InitializeComponent()
-    {
-      this.components = (IContainer) new Container();
-      this.pBOTTOM = new Panel();
-      this.bDisconnect = new Button();
-      this.bConnect = new Button();
-      this.bFind = new Button();
-      this.bCancel = new Button();
-      this.bOk = new Button();
-      this.listWifi = new ListBox();
-      this.timerNet = new Timer(this.components);
-      this.pBOTTOM.SuspendLayout();
-      this.SuspendLayout();
-      this.pBOTTOM.Controls.Add((Control) this.bDisconnect);
-      this.pBOTTOM.Controls.Add((Control) this.bConnect);
-      this.pBOTTOM.Controls.Add((Control) this.bFind);
-      this.pBOTTOM.Controls.Add((Control) this.bCancel);
-      this.pBOTTOM.Controls.Add((Control) this.bOk);
-      this.pBOTTOM.Dock = DockStyle.Bottom;
-      this.pBOTTOM.Location = new Point(0, 379);
-      this.pBOTTOM.Name = "pBOTTOM";
-      this.pBOTTOM.Size = new Size(807, 48);
-      this.pBOTTOM.TabIndex = 5;
-      this.bDisconnect.Dock = DockStyle.Left;
-      this.bDisconnect.Image = (Image) Resources.ico_wifi_disconnect;
-      this.bDisconnect.Location = new Point(96, 0);
-      this.bDisconnect.Name = "bDisconnect";
-      this.bDisconnect.Size = new Size(48, 48);
-      this.bDisconnect.TabIndex = 4;
-      this.bDisconnect.UseVisualStyleBackColor = true;
-      this.bDisconnect.Click += new EventHandler(this.bDisconnect_Click);
-      this.bConnect.Dock = DockStyle.Left;
-      this.bConnect.Image = (Image) Resources.ico_wifi_connect;
-      this.bConnect.Location = new Point(48, 0);
-      this.bConnect.Name = "bConnect";
-      this.bConnect.Size = new Size(48, 48);
-      this.bConnect.TabIndex = 3;
-      this.bConnect.UseVisualStyleBackColor = true;
-      this.bConnect.Click += new EventHandler(this.bConnect_Click);
-      this.bFind.Dock = DockStyle.Left;
-      this.bFind.Image = (Image) Resources.ico_wifi_find;
-      this.bFind.Location = new Point(0, 0);
-      this.bFind.Name = "bFind";
-      this.bFind.Size = new Size(48, 48);
-      this.bFind.TabIndex = 2;
-      this.bFind.UseVisualStyleBackColor = true;
-      this.bFind.Click += new EventHandler(this.bFind_Click);
-      this.bCancel.Dock = DockStyle.Right;
-      this.bCancel.Image = (Image) Resources.ico_del;
-      this.bCancel.Location = new Point(711, 0);
-      this.bCancel.Name = "bCancel";
-      this.bCancel.Size = new Size(48, 48);
-      this.bCancel.TabIndex = 1;
-      this.bCancel.UseVisualStyleBackColor = true;
-      this.bCancel.Visible = false;
-      this.bCancel.Click += new EventHandler(this.bCancel_Click);
-      this.bOk.Dock = DockStyle.Right;
-      this.bOk.Image = (Image) Resources.ico_ok;
-      this.bOk.Location = new Point(759, 0);
-      this.bOk.Name = "bOk";
-      this.bOk.Size = new Size(48, 48);
-      this.bOk.TabIndex = 0;
-      this.bOk.UseVisualStyleBackColor = true;
-      this.bOk.Click += new EventHandler(this.bOk_Click);
-      this.listWifi.Dock = DockStyle.Fill;
-      this.listWifi.DrawMode = DrawMode.OwnerDrawFixed;
-      this.listWifi.Font = new Font("Microsoft Sans Serif", 16f, FontStyle.Regular, GraphicsUnit.Point, (byte) 0);
-      this.listWifi.FormattingEnabled = true;
-      this.listWifi.ItemHeight = 64;
-      this.listWifi.Location = new Point(0, 0);
-      this.listWifi.Name = "listWifi";
-      this.listWifi.Size = new Size(807, 379);
-      this.listWifi.TabIndex = 6;
-      this.listWifi.DrawItem += new DrawItemEventHandler(this.listWifi_DrawItem);
-      this.listWifi.DoubleClick += new EventHandler(this.listWifi_DoubleClick);
-      this.timerNet.Tick += new EventHandler(this.timerNet_Tick);
-      this.AutoScaleMode = AutoScaleMode.None;
-      this.ClientSize = new Size(807, 427);
-      this.ControlBox = false;
-      this.Controls.Add((Control) this.listWifi);
-      this.Controls.Add((Control) this.pBOTTOM);
-      this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
-      this.Name = nameof (DLG_Wifi);
-      this.ShowIcon = false;
-      this.ShowInTaskbar = false;
-      this.StartPosition = FormStartPosition.CenterScreen;
-      this.Text = " ";
-      this.FormClosing += new FormClosingEventHandler(this.DLG_Wifi_FormClosing);
-      this.FormClosed += new FormClosedEventHandler(this.DLG_Wifi_FormClosed);
-      this.Load += new EventHandler(this.DLG_Wifi_Load);
-      this.pBOTTOM.ResumeLayout(false);
-      this.ResumeLayout(false);
-    }
-  }
+		private bool DeleteProfile(string _name)
+		{
+			IEnumerable<AccessPoint> source = List();
+			for (int i = 0; i < source.ToArray().Length; i++)
+			{
+				if (source.ToList()[i].Name.ToLower() == _name.ToLower())
+				{
+					AccessPoint accessPoint = source.ToList()[i];
+					accessPoint.DeleteProfile();
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private AccessPoint Info(string _name)
+		{
+			IEnumerable<AccessPoint> source = List();
+			for (int i = 0; i < source.ToArray().Length; i++)
+			{
+				if (source.ToList()[i].Name.ToLower() == _name.ToLower())
+				{
+					return source.ToList()[i];
+				}
+			}
+			return null;
+		}
+
+		private void bFind_Click(object sender, EventArgs e)
+		{
+			RefreshNet = true;
+		}
+
+		private void bOk_Click(object sender, EventArgs e)
+		{
+			OK = true;
+			Close();
+		}
+
+		private void bCancel_Click(object sender, EventArgs e)
+		{
+			OK = false;
+			Close();
+		}
+
+		private void DLG_Wifi_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			IsClosed = true;
+		}
+
+		private void listWifi_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			e.Graphics.FillRectangle(Brushes.Black, e.Bounds);
+			Rectangle bounds = e.Bounds;
+			bounds.X++;
+			bounds.Y++;
+			bounds.Width -= 2;
+			bounds.Height -= 2;
+			Brush brush = Brushes.White;
+			string[] array = (e.Index < 0) ? new string[3]
+			{
+				"NO WIFI",
+				"0",
+				"false"
+			} : listWifi.Items[e.Index].ToString().Split(',');
+			if (array[2].ToLower() == "true".ToLower())
+			{
+				brush = Brushes.Green;
+			}
+			e.Graphics.FillRectangle(brush, bounds);
+			if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
+			{
+				e.Graphics.FillRectangle(Brushes.Blue, bounds);
+			}
+			Rectangle rect = bounds;
+			rect.Y = bounds.Y + bounds.Height - 24;
+			rect.Height = 24;
+			e.Graphics.FillRectangle(Brushes.Red, rect);
+			int num = 0;
+			try
+			{
+				num = int.Parse(array[1]);
+			}
+			catch
+			{
+			}
+			rect = bounds;
+			rect.Y = bounds.Y + bounds.Height - 24;
+			rect.Height = 24;
+			int num3 = rect.Width = rect.Width * num / 100;
+			Brush brush2 = Brushes.OrangeRed;
+			if (num > 50)
+			{
+				brush2 = Brushes.Yellow;
+			}
+			if (num > 75)
+			{
+				brush2 = Brushes.YellowGreen;
+			}
+			e.Graphics.FillRectangle(brush2, rect);
+			SizeF sizeF = e.Graphics.MeasureString(array[1] + "%", e.Font);
+			rect.Width = bounds.Width;
+			rect.X += 32;
+			e.Graphics.DrawString(array[1] + "%", e.Font, Brushes.Black, rect, StringFormat.GenericDefault);
+			rect = bounds;
+			rect.Y += 8;
+			rect.X += 32;
+			string text = array[0];
+			if (array[2].ToLower() == "true".ToLower())
+			{
+				text += " -> CONNECT";
+			}
+			e.Graphics.DrawString(text, e.Font, Brushes.Black, rect, StringFormat.GenericDefault);
+		}
+
+		private void DLG_Wifi_Load(object sender, EventArgs e)
+		{
+			timerNet.Enabled = true;
+			RefreshNet = true;
+		}
+
+		private void bConnect_Click(object sender, EventArgs e)
+		{
+			if (listWifi.SelectedIndex == -1)
+			{
+				MSG_Ok mSG_Ok = new MSG_Ok(ref opciones, "Select any Wifi");
+				mSG_Ok.ShowDialog();
+				mSG_Ok.Dispose();
+				RefreshNet = true;
+				return;
+			}
+			string[] array = listWifi.Items[listWifi.SelectedIndex].ToString().Split(',');
+			if (array.Length < 1)
+			{
+				RefreshNet = true;
+				return;
+			}
+			DLG_Wifi_Connect dLG_Wifi_Connect = new DLG_Wifi_Connect(ref opciones, array[0], "?", array[3]);
+			dLG_Wifi_Connect.ShowDialog();
+			bool newProfile = dLG_Wifi_Connect.NewProfile;
+			bool alwaysConnect = dLG_Wifi_Connect.AlwaysConnect;
+			if (!dLG_Wifi_Connect.OK)
+			{
+				RefreshNet = true;
+				return;
+			}
+			Disconnect();
+			if (string.IsNullOrEmpty(dLG_Wifi_Connect.Password) || dLG_Wifi_Connect.Password == "?")
+			{
+				Connect(dLG_Wifi_Connect.SID, alwaysConnect);
+			}
+			else if (dLG_Wifi_Connect.SID != array[0])
+			{
+				Connect(array[0] + ",100,False", dLG_Wifi_Connect.Password, dLG_Wifi_Connect.SID, dLG_Wifi_Connect.SEC, alwaysConnect);
+			}
+			else
+			{
+				Connect(array[0] + ",100,False", dLG_Wifi_Connect.Password, alwaysConnect);
+			}
+			RefreshNet = true;
+		}
+
+		private void listWifi_DoubleClick(object sender, EventArgs e)
+		{
+			Disconnect();
+			Connect(listWifi.Items[listWifi.SelectedIndex].ToString(), _auto: true);
+			RefreshNet = true;
+		}
+
+		private void bDisconnect_Click(object sender, EventArgs e)
+		{
+			Disconnect();
+			RefreshNet = true;
+		}
+
+		private void timerNet_Tick(object sender, EventArgs e)
+		{
+			if (RefreshNet)
+			{
+				listWifi.Items.Clear();
+				List();
+				RefreshNet = false;
+			}
+		}
+
+		private void DLG_Wifi_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			RefreshNet = false;
+			timerNet.Enabled = false;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing && components != null)
+			{
+				components.Dispose();
+			}
+			base.Dispose(disposing);
+		}
+
+		private void InitializeComponent()
+		{
+			components = new System.ComponentModel.Container();
+			pBOTTOM = new System.Windows.Forms.Panel();
+			bDisconnect = new System.Windows.Forms.Button();
+			bConnect = new System.Windows.Forms.Button();
+			bFind = new System.Windows.Forms.Button();
+			bCancel = new System.Windows.Forms.Button();
+			bOk = new System.Windows.Forms.Button();
+			listWifi = new System.Windows.Forms.ListBox();
+			timerNet = new System.Windows.Forms.Timer(components);
+			pBOTTOM.SuspendLayout();
+			SuspendLayout();
+			pBOTTOM.Controls.Add(bDisconnect);
+			pBOTTOM.Controls.Add(bConnect);
+			pBOTTOM.Controls.Add(bFind);
+			pBOTTOM.Controls.Add(bCancel);
+			pBOTTOM.Controls.Add(bOk);
+			pBOTTOM.Dock = System.Windows.Forms.DockStyle.Bottom;
+			pBOTTOM.Location = new System.Drawing.Point(0, 379);
+			pBOTTOM.Name = "pBOTTOM";
+			pBOTTOM.Size = new System.Drawing.Size(807, 48);
+			pBOTTOM.TabIndex = 5;
+			bDisconnect.Dock = System.Windows.Forms.DockStyle.Left;
+			bDisconnect.Image = Kiosk.Properties.Resources.ico_wifi_disconnect;
+			bDisconnect.Location = new System.Drawing.Point(96, 0);
+			bDisconnect.Name = "bDisconnect";
+			bDisconnect.Size = new System.Drawing.Size(48, 48);
+			bDisconnect.TabIndex = 4;
+			bDisconnect.UseVisualStyleBackColor = true;
+			bDisconnect.Click += new System.EventHandler(bDisconnect_Click);
+			bConnect.Dock = System.Windows.Forms.DockStyle.Left;
+			bConnect.Image = Kiosk.Properties.Resources.ico_wifi_connect;
+			bConnect.Location = new System.Drawing.Point(48, 0);
+			bConnect.Name = "bConnect";
+			bConnect.Size = new System.Drawing.Size(48, 48);
+			bConnect.TabIndex = 3;
+			bConnect.UseVisualStyleBackColor = true;
+			bConnect.Click += new System.EventHandler(bConnect_Click);
+			bFind.Dock = System.Windows.Forms.DockStyle.Left;
+			bFind.Image = Kiosk.Properties.Resources.ico_wifi_find;
+			bFind.Location = new System.Drawing.Point(0, 0);
+			bFind.Name = "bFind";
+			bFind.Size = new System.Drawing.Size(48, 48);
+			bFind.TabIndex = 2;
+			bFind.UseVisualStyleBackColor = true;
+			bFind.Click += new System.EventHandler(bFind_Click);
+			bCancel.Dock = System.Windows.Forms.DockStyle.Right;
+			bCancel.Image = Kiosk.Properties.Resources.ico_del;
+			bCancel.Location = new System.Drawing.Point(711, 0);
+			bCancel.Name = "bCancel";
+			bCancel.Size = new System.Drawing.Size(48, 48);
+			bCancel.TabIndex = 1;
+			bCancel.UseVisualStyleBackColor = true;
+			bCancel.Visible = false;
+			bCancel.Click += new System.EventHandler(bCancel_Click);
+			bOk.Dock = System.Windows.Forms.DockStyle.Right;
+			bOk.Image = Kiosk.Properties.Resources.ico_ok;
+			bOk.Location = new System.Drawing.Point(759, 0);
+			bOk.Name = "bOk";
+			bOk.Size = new System.Drawing.Size(48, 48);
+			bOk.TabIndex = 0;
+			bOk.UseVisualStyleBackColor = true;
+			bOk.Click += new System.EventHandler(bOk_Click);
+			listWifi.Dock = System.Windows.Forms.DockStyle.Fill;
+			listWifi.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+			listWifi.Font = new System.Drawing.Font("Microsoft Sans Serif", 16f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+			listWifi.FormattingEnabled = true;
+			listWifi.ItemHeight = 64;
+			listWifi.Location = new System.Drawing.Point(0, 0);
+			listWifi.Name = "listWifi";
+			listWifi.Size = new System.Drawing.Size(807, 379);
+			listWifi.TabIndex = 6;
+			listWifi.DrawItem += new System.Windows.Forms.DrawItemEventHandler(listWifi_DrawItem);
+			listWifi.DoubleClick += new System.EventHandler(listWifi_DoubleClick);
+			timerNet.Tick += new System.EventHandler(timerNet_Tick);
+			base.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+			base.ClientSize = new System.Drawing.Size(807, 427);
+			base.ControlBox = false;
+			base.Controls.Add(listWifi);
+			base.Controls.Add(pBOTTOM);
+			base.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			base.Name = "DLG_Wifi";
+			base.ShowIcon = false;
+			base.ShowInTaskbar = false;
+			base.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			Text = " ";
+			base.FormClosing += new System.Windows.Forms.FormClosingEventHandler(DLG_Wifi_FormClosing);
+			base.FormClosed += new System.Windows.Forms.FormClosedEventHandler(DLG_Wifi_FormClosed);
+			base.Load += new System.EventHandler(DLG_Wifi_Load);
+			pBOTTOM.ResumeLayout(false);
+			ResumeLayout(false);
+		}
+	}
 }

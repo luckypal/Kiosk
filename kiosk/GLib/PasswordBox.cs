@@ -1,9 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: GLib.PasswordBox
-// Assembly: Kiosk, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: C3E32FFD-072D-4F9D-AAE4-A7F2B29E989A
-// Assembly location: E:\kiosk\Kiosk.exe
-
+#define DEBUG
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -13,141 +8,158 @@ using System.Windows.Forms;
 
 namespace GLib
 {
-  [ToolboxBitmap(typeof (PasswordBox), "images.PasswordBox.bmp")]
-  public class PasswordBox : TextBox
-  {
-    private StringBuilder _internalBuffer = new StringBuilder();
-    private const int WS_MAXIMIZEBOX = 65536;
-    private const int ES_PASSWORD = 32;
-    private const int ES_AUTOHSCROLL = 128;
-    private const int WM_CHAR = 258;
+	[ToolboxBitmap(typeof(PasswordBox), "images.PasswordBox.bmp")]
+	public class PasswordBox : TextBox
+	{
+		private const int WS_MAXIMIZEBOX = 65536;
 
-    private new bool Multiline
-    {
-      get
-      {
-        return false;
-      }
-    }
+		private const int ES_PASSWORD = 32;
 
-    [Localizable(false)]
-    public override string Text
-    {
-      get
-      {
-        return this._internalBuffer.ToString();
-      }
-      set
-      {
-        base.Text = value == null ? value : new string(' ', value.Length);
-        this._internalBuffer = new StringBuilder(value, this.MaxLength);
-        Debug.Assert(base.TextLength == this._internalBuffer.Length);
-      }
-    }
+		private const int ES_AUTOHSCROLL = 128;
 
-    public override int TextLength
-    {
-      get
-      {
-        Debug.Assert(base.TextLength == this._internalBuffer.Length, "base.TextLength != _internalBuffer.Length");
-        return this._internalBuffer.Length;
-      }
-    }
+		private const int WM_CHAR = 258;
 
-    protected override CreateParams CreateParams
-    {
-      get
-      {
-        CreateParams createParams = base.CreateParams;
-        if (!this.DesignMode)
-          createParams.Style |= 32;
-        return createParams;
-      }
-    }
+		private StringBuilder _internalBuffer = new StringBuilder();
 
-    protected override void Dispose(bool disposing)
-    {
-      if (!disposing)
-        ;
-      base.Dispose(disposing);
-    }
+		private new bool Multiline => false;
 
-    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-    {
-      if (keyData == (Keys.V | Keys.Control) || keyData == (Keys.Insert | Keys.Shift))
-      {
-        IDataObject dataObject = Clipboard.GetDataObject();
-        if (dataObject.GetDataPresent(DataFormats.Text))
-        {
-          this.ReplaceSelection((string) dataObject.GetData(DataFormats.Text));
-          return true;
-        }
-      }
-      else
-      {
-        if (keyData == (Keys.C | Keys.Control) || keyData == (Keys.Insert | Keys.Control) || keyData == (Keys.Delete | Keys.Shift))
-          return true;
-        if (keyData == Keys.Delete)
-          this.DeleteChar();
-      }
-      return base.ProcessCmdKey(ref msg, keyData);
-    }
+		[Localizable(false)]
+		public override string Text
+		{
+			get
+			{
+				return _internalBuffer.ToString();
+			}
+			set
+			{
+				base.Text = ((value == null) ? value : new string(' ', value.Length));
+				_internalBuffer = new StringBuilder(value, MaxLength);
+				Debug.Assert(base.TextLength == _internalBuffer.Length);
+			}
+		}
 
-    protected override bool ProcessKeyMessage(ref Message m)
-    {
-      if (m.Msg == 258)
-      {
-        if ((int) m.WParam == 8)
-        {
-          this.ProcessChar('\b');
-        }
-        else
-        {
-          char wparam = (char) (int) m.WParam;
-          if (!char.IsControl(wparam))
-          {
-            m.WParam = (IntPtr) 32;
-            this.ProcessChar(wparam);
-          }
-        }
-      }
-      return this.ProcessKeyEventArgs(ref m);
-    }
+		public override int TextLength
+		{
+			get
+			{
+				Debug.Assert(base.TextLength == _internalBuffer.Length, "base.TextLength != _internalBuffer.Length");
+				return _internalBuffer.Length;
+			}
+		}
 
-    private void DeleteChar()
-    {
-      int selectionStart = this.SelectionStart;
-      int selectionLength = this.SelectionLength;
-      if (selectionLength > 0)
-        this._internalBuffer.Remove(selectionStart, selectionLength);
-      else if (selectionStart < this._internalBuffer.Length - 1)
-        this._internalBuffer.Remove(selectionStart, 1);
-    }
+		protected override CreateParams CreateParams
+		{
+			get
+			{
+				CreateParams createParams = base.CreateParams;
+				if (!base.DesignMode)
+				{
+					createParams.Style |= 32;
+				}
+				return createParams;
+			}
+		}
 
-    private void ReplaceSelection(string s)
-    {
-      int selectionStart = this.SelectionStart;
-      int selectionLength = this.SelectionLength;
-      if (selectionLength > 0)
-        this._internalBuffer.Remove(selectionStart, selectionLength);
-      this.Text = this._internalBuffer.Insert(selectionStart, s).ToString();
-      this.Select(selectionStart + s.Length, 0);
-    }
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+			}
+			base.Dispose(disposing);
+		}
 
-    private void ProcessChar(char c)
-    {
-      int selectionStart = this.SelectionStart;
-      int selectionLength = this.SelectionLength;
-      if (selectionLength > 0)
-        this._internalBuffer.Remove(selectionStart, selectionLength);
-      else if (c == '\b')
-      {
-        if (selectionStart <= 0)
-          return;
-        this._internalBuffer.Remove(selectionStart - 1, 1);
-        return;
-      }
-      this._internalBuffer.Insert(selectionStart, c);
-    }
-  }
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			if (keyData == (Keys)131158 || keyData == (Keys.LButton | Keys.MButton | Keys.Back | Keys.Space | Keys.Shift))
+			{
+				IDataObject dataObject = Clipboard.GetDataObject();
+				if (dataObject.GetDataPresent(DataFormats.Text))
+				{
+					ReplaceSelection((string)dataObject.GetData(DataFormats.Text));
+					return true;
+				}
+			}
+			else
+			{
+				if (keyData == (Keys)131139 || keyData == (Keys.LButton | Keys.MButton | Keys.Back | Keys.Space | Keys.Control) || keyData == (Keys.RButton | Keys.MButton | Keys.Back | Keys.Space | Keys.Shift))
+				{
+					return true;
+				}
+				if (keyData == Keys.Delete)
+				{
+					DeleteChar();
+				}
+			}
+			return base.ProcessCmdKey(ref msg, keyData);
+		}
+
+		protected override bool ProcessKeyMessage(ref Message m)
+		{
+			bool flag = true;
+			int msg = m.Msg;
+			if (msg == 258)
+			{
+				Keys keys = (Keys)(int)m.WParam;
+				if (keys == Keys.Back)
+				{
+					ProcessChar('\b');
+				}
+				else
+				{
+					char c = (char)(int)m.WParam;
+					if (!char.IsControl(c))
+					{
+						m.WParam = (IntPtr)32;
+						ProcessChar(c);
+					}
+				}
+			}
+			return ProcessKeyEventArgs(ref m);
+		}
+
+		private void DeleteChar()
+		{
+			int selectionStart = base.SelectionStart;
+			int selectionLength = SelectionLength;
+			if (selectionLength > 0)
+			{
+				_internalBuffer.Remove(selectionStart, selectionLength);
+			}
+			else if (selectionStart < _internalBuffer.Length - 1)
+			{
+				_internalBuffer.Remove(selectionStart, 1);
+			}
+		}
+
+		private void ReplaceSelection(string s)
+		{
+			int selectionStart = base.SelectionStart;
+			int selectionLength = SelectionLength;
+			if (selectionLength > 0)
+			{
+				_internalBuffer.Remove(selectionStart, selectionLength);
+			}
+			Text = _internalBuffer.Insert(selectionStart, s).ToString();
+			Select(selectionStart + s.Length, 0);
+		}
+
+		private void ProcessChar(char c)
+		{
+			int selectionStart = base.SelectionStart;
+			int selectionLength = SelectionLength;
+			if (selectionLength > 0)
+			{
+				_internalBuffer.Remove(selectionStart, selectionLength);
+			}
+			else if (c == '\b')
+			{
+				if (selectionStart > 0)
+				{
+					_internalBuffer.Remove(selectionStart - 1, 1);
+				}
+				return;
+			}
+			_internalBuffer.Insert(selectionStart, c);
+		}
+	}
 }
