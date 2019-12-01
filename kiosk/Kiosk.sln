@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurnKiosk", "..\turnkiosk\T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KVKeyboard2", "..\kvkeyboard2\KVKeyboard2.csproj", "{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kiosk.XmlSerializers", "..\kioskxmlserializers\Kiosk.XmlSerializers.csproj", "{84C498EF-0482-4CE3-8D13-C0B509CD8F01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,14 @@ Global
 		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Release|Any CPU.ActiveCfg = Release|x86
 		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Release|x86.ActiveCfg = Release|x86
 		{6C9A1F6E-F7F6-407F-89C7-BF096568DA44}.Release|x86.Build.0 = Release|x86
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Debug|x86.Build.0 = Debug|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Release|x86.ActiveCfg = Release|Any CPU
+		{84C498EF-0482-4CE3-8D13-C0B509CD8F01}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
